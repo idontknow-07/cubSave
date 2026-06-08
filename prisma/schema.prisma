@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id               String        @id @default(cuid())
+  email            String        @unique
+  username         String        @unique
+  passwordHash     String
+  withdrawalPin    String
+  mnemonic         String
+  role             String        @default("user")
+  currencyPref     String        @default("USD")
+  theme            String        @default("dark")
+  emailVerified    Boolean       @default(false)
+  emailCode        String?
+  emailCodeExpiry  DateTime?
+  idVerified       Boolean       @default(false)
+  idType           String?
+  createdAt        DateTime      @default(now())
+  wallets          Wallet[]
+  transactions     Transaction[]
+}
+
+model Wallet {
+  id      String @id @default(cuid())
+  userId  String
+  coin    String
+  network String
+  balance Float  @default(0)
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, coin, network])
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  coin      String
+  network   String
+  type      String
+  amount    Float
+  status    String   @default("pending")
+  address   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}

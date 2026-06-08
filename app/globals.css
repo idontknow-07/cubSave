@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+@source "../components/**/*.{ts,tsx}";
+
+@theme {
+  --font-sora: var(--font-sora), "Sora", sans-serif;
+  --font-manrope: var(--font-manrope), "Manrope", sans-serif;
+
+  --color-vault-bg: #ffffff;
+  --color-vault-surface: #f4faf6;
+  --color-vault-card: #f4faf6;
+  --color-vault-card-hover: #eafaf1;
+  --color-vault-border: #e4efe9;
+  --color-vault-border-2: #cdd9d2;
+
+  --color-vault-accent: #15a35c;
+  --color-vault-accent-dark: #0c8048;
+  --color-vault-accent-dim: rgba(21, 163, 92, 0.08);
+  --color-vault-accent-glow: rgba(21, 163, 92, 0.28);
+  --color-vault-accent-text: #ffffff;
+
+  --color-vault-text: #0a1f17;
+  --color-vault-text-2: #51635b;
+  --color-vault-text-3: #7b8c84;
+
+  --color-vault-gain: #15a35c;
+  --color-vault-gain-dim: rgba(21, 163, 92, 0.10);
+  --color-vault-loss: #e53935;
+  --color-vault-loss-dim: rgba(229, 57, 53, 0.10);
+  --color-vault-yellow: #f59e0b;
+  --color-vault-yellow-dim: rgba(245, 158, 11, 0.10);
+}
+
+/* ═══════════════════════════════════
+   VaultChain — GREEN × WHITE SYSTEM
+   ═══════════════════════════════════ */
+:root {
+  --bg: #ffffff;
+  --surface: #f4faf6;
+  --card: #f4faf6;
+  --card-hover: #eafaf1;
+  --border: #e4efe9;
+  --border-2: #cdd9d2;
+
+  --accent: #15a35c;
+  --accent-dark: #0c8048;
+  --accent-dim: rgba(21, 163, 92, 0.08);
+  --accent-glow: rgba(21, 163, 92, 0.28);
+  --accent-text: #ffffff;
+
+  --text: #0a1f17;
+  --text-2: #51635b;
+  --text-3: #7b8c84;
+
+  --gain: #15a35c;
+  --gain-dim: rgba(21, 163, 92, 0.10);
+  --loss: #e53935;
+  --loss-dim: rgba(229, 57, 53, 0.10);
+  --yellow: #f59e0b;
+  --yellow-dim: rgba(245, 158, 11, 0.10);
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-manrope, "Manrope"), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ── Scrollbar ───────────────────── */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 99px;
+}
+
+/* ── Buttons ─────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 14px;
+  padding: 14px 24px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 800;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-dark);
+  box-shadow: 0 6px 32px var(--accent-glow);
+}
+
+.btn-ghost {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border-2);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--card-hover);
+}
+
+.btn-danger {
+  background: var(--loss-dim);
+  color: var(--loss);
+  border: 1px solid rgba(229, 57, 53, 0.2);
+}
+
+/* ── Inputs ──────────────────────── */
+.input {
+  width: 100%;
+  padding: 13px 16px;
+  background: #ffffff;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+  font-family: inherit;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim), 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.input:hover:not(:focus) {
+  border-color: var(--border-2);
+}
+
+.input::placeholder {
+  color: var(--text-3);
+}
+
+/* ── Animations ──────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.25s ease forwards;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -600px 0;
+  }
+
+  to {
+    background-position: 600px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--card-hover) 50%, var(--card) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.3s infinite;
+  border-radius: 8px;
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gain);
+  animation: pulse-dot 2s infinite;
+  flex-shrink: 0;
+}
+
+/* ── Buttons (premium upgrades) ─── */
+.btn-primary {
+  letter-spacing: 0.01em;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--border-2);
+  transform: translateY(-1px);
+}
+
+/* ── Glass nav ───────────────────── */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Premium card ────────────────── */
+.card-premium {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+}
+
+.card-premium:hover {
+  border-color: var(--border-2);
+  box-shadow: 0 4px 24px rgba(21, 163, 92, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ── Gradient text ───────────────── */
+.text-lime {
+  background: linear-gradient(135deg, #15a35c 0%, #12b76a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Page transitions ────────────── */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageIn 0.22s ease forwards;
+}
+
+/* ── Pulse animation ─────────────── */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
