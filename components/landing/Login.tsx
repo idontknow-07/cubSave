@@ -1,26 +1,26 @@
+"use client";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AuthLayout, { Field, PasswordField, SocialRow } from "./AuthLayout";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: connect to your auth backend here.
-    // For now this just demonstrates the flow.
     console.log("login", { email, password, remember });
-    navigate("/");
+    router.push("/");
   }
 
   return (
     <AuthLayout
       title="Welcome back"
       subtitle="Sign in to your VaultChain account to keep trading."
-      footer={<>Don&apos;t have an account? <Link to="/signup" className="text-[#15a35c] font-semibold hover:underline">Create one</Link></>}
+      footer={<>Don&apos;t have an account? <Link href="/signup" className="text-[#15a35c] font-semibold hover:underline">Create one</Link></>}
     >
       <form onSubmit={handleSubmit}>
         <Field label="Email address" type="email" placeholder="you@example.com" value={email} onChange={setEmail} autoComplete="email" />

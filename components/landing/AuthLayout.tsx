@@ -1,5 +1,6 @@
+"use client";
 import { useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Logo } from "./ui";
 
 /* ---------- Brand side panel (desktop only) ---------- */
@@ -55,7 +56,7 @@ export default function AuthLayout({ title, subtitle, children, footer, brandSid
         {/* top bar (mobile logo + back home) */}
         <div className="flex items-center justify-between px-6 sm:px-10 h-[72px] border-b border-[#e4efe9] lg:border-none">
           <div className="lg:hidden"><Logo /></div>
-          <Link to="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
+          <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
             Back to site
           </Link>

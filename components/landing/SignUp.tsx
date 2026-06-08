@@ -1,11 +1,13 @@
+"use client";
 import { useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import AuthLayout, { Field, PasswordField, SelectField, SocialRow } from "./AuthLayout";
-import ReCaptcha from "../components/reCaptcha";
+import ReCaptcha from "./reCaptcha";
 import { COUNTRIES } from "../data";
 
 export default function Signup() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,17 +17,13 @@ export default function Signup() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [agree, setAgree] = useState(false);
 
-  // useCallback so the ReCaptcha effect doesn't re-run on every keystroke
   const handleCaptcha = useCallback((token: string | null) => setCaptchaToken(token), []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!agree || !captchaToken) return;
-    // TODO: send the form data AND `captchaToken` to your backend.
-    // Your backend must verify the token with Google before creating the account:
-    // POST https://www.google.com/recaptcha/api/siteverify  (secret + response=captchaToken)
     console.log("signup", { firstName, lastName, email, password, country, mobile, captchaToken });
-    navigate("/");
+    router.push("/");
   }
 
   return (
@@ -33,7 +31,7 @@ export default function Signup() {
       brandSide="left"
       title="Set up your account"
       subtitle="Welcome, let's get started."
-      footer={<>Already have an account? <Link to="/login" className="text-[#15a35c] font-semibold hover:underline">Sign in</Link></>}
+      footer={<>Already have an account? <Link href="/login" className="text-[#15a35c] font-semibold hover:underline">Sign in</Link></>}
     >
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-3">

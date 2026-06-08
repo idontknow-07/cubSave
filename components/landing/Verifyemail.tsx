@@ -1,9 +1,10 @@
+"use client";
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import AuthLayout from "./AuthLayout";
 
 export default function VerifyEmail() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const [resent, setResent] = useState(false);
   const refs = useRef<(HTMLInputElement | null)[]>([]);
@@ -34,8 +35,7 @@ export default function VerifyEmail() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (code.length < 6) return;
-    // TODO: verify `code` against the one your backend emailed the user.
-    navigate("/verify-id");
+    router.push("/verify-id");
   }
 
   return (

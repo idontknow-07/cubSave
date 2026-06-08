@@ -1,5 +1,6 @@
+"use client";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import AuthLayout, { Field, SelectField } from "./AuthLayout";
 
 const ID_TYPES = [
@@ -10,16 +11,14 @@ const ID_TYPES = [
 ];
 
 export default function VerifyId() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [idType, setIdType] = useState("");
   const [idNumber, setIdNumber] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!idType || !idNumber.trim()) return;
-    // TODO: send { idType, idNumber } to your KYC/verification backend.
-    // On success, send the user to your dashboard:
-    navigate("/dashboard"); // <-- change to your real dashboard route or URL
+    router.push("/dashboard");
   }
 
   return (
