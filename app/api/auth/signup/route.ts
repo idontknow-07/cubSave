@@ -51,9 +51,13 @@ export async function POST(req: NextRequest) {
     await sendVerificationEmail(email, username, verifyUrl);
 
     return NextResponse.json({ userId: user.id, email: user.email });
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e: any) {
+    console.error("SIGNUP ERROR:", e);
+    // If it's a Resend error, it often has more details in e.message or e.data
+    return NextResponse.json({ 
+      error: "Server error", 
+      details: e.message || "Unknown error" 
+    }, { status: 500 });
   }
 }
 
