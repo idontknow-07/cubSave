@@ -159,7 +159,11 @@ export default function DashboardPage() {
         background: "var(--surface)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--accent)", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 10 }}>CV</div>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
+                <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
+              </svg>
+            </div>
           <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>SecureChain</span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>

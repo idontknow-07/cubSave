@@ -2,7 +2,7 @@
   "name": "SecureChain",
   "short_name": "SecureChain",
   "description": "SecureChain — modern crypto exchange and trading platform.",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#15a35c",

@@ -31,7 +31,13 @@ export async function POST(req: NextRequest) {
     const res = NextResponse.json({
       user: { id: user.id, email: user.email, username: user.username, role, currencyPref: user.currencyPref, theme: user.theme },
     });
-    res.cookies.set("token", token, { httpOnly: true, maxAge: 60 * 60 * 24 * 7, path: "/" });
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 30,
+      path: "/",
+    });
     return res;
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
