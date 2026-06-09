@@ -35,7 +35,7 @@ model Wallet {
   coin    String
   network String
   balance Float  @default(0)
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, coin, network])
 }
@@ -50,5 +50,5 @@ model Transaction {
   status    String   @default("pending")
   address   String?
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
