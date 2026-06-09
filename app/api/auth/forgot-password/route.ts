@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
     if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
 
     const user = await prisma.user.findUnique({ where: { email } });
-    /* Always return success to prevent email enumeration */
     if (!user) return NextResponse.json({ ok: true });
 
     const code   = generateCode();
@@ -20,10 +19,10 @@ export async function POST(req: NextRequest) {
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { emailCode: code, emailCodeExpiry: expiry },
+      data: { emailToken: code, emailTokenExpiry: expiry },
     });
 
-    sendPasswordResetEmail(user.email, user.username, code).catch(console.error);
+    await sendPasswordResetEmail(user.email, user.username, code);
 
     return NextResponse.json({ ok: true });
   } catch {

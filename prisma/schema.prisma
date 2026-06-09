@@ -18,10 +18,12 @@ model User {
   currencyPref     String        @default("USD")
   theme            String        @default("dark")
   emailVerified    Boolean       @default(false)
-  emailCode        String?
-  emailCodeExpiry  DateTime?
+  emailToken       String?
+  emailTokenExpiry DateTime?
   idVerified       Boolean       @default(false)
   idType           String?
+  country          String?
+  phone            String?
   createdAt        DateTime      @default(now())
   wallets          Wallet[]
   transactions     Transaction[]

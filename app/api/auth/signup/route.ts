@@ -4,14 +4,11 @@ import { hashPassword, hashPin } from "@/lib/auth";
 import { FUNCTIONAL_COINS } from "@/lib/coins";
 import { sendVerificationEmail } from "@/lib/email";
 import * as bip39 from "bip39";
-
-function generateCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, username, password } = await req.json();
+    const { email, username, password, country, phone } = await req.json();
 
     if (!email || !username || !password) {
       return NextResponse.json({ error: "All fields required" }, { status: 400 });
@@ -22,12 +19,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email or username already taken" }, { status: 409 });
     }
 
-    const code   = generateCode();
-    const expiry = new Date(Date.now() + 15 * 60 * 1000);
+    const token  = crypto.randomBytes(32).toString("hex");
+    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
     const mnemonic = bip39.generateMnemonic();
-    /* PIN is set in a separate step after email verification */
-    const tempPin = `unset_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const tempPin  = `unset_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
     const user = await prisma.user.create({
       data: {
         email, username,
@@ -36,8 +33,10 @@ export async function POST(req: NextRequest) {
         mnemonic,
         role: "user",
         emailVerified: false,
-        emailCode: code,
-        emailCodeExpiry: expiry,
+        emailToken: token,
+        emailTokenExpiry: expiry,
+        country: country || null,
+        phone: phone || null,
       },
     });
 
@@ -47,7 +46,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    sendVerificationEmail(email, username, code).catch(console.error);
+    const origin  = req.nextUrl.origin;
+    const verifyUrl = `${origin}/api/auth/verify-email?token=${token}`;
+    await sendVerificationEmail(email, username, verifyUrl);
 
     return NextResponse.json({ userId: user.id, email: user.email });
   } catch (e) {
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/* Resend code */
+/* Resend verification link */
 export async function PATCH(req: NextRequest) {
   try {
     const { userId } = await req.json();
@@ -66,10 +67,13 @@ export async function PATCH(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
     if (user.emailVerified) return NextResponse.json({ ok: true });
 
-    const code   = generateCode();
-    const expiry = new Date(Date.now() + 15 * 60 * 1000);
-    await prisma.user.update({ where: { id: userId }, data: { emailCode: code, emailCodeExpiry: expiry } });
-    sendVerificationEmail(user.email, user.username, code).catch(console.error);
+    const token  = crypto.randomBytes(32).toString("hex");
+    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    await prisma.user.update({ where: { id: userId }, data: { emailToken: token, emailTokenExpiry: expiry } });
+
+    const origin    = req.nextUrl.origin;
+    const verifyUrl = `${origin}/api/auth/verify-email?token=${token}`;
+    await sendVerificationEmail(user.email, user.username, verifyUrl);
 
     return NextResponse.json({ ok: true });
   } catch {

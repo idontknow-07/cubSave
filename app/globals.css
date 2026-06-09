@@ -63,6 +63,9 @@
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
+  /* prevent iOS Safari auto-zooming inputs/text */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -70,8 +73,17 @@ body {
   color: var(--text);
   font-family: var(--font-manrope, "Manrope"), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* dvh = real iPhone viewport (excludes address bar), falls back to vh */
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  /* smooth momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tap highlight: remove the grey flash on iOS taps */
+a, button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .num {

@@ -61,34 +61,34 @@ function base(title: string, body: string) {
 </html>`;
 }
 
-export async function sendVerificationEmail(to: string, username: string, code: string) {
+export async function sendVerificationEmail(to: string, username: string, verifyUrl: string) {
   const body = `
     <h2 style="font-size:22px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">
       Verify your email
     </h2>
     <p style="font-size:15px;color:#51635b;margin:0 0 28px;line-height:1.6;">
-      Hey <strong style="color:#0a1f17;">${username}</strong>, enter this code to confirm your VaultChain account.
+      Hey <strong style="color:#0a1f17;">${username}</strong>, click the button below to confirm your VaultChain account.
     </p>
 
-    <div style="background:#f4faf6;border:1px solid #e4efe9;border-radius:16px;padding:28px;text-align:center;margin-bottom:28px;">
-      <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#7b8c84;margin:0 0 12px;">
-        Verification Code
-      </p>
-      <p style="font-size:48px;font-weight:900;letter-spacing:10px;color:#15a35c;margin:0;line-height:1;">
-        ${code}
-      </p>
+    <div style="text-align:center;margin-bottom:28px;">
+      <a href="${verifyUrl}"
+        style="display:inline-block;background:#15a35c;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 36px;border-radius:10px;letter-spacing:-0.01em;box-shadow:0 10px 26px rgba(21,163,92,0.28);">
+        Verify my email
+      </a>
     </div>
 
-    <p style="font-size:13px;color:#7b8c84;margin:0;text-align:center;line-height:1.7;">
-      This code expires in <strong style="color:#51635b;">15 minutes</strong>.<br/>
-      Never share this code with anyone.
+    <p style="font-size:13px;color:#7b8c84;margin:0 0 8px;text-align:center;line-height:1.7;">
+      This link expires in <strong style="color:#51635b;">24 hours</strong>.
+    </p>
+    <p style="font-size:12px;color:#9db5a8;margin:0;text-align:center;word-break:break-all;">
+      Or copy this URL: ${verifyUrl}
     </p>
   `;
 
   await transporter.sendMail({
     from: FROM,
     to,
-    subject: `${code} — Your VaultChain verification code`,
+    subject: "Verify your VaultChain account",
     html: base("Verify your email", body),
   });
 }

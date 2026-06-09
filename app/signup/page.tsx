@@ -1,9 +1,10 @@
 "use client";
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowRight, CheckCircle2, Shield, CreditCard, Lock } from "lucide-react";
+import { ArrowRight, Shield, CreditCard, Lock, Mail } from "lucide-react";
+import { COUNTRIES } from "@/components/data";
 
 const ID_TYPES = ["National ID", "Passport", "Driver's License", "SSN", "NIN", "Voter's Card", "Government ID"];
 
@@ -50,6 +51,26 @@ function PasswordField({ label, placeholder, value, onChange, autoComplete }: {
   );
 }
 
+function SelectField({ label, value, onChange, options, placeholder = "Select…" }: {
+  label: string; value: string; onChange: (v: string) => void; options: string[]; placeholder?: string;
+}) {
+  return (
+    <label className="block mb-4">
+      <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-1.5">{label}</span>
+      <div className="relative">
+        <select
+          value={value} onChange={e => onChange(e.target.value)}
+          className={`w-full h-[46px] pl-3.5 pr-10 rounded-[10px] bg-white border border-[#e4efe9] text-[15px] outline-none appearance-none transition-all focus:border-[#15a35c] focus:ring-4 focus:ring-[#15a35c]/10 ${value ? "text-[#0a1f17]" : "text-[#9db5a8]"}`}
+        >
+          <option value="" disabled>{placeholder}</option>
+          {options.map(o => <option key={o} value={o} className="text-[#0a1f17]">{o}</option>)}
+        </select>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#7b8c84] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"><path d="m6 9 6 6 6-6" /></svg>
+      </div>
+    </label>
+  );
+}
+
 function ErrorBox({ msg }: { msg: string }) {
   return (
     <div className="rounded-[10px] bg-red-50 border border-red-100 px-3.5 py-3 text-[13px] font-semibold text-red-600 mb-4">
@@ -62,11 +83,9 @@ function GreenBtn({ children, onClick, type = "button", disabled = false }: {
   children: React.ReactNode; onClick?: () => void; type?: "button" | "submit"; disabled?: boolean;
 }) {
   return (
-    <button
-      type={type} onClick={onClick} disabled={disabled}
+    <button type={type} onClick={onClick} disabled={disabled}
       className="w-full h-[48px] rounded-[10px] text-white text-[15px] flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:-translate-y-0.5"
-      style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 600, background: "#15a35c", boxShadow: "0 10px 26px rgba(21,163,92,0.28)" }}
-    >
+      style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 600, background: "#15a35c", boxShadow: "0 10px 26px rgba(21,163,92,0.28)" }}>
       {children}
     </button>
   );
@@ -81,46 +100,28 @@ function Spinner() {
   );
 }
 
-/* Fake ID verification logic */
 function validateIdFormat(idType: string, idNumber: string): string | null {
   const clean = idNumber.replace(/[\s\-]/g, "");
   switch (idType) {
-    case "SSN":
-      if (!/^\d{9}$/.test(clean)) return "SSN must be exactly 9 digits (e.g. 123-45-6789).";
-      if (/^(000|666|9\d\d)/.test(clean)) return "This SSN format is not valid. Please check and re-enter.";
-      return null;
-    case "NIN":
-      if (!/^\d{11}$/.test(clean)) return "NIN must be exactly 11 digits.";
-      return null;
-    case "Passport":
-      if (!/^[A-Z0-9]{8,9}$/i.test(clean)) return "Passport number must be 8–9 alphanumeric characters.";
-      return null;
-    case "Voter's Card":
-      if (clean.length < 10) return "Voter's Card number must be at least 10 characters.";
-      return null;
-    case "National ID":
-      if (clean.length < 8) return "National ID must be at least 8 characters.";
-      return null;
-    case "Driver's License":
-      if (clean.length < 6) return "Driver's License must be at least 6 characters.";
-      return null;
-    default:
-      if (clean.length < 6) return "ID number must be at least 6 characters.";
-      return null;
+    case "SSN": return /^\d{9}$/.test(clean) ? (/^(000|666|9\d\d)/.test(clean) ? "This SSN format is not valid." : null) : "SSN must be exactly 9 digits.";
+    case "NIN": return /^\d{11}$/.test(clean) ? null : "NIN must be exactly 11 digits.";
+    case "Passport": return /^[A-Z0-9]{8,9}$/i.test(clean) ? null : "Passport must be 8–9 alphanumeric characters.";
+    case "Voter's Card": return clean.length >= 10 ? null : "Voter's Card must be at least 10 characters.";
+    case "National ID": return clean.length >= 8 ? null : "National ID must be at least 8 characters.";
+    case "Driver's License": return clean.length >= 6 ? null : "Driver's License must be at least 6 characters.";
+    default: return clean.length >= 6 ? null : "ID number must be at least 6 characters.";
   }
 }
 
-export default function SignupPage() {
+function SignupInner() {
   const { setUser } = useAuth();
   const router = useRouter();
+  const params = useSearchParams();
   const [step, setStep] = useState<Step>("form");
 
-  const [form, setForm] = useState({ email: "", username: "", password: "" });
+  const [form, setForm] = useState({ email: "", username: "", password: "", country: "", phone: "" });
   const [userId, setUserId] = useState("");
   const [emailTo, setEmailTo] = useState("");
-
-  const [code, setCode] = useState(["", "", "", "", "", ""]);
-  const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [resent, setResent] = useState(false);
 
   const [pin, setPin] = useState("");
@@ -134,11 +135,28 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  /* Resume flow after clicking the email link: /signup?step=pin&userId=xxx */
+  useEffect(() => {
+    const stepParam = params.get("step") as Step | null;
+    const userIdParam = params.get("userId");
+    const errorParam = params.get("error");
+
+    if (errorParam === "link_expired" && userIdParam) {
+      setUserId(userIdParam);
+      setStep("email");
+      setError("Your verification link expired. Hit Resend to get a fresh one.");
+    } else if (errorParam) {
+      setError("Invalid or expired verification link. Please try signing up again.");
+    } else if (stepParam && userIdParam) {
+      setUserId(userIdParam);
+      setStep(stepParam);
+    }
+  }, [params]);
+
   const steps: Step[] = ["form", "email", "pin", "identity"];
   const stepIdx = steps.indexOf(step);
   const stepLabels = ["Account", "Email", "PIN", "Identity"];
 
-  /* ── Step 1: Register ── */
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); setLoading(true);
@@ -153,40 +171,18 @@ export default function SignupPage() {
     } finally { setLoading(false); }
   };
 
-  /* ── Step 2: Email OTP ── */
-  const handleCodeInput = (i: number, val: string) => {
-    const char = val.replace(/\D/g, "").slice(-1);
-    const next = [...code]; next[i] = char; setCode(next);
-    if (char && i < 5) codeRefs.current[i + 1]?.focus();
-    if (!char && i > 0) codeRefs.current[i - 1]?.focus();
-  };
-
-  const submitCode = async () => {
-    const fullCode = code.join("");
-    if (fullCode.length < 6) { setError("Enter the full 6-digit code"); return; }
-    setError(""); setLoading(true);
+  const resendLink = async () => {
+    setError(""); setResent(false); setLoading(true);
     try {
-      const res = await fetch("/api/auth/verify-email", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, code: fullCode }),
+      await fetch("/api/auth/signup", {
+        method: "PATCH", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error); return; }
-      setStep("pin");
+      setResent(true);
+      setTimeout(() => setResent(false), 5000);
     } finally { setLoading(false); }
   };
 
-  const resendCode = async () => {
-    setError("");
-    await fetch("/api/auth/signup", {
-      method: "PATCH", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
-    setResent(true); setCode(["", "", "", "", "", ""]);
-    setTimeout(() => setResent(false), 4000);
-  };
-
-  /* ── Step 3: Set PIN ── */
   const submitPin = async () => {
     if (!/^\d{4,6}$/.test(pin)) { setError("PIN must be 4–6 digits (numbers only)"); return; }
     if (pin !== pinConfirm) { setError("PINs don't match — please re-enter"); return; }
@@ -202,16 +198,12 @@ export default function SignupPage() {
     } finally { setLoading(false); }
   };
 
-  /* ── Step 4: Identity ── */
   const submitId = async () => {
     const fmtError = validateIdFormat(idType, idNumber);
     if (!idType) { setError("Please select an ID type"); return; }
     if (fmtError) { setError(fmtError); return; }
     setError(""); setVerifying(true);
-
-    /* Simulate verification delay */
     await new Promise(r => setTimeout(r, 2800 + Math.random() * 1400));
-
     setVerifying(false); setLoading(true);
     try {
       const res = await fetch("/api/auth/verify-id", {
@@ -225,38 +217,38 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
+    <div className="min-h-[100dvh] lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
 
-      {/* ── Form panel (left) ── */}
-      <div className="flex flex-col bg-white">
-        <div className="flex items-center justify-between px-6 sm:px-10 h-[72px] border-b border-[#e4efe9] lg:border-none">
-          <div className="lg:hidden flex items-center gap-[11px]">
-            <span className="w-[34px] h-[34px] rounded-[9px] grid place-items-center"
+      {/* Form panel */}
+      <div className="flex flex-col min-h-[100dvh] lg:min-h-0 bg-white">
+        <div className="flex items-center justify-between px-5 sm:px-10 h-[64px] border-b border-[#e4efe9] lg:border-none shrink-0">
+          <div className="lg:hidden flex items-center gap-[10px]">
+            <span className="w-[32px] h-[32px] rounded-[8px] grid place-items-center"
               style={{ background: "linear-gradient(135deg,#15a35c,#047857)" }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="w-[17px] h-[17px]">
                 <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z" /><circle cx="12" cy="11" r="1.9" /><path d="M12 12.9V15.4" />
               </svg>
             </span>
-            <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 18, color: "#0a1f17" }}>
+            <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 17, color: "#0a1f17" }}>
               Vault<span style={{ color: "#15a35c" }}>Chain</span>
             </span>
           </div>
           <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-            Back to site
+            Back
           </Link>
         </div>
 
-        <div className="flex-1 flex items-start justify-center px-6 sm:px-10 py-10">
-          <div className="w-full max-w-[420px] fade-up">
+        <div className="flex-1 flex items-start justify-center px-5 sm:px-8 py-8 overflow-y-auto">
+          <div className="w-full max-w-[420px]">
 
             {/* Step bar */}
-            <div className="flex gap-2 mb-8">
+            <div className="flex gap-2 mb-7">
               {stepLabels.map((label, i) => (
                 <div key={label} className="flex-1 flex flex-col gap-1.5">
                   <div className="h-1 rounded-full transition-all duration-300"
                     style={{ background: i <= stepIdx ? "#15a35c" : "#e4efe9" }} />
-                  <span className="text-[10px] font-bold text-center uppercase tracking-[0.06em] transition-colors duration-300"
+                  <span className="text-[10px] font-bold text-center uppercase tracking-[0.06em]"
                     style={{ color: i <= stepIdx ? "#15a35c" : "#9db5a8" }}>
                     {label}
                   </span>
@@ -264,98 +256,72 @@ export default function SignupPage() {
               ))}
             </div>
 
-            {/* ── STEP 1: Registration ── */}
+            {/* STEP 1 */}
             {step === "form" && (
               <>
-                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 30, letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 6 }}>
+                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: "clamp(24px,6vw,30px)", letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 6 }}>
                   Set up your account
                 </h1>
-                <p className="text-[#51635b] text-[15px] mb-8">Welcome — let&apos;s get you started.</p>
+                <p className="text-[#51635b] text-[14px] mb-7">Welcome — let&apos;s get you started.</p>
                 <form onSubmit={submitForm}>
                   <Field label="Email" type="email" placeholder="you@example.com" value={form.email} onChange={v => setForm({ ...form, email: v })} autoComplete="email" />
                   <Field label="Username" placeholder="satoshi" value={form.username} onChange={v => setForm({ ...form, username: v })} autoComplete="username" />
                   <PasswordField label="Password" placeholder="Create a strong password" value={form.password} onChange={v => setForm({ ...form, password: v })} autoComplete="new-password" />
+                  <SelectField label="Country" value={form.country} onChange={v => setForm({ ...form, country: v })} options={COUNTRIES} placeholder="Select your country" />
+                  <Field label="Phone number (optional)" type="tel" placeholder="+1 234 567 8900" value={form.phone} onChange={v => setForm({ ...form, phone: v })} autoComplete="tel" />
                   {error && <ErrorBox msg={error} />}
                   <GreenBtn type="submit" disabled={loading}>
                     {loading ? <Spinner /> : <span className="flex items-center gap-2">Continue <ArrowRight size={16} /></span>}
                   </GreenBtn>
                 </form>
-                <p className="text-center text-[14.5px] text-[#51635b] mt-7">
+                <p className="text-center text-[14px] text-[#51635b] mt-6">
                   Already have an account?{" "}
                   <Link href="/login" className="font-semibold text-[#15a35c] hover:underline">Sign in</Link>
                 </p>
               </>
             )}
 
-            {/* ── STEP 2: Email verification ── */}
+            {/* STEP 2: Link sent */}
             {step === "email" && (
               <>
                 <div className="w-14 h-14 rounded-[16px] bg-[#eafaf1] border border-[#cdeedd] grid place-items-center mb-5">
-                  <CheckCircle2 size={26} color="#15a35c" />
+                  <Mail size={26} color="#15a35c" />
                 </div>
-                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
-                  Check your email
+                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: "clamp(22px,6vw,28px)", letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
+                  Check your inbox
                 </h1>
-                <p className="text-[#51635b] text-[14px] mb-8 leading-relaxed">
-                  We sent a 6-digit code to <strong className="text-[#0a1f17]">{emailTo}</strong>.<br />
-                  Enter it below to verify your account.
-                </p>
-
-                <div className="flex gap-2 mb-7">
-                  {code.map((digit, i) => (
-                    <input
-                      key={i}
-                      ref={el => { codeRefs.current[i] = el; }}
-                      type="text" inputMode="numeric" maxLength={1} value={digit}
-                      onChange={e => handleCodeInput(i, e.target.value)}
-                      onKeyDown={e => { if (e.key === "Backspace" && !digit && i > 0) codeRefs.current[i - 1]?.focus(); }}
-                      onPaste={e => {
-                        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                        const next = [...code];
-                        pasted.split("").forEach((c, idx) => { if (idx < 6) next[idx] = c; });
-                        setCode(next);
-                        codeRefs.current[Math.min(pasted.length, 5)]?.focus();
-                        e.preventDefault();
-                      }}
-                      className="flex-1 min-w-0 h-[54px] text-center text-xl font-black rounded-[10px] bg-white outline-none transition-all"
-                      style={{
-                        border: `2px solid ${digit ? "#15a35c" : "#e4efe9"}`,
-                        color: "#0a1f17",
-                        boxShadow: digit ? "0 0 0 3px rgba(21,163,92,0.08)" : "none",
-                      }}
-                    />
-                  ))}
+                <p className="text-[#51635b] text-[14px] mb-1 leading-relaxed">We sent a verification link to</p>
+                <p className="font-semibold text-[#0a1f17] text-[15px] mb-6 break-all">{emailTo}</p>
+                <div className="bg-[#f4faf6] border border-[#e4efe9] rounded-[14px] px-4 py-4 mb-7 text-[13px] text-[#51635b] leading-relaxed">
+                  Click <strong className="text-[#0a1f17]">"Verify my email"</strong> in the email — you&apos;ll be brought right back here to finish setting up your account.
                 </div>
-
                 {error && <ErrorBox msg={error} />}
                 {resent && (
                   <div className="rounded-[10px] bg-[#eafaf1] border border-[#cdeedd] px-3.5 py-3 text-[13px] font-semibold text-[#15a35c] mb-4">
-                    ✓ New code sent to your email
+                    ✓ New link sent — check your inbox
                   </div>
                 )}
-                <GreenBtn onClick={submitCode} disabled={loading || code.join("").length < 6}>
-                  {loading ? <Spinner /> : <span className="flex items-center gap-2">Verify Email <ArrowRight size={16} /></span>}
+                <GreenBtn onClick={resendLink} disabled={loading}>
+                  {loading ? <Spinner /> : "Resend verification link"}
                 </GreenBtn>
-                <button onClick={resendCode}
-                  className="w-full mt-3 py-3 text-[14px] font-medium text-[#7b8c84] hover:text-[#15a35c] transition-colors bg-transparent border-none cursor-pointer">
-                  Didn&apos;t get it? Resend code
-                </button>
+                <p className="text-center text-[12.5px] text-[#9db5a8] mt-4">
+                  Wrong email? <Link href="/signup" className="text-[#15a35c] hover:underline">Start over</Link>
+                </p>
               </>
             )}
 
-            {/* ── STEP 3: Set Withdrawal PIN ── */}
+            {/* STEP 3: PIN */}
             {step === "pin" && (
               <>
                 <div className="w-14 h-14 rounded-[16px] bg-[#eafaf1] border border-[#cdeedd] grid place-items-center mb-5">
                   <Lock size={26} color="#15a35c" />
                 </div>
-                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
+                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: "clamp(22px,6vw,28px)", letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
                   Create your PIN
                 </h1>
                 <p className="text-[#51635b] text-[14px] mb-7 leading-relaxed">
                   Set a 4–6 digit PIN. You&apos;ll use this to confirm every withdrawal — keep it private.
                 </p>
-
                 <label className="block mb-4">
                   <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-1.5">Withdrawal PIN</span>
                   <div className="relative">
@@ -374,7 +340,6 @@ export default function SignupPage() {
                     </button>
                   </div>
                 </label>
-
                 <label className="block mb-6">
                   <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-1.5">Confirm PIN</span>
                   <input
@@ -384,7 +349,6 @@ export default function SignupPage() {
                     className="w-full h-[46px] px-3.5 rounded-[10px] bg-white border border-[#e4efe9] text-[15px] outline-none transition-all placeholder:text-[#9db5a8] focus:border-[#15a35c] focus:ring-4 focus:ring-[#15a35c]/10 tracking-[0.3em]"
                   />
                 </label>
-
                 {error && <ErrorBox msg={error} />}
                 <GreenBtn onClick={submitPin} disabled={loading || pin.length < 4}>
                   {loading ? <Spinner /> : <span className="flex items-center gap-2">Set PIN <ArrowRight size={16} /></span>}
@@ -392,48 +356,44 @@ export default function SignupPage() {
               </>
             )}
 
-            {/* ── STEP 4: Identity ── */}
+            {/* STEP 4: Identity */}
             {step === "identity" && (
               <>
                 <div className="w-14 h-14 rounded-[16px] bg-[#eafaf1] border border-[#cdeedd] grid place-items-center mb-5">
                   <Shield size={26} color="#15a35c" />
                 </div>
-                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
+                <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: "clamp(22px,6vw,28px)", letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
                   Verify your identity
                 </h1>
                 <p className="text-[#51635b] text-[14px] mb-7 leading-relaxed">
                   A government-issued ID is required to secure your wallet. Your information is encrypted and never shared.
                 </p>
-
                 <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-2.5">ID Type</span>
                 <div className="grid grid-cols-2 gap-2 mb-5">
                   {ID_TYPES.map(t => (
                     <button key={t} type="button" onClick={() => setIdType(t)}
-                      className="p-3 rounded-[10px] text-[13px] font-semibold text-left flex items-center gap-2 transition-all cursor-pointer"
+                      className="p-3 rounded-[10px] text-[12.5px] font-semibold text-left flex items-center gap-2 transition-all"
                       style={{
                         background: idType === t ? "#eafaf1" : "#f4faf6",
                         border: idType === t ? "1.5px solid #15a35c" : "1.5px solid #e4efe9",
                         color: idType === t ? "#15a35c" : "#51635b",
                       }}>
-                      <CreditCard size={14} />{t}
+                      <CreditCard size={13} className="shrink-0" /><span className="truncate">{t}</span>
                     </button>
                   ))}
                 </div>
-
                 <label className="block mb-2">
                   <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-1.5">ID Number</span>
                   <input
                     placeholder="Enter your ID number" value={idNumber}
                     onChange={e => setIdNumber(e.target.value)}
-                    className="w-full h-[46px] px-3.5 rounded-[10px] bg-white border border-[#e4efe9] text-[15px] outline-none transition-all placeholder:text-[#9db5a8] focus:border-[#15a35c] focus:ring-4 focus:ring-[#15a35c]/10 tracking-[0.05em]"
+                    className="w-full h-[46px] px-3.5 rounded-[10px] bg-white border border-[#e4efe9] text-[15px] outline-none transition-all placeholder:text-[#9db5a8] focus:border-[#15a35c] focus:ring-4 focus:ring-[#15a35c]/10"
                   />
                 </label>
                 <p className="text-[12px] text-[#7b8c84] mb-6">
-                  Encrypted end-to-end. We do not store or share your actual ID document.
+                  Encrypted end-to-end. We never store or share your actual ID document.
                 </p>
-
                 {error && <ErrorBox msg={error} />}
-
                 {verifying ? (
                   <div className="w-full h-[48px] rounded-[10px] flex items-center justify-center gap-3 bg-[#eafaf1] border border-[#cdeedd]">
                     <span className="w-4 h-4 rounded-full border-2 border-[#15a35c]/30 border-t-[#15a35c] animate-spin" />
@@ -450,13 +410,13 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* ── Brand panel (right, desktop) ── */}
+      {/* Brand panel (desktop only) */}
       <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden text-white"
         style={{ background: "linear-gradient(150deg,#0c8048,#076c45 55%,#053a2b)" }}>
         <div className="absolute -top-28 -left-24 w-[380px] h-[380px] rounded-full pointer-events-none"
           style={{ background: "radial-gradient(circle, rgba(39,232,154,.22), transparent 70%)" }} />
         <div className="relative z-10 flex items-center gap-[11px]">
-          <span className="w-[34px] h-[34px] rounded-[9px] grid place-items-center shadow-[0_4px_14px_rgba(21,163,92,0.35)]"
+          <span className="w-[34px] h-[34px] rounded-[9px] grid place-items-center"
             style={{ background: "linear-gradient(135deg,#15a35c,#047857)" }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
               <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z" /><circle cx="12" cy="11" r="1.9" /><path d="M12 12.9V15.4" />
@@ -474,11 +434,7 @@ export default function SignupPage() {
             A modern exchange built for security, transparency, and speed.
           </p>
           <ul className="mt-9 flex flex-col gap-4">
-            {[
-              "Bank-grade security & cold storage",
-              "Low, transparent fees — no hidden spreads",
-              "100+ assets across major chains",
-            ].map(p => (
+            {["Bank-grade security & cold storage", "Low, transparent fees — no hidden spreads", "100+ assets across major chains"].map(p => (
               <li key={p} className="flex items-center gap-3 text-[15px] text-white/90">
                 <span className="w-6 h-6 rounded-full shrink-0 bg-white/15 grid place-items-center">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-[13px] h-[13px]"><path d="M20 6 9 17l-5-5" /></svg>
@@ -491,5 +447,13 @@ export default function SignupPage() {
         <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 VaultChain. All rights reserved.</div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupInner />
+    </Suspense>
   );
 }

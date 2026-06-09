@@ -1,32 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
+  const token = req.nextUrl.searchParams.get("token");
+  const base  = req.nextUrl.origin;
+
+  if (!token) {
+    return NextResponse.redirect(`${base}/signup?error=invalid_link`);
+  }
+
   try {
-    const { userId, code } = await req.json();
-    if (!userId || !code) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    const user = await prisma.user.findFirst({ where: { emailToken: token } });
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
-    if (user.emailVerified) return NextResponse.json({ ok: true });
-
-    if (!user.emailCode || !user.emailCodeExpiry) {
-      return NextResponse.json({ error: "No verification code found. Request a new one." }, { status: 400 });
+    if (!user) {
+      return NextResponse.redirect(`${base}/signup?error=invalid_link`);
     }
-    if (new Date() > user.emailCodeExpiry) {
-      return NextResponse.json({ error: "Code expired. Request a new one." }, { status: 400 });
-    }
-    if (user.emailCode !== code.trim()) {
-      return NextResponse.json({ error: "Incorrect code. Please try again." }, { status: 400 });
+    if (user.emailTokenExpiry && new Date() > user.emailTokenExpiry) {
+      return NextResponse.redirect(`${base}/signup?error=link_expired&userId=${user.id}`);
     }
 
     await prisma.user.update({
-      where: { id: userId },
-      data: { emailVerified: true, emailCode: null, emailCodeExpiry: null },
+      where: { id: user.id },
+      data: { emailVerified: true, emailToken: null, emailTokenExpiry: null },
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.redirect(`${base}/signup?step=pin&userId=${user.id}`);
   } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.redirect(`${base}/signup?error=server_error`);
   }
 }

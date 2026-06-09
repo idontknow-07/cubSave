@@ -16,10 +16,10 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Invalid or expired code" }, { status: 400 });
 
     if (
-      !user.emailCode ||
-      user.emailCode !== code ||
-      !user.emailCodeExpiry ||
-      new Date() > user.emailCodeExpiry
+      !user.emailToken ||
+      user.emailToken !== code ||
+      !user.emailTokenExpiry ||
+      new Date() > user.emailTokenExpiry
     ) {
       return NextResponse.json({ error: "Invalid or expired code" }, { status: 400 });
     }
@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
       where: { id: user.id },
       data: {
         passwordHash: await hashPassword(newPassword),
-        emailCode: null,
-        emailCodeExpiry: null,
+        emailToken: null,
+        emailTokenExpiry: null,
       },
     });
 
