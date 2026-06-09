@@ -34,11 +34,13 @@ export default function BottomNav() {
           style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4, background: "none", border: "none", cursor: "pointer", marginBottom: 12 }}
         >
           <div style={{
-            width: 56, height: 56, borderRadius: 18, background: "var(--accent)",
+            width: 56, height: 56, borderRadius: 18,
+            background: "#ffffff",
+            border: "1.5px solid #c8e8d5",
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 0 20px var(--accent-glow), 0 4px 16px rgba(0,0,0,0.5)",
+            boxShadow: "0 4px 18px rgba(21,163,92,0.15), 0 2px 8px rgba(0,0,0,0.06)",
           }}>
-            <ArrowLeftRight size={22} color="#000" strokeWidth={2.5} />
+            <ArrowLeftRight size={22} color="var(--accent)" strokeWidth={2.2} />
           </div>
           <span style={{ fontSize: 10, fontWeight: 700, color: "var(--text-3)", letterSpacing: "0.02em" }}>Swap</span>
         </button>

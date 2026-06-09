@@ -17,9 +17,15 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "SecureChain",
   description: "Your crypto, your control.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "SecureChain",
+  },
   other: {
-    /* Stop iOS Safari from auto-linking email addresses and phone numbers */
     "format-detection": "telephone=no,email=no,address=no",
+    "mobile-web-app-capable": "yes",
   },
 };
 

@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/context/AuthContext";
 import BottomNav from "@/components/BottomNav";
 import DashboardSidebar from "@/components/DashboardSidebar";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,6 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
         <DashboardSidebar />
         <div style={{ flex: 1, minWidth: 0, overflowY: "auto" }}>
+          <InstallPrompt />
           {children}
         </div>
       </div>
