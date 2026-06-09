@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowRight, Shield, CreditCard, Lock, Mail } from "lucide-react";
+import { ArrowRight, Shield, CreditCard, Lock, CheckCircle2 } from "lucide-react";
 import { COUNTRIES } from "@/components/data";
 
 const ID_TYPES = ["National ID", "Passport", "Driver's License", "SSN", "NIN", "Voter's Card", "Government ID"];
@@ -123,6 +123,8 @@ function SignupInner() {
   const [userId, setUserId] = useState("");
   const [emailTo, setEmailTo] = useState("");
   const [resent, setResent] = useState(false);
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const codeRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [pin, setPin] = useState("");
   const [pinConfirm, setPinConfirm] = useState("");
@@ -168,6 +170,7 @@ function SignupInner() {
     setStep("form");
     setForm({ email: "", username: "", password: "", country: "", phone: "" });
     setUserId(""); setEmailTo(""); setError(""); setResent(false);
+    setCode(["", "", "", "", "", ""]);
   };
 
   const submitForm = async (e: React.FormEvent) => {
@@ -184,13 +187,36 @@ function SignupInner() {
     } finally { setLoading(false); }
   };
 
-  const resendLink = async () => {
+  const handleCodeInput = (i: number, val: string) => {
+    const char = val.replace(/\D/g, "").slice(-1);
+    const next = [...code]; next[i] = char; setCode(next);
+    if (char && i < 5) codeRefs.current[i + 1]?.focus();
+    if (!char && i > 0) codeRefs.current[i - 1]?.focus();
+  };
+
+  const submitCode = async () => {
+    const fullCode = code.join("");
+    if (fullCode.length < 6) { setError("Enter the full 6-digit code"); return; }
+    setError(""); setLoading(true);
+    try {
+      const res = await fetch("/api/auth/verify-email", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, code: fullCode }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.error); return; }
+      setStep("pin");
+    } finally { setLoading(false); }
+  };
+
+  const resendCode = async () => {
     setError(""); setResent(false); setLoading(true);
     try {
       await fetch("/api/auth/signup", {
         method: "PATCH", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
       });
+      setCode(["", "", "", "", "", ""]);
       setResent(true);
       setTimeout(() => setResent(false), 5000);
     } finally { setLoading(false); }
@@ -294,30 +320,62 @@ function SignupInner() {
               </>
             )}
 
-            {/* STEP 2: Link sent */}
+            {/* STEP 2: OTP code */}
             {step === "email" && (
               <>
                 <div className="w-14 h-14 rounded-[16px] bg-[#eafaf1] border border-[#cdeedd] grid place-items-center mb-5">
-                  <Mail size={26} color="#15a35c" />
+                  <CheckCircle2 size={26} color="#15a35c" />
                 </div>
                 <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: "clamp(22px,6vw,28px)", letterSpacing: "-0.02em", color: "#0a1f17", marginBottom: 8 }}>
-                  Check your inbox
+                  Check your email
                 </h1>
-                <p className="text-[#51635b] text-[14px] mb-1 leading-relaxed">We sent a verification link to</p>
-                <p className="font-semibold text-[#0a1f17] text-[15px] mb-6 break-all select-all" style={{ pointerEvents: "none" }}>{emailTo}</p>
-                <div className="bg-[#f4faf6] border border-[#e4efe9] rounded-[14px] px-4 py-4 mb-7 text-[13px] text-[#51635b] leading-relaxed">
-                  Click <strong className="text-[#0a1f17]">"Verify my email"</strong> in the email — you&apos;ll be brought right back here to finish setting up your account.
+                <p className="text-[#51635b] text-[14px] mb-6 leading-relaxed">
+                  We sent a 6-digit code to{" "}
+                  <strong className="text-[#0a1f17]" style={{ pointerEvents: "none" }}>{emailTo}</strong>.
+                  Enter it below.
+                </p>
+
+                <div className="flex gap-2 mb-7">
+                  {code.map((digit, i) => (
+                    <input
+                      key={i}
+                      ref={el => { codeRefs.current[i] = el; }}
+                      type="text" inputMode="numeric" maxLength={1} value={digit}
+                      onChange={e => handleCodeInput(i, e.target.value)}
+                      onKeyDown={e => { if (e.key === "Backspace" && !digit && i > 0) codeRefs.current[i - 1]?.focus(); }}
+                      onPaste={e => {
+                        const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                        const next = [...code];
+                        pasted.split("").forEach((c, idx) => { if (idx < 6) next[idx] = c; });
+                        setCode(next);
+                        codeRefs.current[Math.min(pasted.length, 5)]?.focus();
+                        e.preventDefault();
+                      }}
+                      className="flex-1 min-w-0 h-[54px] text-center font-black rounded-[10px] bg-white outline-none transition-all"
+                      style={{
+                        fontSize: 22,
+                        border: `2px solid ${digit ? "#15a35c" : "#e4efe9"}`,
+                        color: "#0a1f17",
+                        boxShadow: digit ? "0 0 0 3px rgba(21,163,92,0.08)" : "none",
+                      }}
+                    />
+                  ))}
                 </div>
+
                 {error && <ErrorBox msg={error} />}
                 {resent && (
                   <div className="rounded-[10px] bg-[#eafaf1] border border-[#cdeedd] px-3.5 py-3 text-[13px] font-semibold text-[#15a35c] mb-4">
-                    ✓ New link sent — check your inbox
+                    ✓ New code sent — check your inbox
                   </div>
                 )}
-                <GreenBtn onClick={resendLink} disabled={loading}>
-                  {loading ? <Spinner /> : "Resend verification link"}
+                <GreenBtn onClick={submitCode} disabled={loading || code.join("").length < 6}>
+                  {loading ? <Spinner /> : <span className="flex items-center gap-2">Verify Email <ArrowRight size={16} /></span>}
                 </GreenBtn>
-                <p className="text-center text-[12.5px] text-[#9db5a8] mt-4">
+                <button onClick={resendCode} disabled={loading}
+                  className="w-full mt-3 py-3 text-[14px] font-medium text-[#7b8c84] hover:text-[#15a35c] transition-colors">
+                  Didn&apos;t get it? Resend code
+                </button>
+                <p className="text-center text-[12.5px] text-[#9db5a8] mt-1">
                   Wrong email?{" "}
                   <button onClick={resetToForm} className="text-[#15a35c] hover:underline font-medium">Start over</button>
                 </p>

@@ -1,31 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get("token");
-  const base  = req.nextUrl.origin;
-
-  if (!token) {
-    return NextResponse.redirect(`${base}/signup?error=invalid_link`);
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const user = await prisma.user.findFirst({ where: { emailToken: token } });
+    const { userId, code } = await req.json();
+    if (!userId || !code) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-    if (!user) {
-      return NextResponse.redirect(`${base}/signup?error=invalid_link`);
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (user.emailVerified) return NextResponse.json({ ok: true });
+
+    if (!user.emailToken || !user.emailTokenExpiry) {
+      return NextResponse.json({ error: "No code found. Request a new one." }, { status: 400 });
     }
-    if (user.emailTokenExpiry && new Date() > user.emailTokenExpiry) {
-      return NextResponse.redirect(`${base}/signup?error=link_expired&userId=${user.id}`);
+    if (new Date() > user.emailTokenExpiry) {
+      return NextResponse.json({ error: "Code expired. Request a new one." }, { status: 400 });
+    }
+    if (user.emailToken !== code.trim()) {
+      return NextResponse.json({ error: "Incorrect code. Try again." }, { status: 400 });
     }
 
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: userId },
       data: { emailVerified: true, emailToken: null, emailTokenExpiry: null },
     });
 
-    return NextResponse.redirect(`${base}/signup?step=pin&userId=${user.id}`);
+    return NextResponse.json({ ok: true });
   } catch {
-    return NextResponse.redirect(`${base}/signup?error=server_error`);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

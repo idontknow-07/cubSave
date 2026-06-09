@@ -4,7 +4,10 @@ import { hashPassword, hashPin } from "@/lib/auth";
 import { FUNCTIONAL_COINS } from "@/lib/coins";
 import { sendVerificationEmail } from "@/lib/email";
 import * as bip39 from "bip39";
-import crypto from "crypto";
+
+function generateCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,8 +22,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email or username already taken" }, { status: 409 });
     }
 
-    const token  = crypto.randomBytes(32).toString("hex");
-    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const code   = generateCode();
+    const expiry = new Date(Date.now() + 15 * 60 * 1000);
 
     const mnemonic = bip39.generateMnemonic();
     const tempPin  = `unset_${Date.now()}_${Math.random().toString(36).slice(2)}`;
@@ -33,7 +36,7 @@ export async function POST(req: NextRequest) {
         mnemonic,
         role: "user",
         emailVerified: false,
-        emailToken: token,
+        emailToken: code,
         emailTokenExpiry: expiry,
         country: country || null,
         phone: phone || null,
@@ -46,22 +49,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const origin  = req.nextUrl.origin;
-    const verifyUrl = `${origin}/api/auth/verify-email?token=${token}`;
-    await sendVerificationEmail(email, username, verifyUrl);
+    await sendVerificationEmail(email, username, code);
 
     return NextResponse.json({ userId: user.id, email: user.email });
   } catch (e: any) {
     console.error("SIGNUP ERROR:", e);
-    // If it's a Resend error, it often has more details in e.message or e.data
-    return NextResponse.json({ 
-      error: "Server error", 
-      details: e.message || "Unknown error" 
-    }, { status: 500 });
+    return NextResponse.json({ error: "Server error", details: e.message || "Unknown error" }, { status: 500 });
   }
 }
 
-/* Resend verification link */
+/* Resend code */
 export async function PATCH(req: NextRequest) {
   try {
     const { userId } = await req.json();
@@ -71,13 +68,10 @@ export async function PATCH(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
     if (user.emailVerified) return NextResponse.json({ ok: true });
 
-    const token  = crypto.randomBytes(32).toString("hex");
-    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    await prisma.user.update({ where: { id: userId }, data: { emailToken: token, emailTokenExpiry: expiry } });
-
-    const origin    = req.nextUrl.origin;
-    const verifyUrl = `${origin}/api/auth/verify-email?token=${token}`;
-    await sendVerificationEmail(user.email, user.username, verifyUrl);
+    const code   = generateCode();
+    const expiry = new Date(Date.now() + 15 * 60 * 1000);
+    await prisma.user.update({ where: { id: userId }, data: { emailToken: code, emailTokenExpiry: expiry } });
+    await sendVerificationEmail(user.email, user.username, code);
 
     return NextResponse.json({ ok: true });
   } catch {
