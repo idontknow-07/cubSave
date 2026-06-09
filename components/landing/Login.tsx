@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import AuthLayout, { Field, PasswordField, SocialRow } from "./AuthLayout";
+import AuthLayout, { Field, PasswordField } from "./AuthLayout";
 
 export default function Login() {
   const router = useRouter();
@@ -38,8 +38,6 @@ export default function Login() {
           Sign In
         </button>
       </form>
-
-      <SocialRow />
     </AuthLayout>
   );
 }

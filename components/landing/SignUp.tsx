@@ -2,7 +2,7 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import AuthLayout, { Field, PasswordField, SelectField, SocialRow } from "./AuthLayout";
+import AuthLayout, { Field, PasswordField, SelectField } from "./AuthLayout";
 import Turnstile from "./Turnstile";
 import { COUNTRIES } from "../data";
 
