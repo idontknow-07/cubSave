@@ -12,7 +12,7 @@ const QUICK = ["How do I deposit?", "What are the fees?", "Is it secure?", "What
 // Built-in replies — rules are checked top to bottom, so put specific topics first.
 // Swap this for a real live-chat service or an AI backend later.
 const RULES: { match: RegExp; reply: string }[] = [
-  { match: /\b(hi|hello|hey|yo|howdy|good (morning|afternoon|evening))\b/, reply: "Hi there! How can we help you with VaultChain today? You can ask about deposits, fees, security, or getting started." },
+  { match: /\b(hi|hello|hey|yo|howdy|good (morning|afternoon|evening))\b/, reply: "Hi there! How can we help you with SecureChain today? You can ask about deposits, fees, security, or getting started." },
   { match: /(thank|thanks|thx|appreciate)/, reply: "You're welcome! Is there anything else I can help you with?" },
   { match: /\b(bye|goodbye|see you|cya)\b/, reply: "Thanks for stopping by. Have a great day, and trade safely!" },
   { match: /(fee|charge|commission|cost|spread)/, reply: "Our fees are low and fully transparent — you'll always see the exact cost before you confirm a trade, with no hidden spreads." },
@@ -25,8 +25,8 @@ const RULES: { match: RegExp; reply: string }[] = [
   { match: /(trade|trading|buy|sell|swap|order|exchange)/, reply: "You can buy, sell, and swap from your dashboard using market, limit, or stop orders, with live charts to guide you." },
   { match: /(forgot|reset|can'?t (log|sign) ?in|password|locked out)/, reply: "Trouble signing in? Use the “Forgot password?” link on the login page to reset it. If you're still stuck, our team can help." },
   { match: /(sign ?up|register|create.*account|new account|open.*account)/, reply: "Creating an account takes just a few minutes — tap “Get Started” at the top or visit the Sign up page, then verify your email." },
-  { match: /(app|mobile|ios|android|phone|download)/, reply: "VaultChain works great in any mobile browser, and you can add it to your home screen to use it like an app." },
-  { match: /(country|countries|region|available in|where.*available)/, reply: "VaultChain is available in many countries. During signup you'll choose your country to see what's supported in your region." },
+  { match: /(app|mobile|ios|android|phone|download)/, reply: "SecureChain works great in any mobile browser, and you can add it to your home screen to use it like an app." },
+  { match: /(country|countries|region|available in|where.*available)/, reply: "SecureChain is available in many countries. During signup you'll choose your country to see what's supported in your region." },
   { match: /(how long|how fast|duration|when will|time.*take|speed)/, reply: "Most transactions are processed promptly. Final settlement time depends on the blockchain network's confirmation speed." },
   { match: /(contact|email|reach you|get in touch)/, reply: "You can reach our team right here in chat, or by email — leave your address and a short note and we'll follow up." },
   { match: /(hour|\bopen\b|available|24\/?7)/, reply: "Our support team is available 24/7 — feel free to reach out anytime." },
@@ -43,7 +43,7 @@ function botReply(input: string): string {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([
-    { from: "bot", text: "Hi! Welcome to VaultChain. How can we help you today?" },
+    { from: "bot", text: "Hi! Welcome to SecureChain. How can we help you today?" },
   ]);
   const [input, setInput] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
@@ -64,9 +64,8 @@ export default function ChatWidget() {
     <>
       {/* Chat panel */}
       <div
-        className={`fixed bottom-[88px] right-5 z-[200] w-[360px] max-w-[calc(100vw-2.5rem)] h-[470px] max-h-[calc(100vh-7rem)] bg-white rounded-2xl border border-[#e4efe9] shadow-[0_24px_60px_rgba(10,31,23,0.18)] flex flex-col overflow-hidden origin-bottom-right transition-all duration-200 ${
-          open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
-        }`}
+        className={`fixed bottom-[88px] right-5 z-[200] w-[360px] max-w-[calc(100vw-2.5rem)] h-[470px] max-h-[calc(100vh-7rem)] bg-white rounded-2xl border border-[#e4efe9] shadow-[0_24px_60px_rgba(10,31,23,0.18)] flex flex-col overflow-hidden origin-bottom-right transition-all duration-200 ${open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
+          }`}
       >
         {/* header */}
         <div className="flex items-center gap-3 px-4 py-3.5 text-white" style={{ background: "linear-gradient(135deg,#15a35c,#047857)" }}>
@@ -74,7 +73,7 @@ export default function ChatWidget() {
             <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]"><path d="M12 2.6 20 7V17L12 21.4 4 17V7Z" /><circle cx="12" cy="11" r="1.9" /><path d="M12 12.9V15.4" /></svg>
           </span>
           <div className="flex-1">
-            <div className="font-sora font-semibold text-[15px] leading-tight">VaultChain Support</div>
+            <div className="font-sora font-semibold text-[15px] leading-tight">SecureChain Support</div>
             <div className="flex items-center gap-1.5 text-[12px] text-white/85"><span className="w-2 h-2 rounded-full bg-[#5cf0ad]" /> Online now</div>
           </div>
           <button onClick={() => setOpen(false)} aria-label="Close chat" className="text-white/80 hover:text-white transition-colors">
@@ -85,11 +84,10 @@ export default function ChatWidget() {
         {/* messages */}
         <div className="flex-1 overflow-y-auto px-4 py-4 bg-[#f7faf8] flex flex-col gap-3">
           {messages.map((m, i) => (
-            <div key={i} className={`max-w-[80%] px-3.5 py-2.5 text-[14px] leading-snug rounded-2xl ${
-              m.from === "bot"
+            <div key={i} className={`max-w-[80%] px-3.5 py-2.5 text-[14px] leading-snug rounded-2xl ${m.from === "bot"
                 ? "self-start bg-white border border-[#e4efe9] text-[#0a1f17] rounded-bl-md"
                 : "self-end bg-[#15a35c] text-white rounded-br-md"
-            }`}>
+              }`}>
               {m.text}
             </div>
           ))}

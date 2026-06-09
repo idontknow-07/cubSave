@@ -1,16 +1,19 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "smtp.gmail.com",
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: process.env.SMTP_SECURE === "true",
-  auth: {
-    user: process.env.SMTP_USER || process.env.GMAIL_USER,
-    pass: process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD,
-  },
-});
+/**
+ * RESEND CONFIGURATION
+ * 
+ * We are now using Resend (resend.com), which is the best modern
+ * way to send emails in Next.js apps.
+ * 
+ * 1. Get an API Key at https://resend.com
+ * 2. If you don't have a domain yet, Resend allows you to send
+ *    to YOUR OWN EMAIL using their default "onboarding@resend.dev" address.
+ */
 
-const FROM = `"VaultChain" <${process.env.SMTP_USER || process.env.GMAIL_USER}>`;
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const FROM = process.env.EMAIL_FROM || "VaultChain <onboarding@resend.dev>";
 
 function base(title: string, body: string) {
   return `<!DOCTYPE html>
@@ -85,7 +88,7 @@ export async function sendVerificationEmail(to: string, username: string, verify
     </p>
   `;
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM,
     to,
     subject: "Verify your VaultChain account",
@@ -117,7 +120,7 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
     </p>
   `;
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM,
     to,
     subject: `${code} — Reset your VaultChain password`,
@@ -161,13 +164,13 @@ export async function sendDepositEmail(
     <div style="background:#fff8ed;border:1px solid #ffe4a0;border-radius:12px;padding:16px 18px;margin-bottom:8px;">
       <p style="font-size:13px;color:#92610a;margin:0;line-height:1.6;">
         <strong>Was this not you?</strong> If you did not authorise this deposit or believe this is an error, please
-        <a href="mailto:support@vaultchain.io" style="color:#c47d0e;font-weight:700;">contact our support team</a> immediately.
+        <a href="mailto:support@VaultChain.io" style="color:#c47d0e;font-weight:700;">contact our support team</a> immediately.
         Do not share your account details with anyone.
       </p>
     </div>
   `;
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM,
     to,
     subject: `+${amount} ${coin} deposited to your VaultChain wallet`,
@@ -184,7 +187,7 @@ export async function sendWithdrawalStatusEmail(
 ) {
   const isApproved = status === "approved";
   const color = isApproved ? "#15a35c" : "#e53935";
-  const bg    = isApproved ? "#eafaf1" : "#fff0f0";
+  const bg = isApproved ? "#eafaf1" : "#fff0f0";
   const border = isApproved ? "#cdeedd" : "#ffc9c9";
   const emoji = isApproved ? "✅" : "❌";
 
@@ -209,13 +212,13 @@ export async function sendWithdrawalStatusEmail(
 
     <p style="font-size:13px;color:#7b8c84;margin:0;text-align:center;line-height:1.7;">
       ${isApproved
-        ? "Your funds are on their way. Processing times vary by network."
-        : "Your withdrawal was not approved. Please contact support if you have questions."
-      }
+      ? "Your funds are on their way. Processing times vary by network."
+      : "Your withdrawal was not approved. Please contact support if you have questions."
+    }
     </p>
   `;
 
-  await transporter.sendMail({
+  await resend.emails.send({
     from: FROM,
     to,
     subject: `Withdrawal ${status}: ${amount} ${coin}`,

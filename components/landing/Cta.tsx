@@ -9,7 +9,7 @@ export default function Cta() {
       <Reveal className="relative z-[1]">
         <Wrap className="max-w-[620px]">
           <Eyebrow center>Get started today</Eyebrow>
-          <h2 className="font-sora font-bold leading-[1.1] tracking-[-0.02em] text-[clamp(30px,4vw,46px)] text-[#0a1f17] mt-3.5">Start trading on VaultChain.</h2>
+          <h2 className="font-sora font-bold leading-[1.1] tracking-[-0.02em] text-[clamp(30px,4vw,46px)] text-[#0a1f17] mt-3.5">Start trading on SecureChain.</h2>
           <p className="text-[#51635b] text-[17px] mt-[18px] mb-8">Create your account in minutes and join a community trading with clarity and confidence.</p>
           <div className="flex gap-3.5 justify-center flex-wrap">
             <Btn primary to="/signup">Create Account</Btn>

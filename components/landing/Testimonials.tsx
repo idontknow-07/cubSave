@@ -10,7 +10,7 @@ export default function Testimonials() {
         <SectionHeading
           eyebrow="What traders say"
           title="Trusted by a growing community."
-          intro="A few words from people who trade on VaultChain. (Replace with your own verified reviews before launch.)"
+          intro="A few words from people who trade on SecureChain. (Replace with your own verified reviews before launch.)"
         />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {TESTIMONIALS.map((t, i) => (

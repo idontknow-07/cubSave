@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
         <div className="border-t border-white/10 pt-[26px] flex justify-center items-center">
           <p className="text-[#6f867c] text-[13px]">
-            © 2026 VaultChain. All rights reserved.
+            © 2026 SecureChain. All rights reserved.
           </p>
         </div>
       </Wrap>

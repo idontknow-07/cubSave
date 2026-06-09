@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "VaultChain",
+  title: "SecureChain",
   description: "Your crypto, your control.",
 };
 

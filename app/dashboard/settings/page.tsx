@@ -38,7 +38,7 @@ export default function SettingsPage() {
     {
       title: "About",
       items: [
-        { icon: Info, label: "About App", sub: "VaultChain v1.0", key: "about" },
+        { icon: Info, label: "About App", sub: "SecureChain v1.0", key: "about" },
         { icon: HeadphonesIcon, label: "Support", sub: "Get help", key: "support" },
       ],
     },
@@ -213,7 +213,7 @@ export default function SettingsPage() {
             <div>
               <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>About</p>
               <div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 14, padding: "4px 0" }}>
-                {[["App", "VaultChain"], ["Version", "1.0.0"], ["Build", "2026"]].map(([k, v], i) => (
+                {[["App", "SecureChain"], ["Version", "1.0.0"], ["Build", "2026"]].map(([k, v], i) => (
                   <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "14px 18px", borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
                     <span style={{ fontSize: 14, color: "var(--text-3)" }}>{k}</span>
                     <span style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>{v}</span>
@@ -231,7 +231,7 @@ export default function SettingsPage() {
                   Have a question or need help? Reach out to our support team.
                 </p>
                 <p style={{ fontSize: 11, color: "var(--text-3)", marginBottom: 4 }}>Email</p>
-                <p style={{ fontWeight: 700, fontSize: 15, color: "var(--accent)" }}>support@VaultChain.io</p>
+                <p style={{ fontWeight: 700, fontSize: 15, color: "var(--accent)" }}>support@SecureChain.io</p>
               </div>
             </div>
           )}

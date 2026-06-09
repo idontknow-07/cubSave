@@ -29,7 +29,7 @@ function SidebarContent({ close }: { close?: () => void }) {
             CV
           </div>
           <div>
-            <p style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", lineHeight: 1.2 }}>VaultChain</p>
+            <p style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", lineHeight: 1.2 }}>SecureChain</p>
             <p style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: 4, marginTop: 2 }}>
               <ShieldCheck size={10} /> Admin Panel
             </p>
@@ -116,7 +116,7 @@ export default function AdminSidebar() {
         className="mobile-topbar">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: 9, background: "var(--accent)", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 11 }}>CV</div>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>VaultChain</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>SecureChain</span>
           <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 6, background: "var(--accent-dim)", color: "var(--accent)" }}>Admin</span>
         </div>
         <button onClick={() => setOpen(true)} style={{ width: 36, height: 36, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>

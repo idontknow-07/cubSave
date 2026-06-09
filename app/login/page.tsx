@@ -73,7 +73,7 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 VaultChain. All rights reserved.</div>
+        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 SecureChain. All rights reserved.</div>
       </div>
 
       {/* ── Form panel ── */}
@@ -105,7 +105,7 @@ export default function LoginPage() {
             <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 30, letterSpacing: "-0.02em", color: "#0a1f17" }}>
               Welcome back
             </h1>
-            <p className="text-[#51635b] text-[15px] mt-2">Sign in to your VaultChain account to keep trading.</p>
+            <p className="text-[#51635b] text-[15px] mt-2">Sign in to your SecureChain account to keep trading.</p>
 
             <form onSubmit={submit} className="mt-8 flex flex-col gap-4">
               <label className="block">

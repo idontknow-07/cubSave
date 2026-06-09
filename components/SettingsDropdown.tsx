@@ -211,7 +211,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
     <div>
       <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>About</p>
       <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-        {[["App", "VaultChain"], ["Version", "1.0.0"], ["Build", "2026"]].map(([k, v]) => (
+        {[["App", "SecureChain"], ["Version", "1.0.0"], ["Build", "2026"]].map(([k, v]) => (
           <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
             <span style={{ color: "var(--text-3)" }}>{k}</span>
             <span style={{ fontWeight: 700, color: "var(--text)" }}>{v}</span>
@@ -227,7 +227,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
       <p style={{ fontSize: 14, color: "var(--text-2)", marginBottom: 16, lineHeight: 1.6 }}>Have a question or need help? Reach out to us.</p>
       <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 12, padding: 16 }}>
         <p style={{ fontSize: 12, color: "var(--text-3)", marginBottom: 4 }}>Email</p>
-        <p style={{ fontWeight: 700, fontSize: 14, color: "var(--accent)" }}>support@VaultChain.io</p>
+        <p style={{ fontWeight: 700, fontSize: 14, color: "var(--accent)" }}>support@SecureChain.io</p>
       </div>
     </div>
   );

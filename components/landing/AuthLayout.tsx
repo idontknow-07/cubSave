@@ -33,7 +33,7 @@ function BrandPanel({ className = "" }: { className?: string }) {
         </ul>
       </div>
 
-      <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 VaultChain. All rights reserved.</div>
+      <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 SecureChain. All rights reserved.</div>
     </div>
   );
 }
@@ -163,22 +163,5 @@ export function SelectField({ label, value, onChange, options, placeholder = "Se
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#7b8c84] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"><path d="m6 9 6 6 6-6" /></svg>
       </div>
     </label>
-  );
-}
-
-/* ---------- Google button + divider (UI only) ---------- */
-export function SocialRow() {
-  return (
-    <>
-      <div className="flex items-center gap-3 my-6">
-        <span className="h-px flex-1 bg-[#e4efe9]" />
-        <span className="text-[12.5px] text-[#7b8c84]">or</span>
-        <span className="h-px flex-1 bg-[#e4efe9]" />
-      </div>
-      <button type="button" className="w-full h-[46px] rounded-[10px] border border-[#e4efe9] bg-white text-[14px] font-medium text-[#0a1f17] flex items-center justify-center gap-2.5 hover:border-[#cdeedd] hover:bg-[#f4faf6] transition-all">
-        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.57c2.08-1.92 3.27-4.74 3.27-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.76c-.99.66-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z" /><path fill="#FBBC05" d="M5.84 14.09a6.6 6.6 0 0 1 0-4.18V7.07H2.18a11 11 0 0 0 0 9.86l3.66-2.84z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.07l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" /></svg>
-        Continue with Google
-      </button>
-    </>
   );
 }

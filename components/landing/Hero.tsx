@@ -35,7 +35,7 @@ export default function Hero() {
             Trade crypto with <span className="text-[#15a35c]">clarity</span> and confidence.
           </h1>
           <p className="text-[#51635b] text-[18px] mt-6 max-w-[520px]">
-            VaultChain is a modern exchange built for serious traders and first-timers alike — fast execution, transparent fees, and the tools you need to navigate every market.
+            SecureChain is a modern exchange built for serious traders and first-timers alike — fast execution, transparent fees, and the tools you need to navigate every market.
           </p>
           <ul className="mt-[30px] flex flex-col gap-3.5">
             {POINTS.map((t) => (
@@ -48,8 +48,8 @@ export default function Hero() {
           </ul>
           <div className="flex gap-3.5 mt-9 flex-wrap">
             <Link href="/signup" className="inline-flex items-center justify-center gap-2 font-sora font-semibold text-[15px] px-[26px] py-3.5 rounded-[10px] bg-[#15a35c] text-white shadow-[0_10px_26px_rgba(21,163,92,0.28)] hover:bg-[#0c8048] hover:-translate-y-0.5 transition-all">
-  Create Account
-</Link>
+              Create Account
+            </Link>
             <Btn href="#markets">View Markets</Btn>
           </div>
         </Reveal>

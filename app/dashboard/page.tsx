@@ -160,7 +160,7 @@ export default function DashboardPage() {
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 28, height: 28, borderRadius: 8, background: "var(--accent)", color: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 10 }}>CV</div>
-          <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>VaultChain</span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>SecureChain</span>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={() => setShowSettings(true)}

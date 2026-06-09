@@ -50,7 +50,7 @@ export default function DashboardSidebar() {
               fontWeight: 900, fontSize: 11, flexShrink: 0,
               boxShadow: "0 0 12px var(--accent-glow)",
             }}>CV</div>
-            <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", letterSpacing: "-0.01em" }}>VaultChain</span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", letterSpacing: "-0.01em" }}>SecureChain</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
@@ -144,7 +144,7 @@ export default function DashboardSidebar() {
 
         {/* Footer */}
         <div style={{ borderTop: "1px solid var(--border)", padding: "10px 12px 14px" }}>
-          <p style={{ fontSize: 11, color: "var(--text-3)", padding: "6px 12px 8px" }}>VaultChain v1.0</p>
+          <p style={{ fontSize: 11, color: "var(--text-3)", padding: "6px 12px 8px" }}>SecureChain v1.0</p>
           <button
             onClick={logout}
             style={{
