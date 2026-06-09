@@ -58,7 +58,7 @@ export default function AuthLayout({ title, subtitle, children, footer, brandSid
           <div className="lg:hidden"><Logo /></div>
           <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-            Back to site
+            Back
           </Link>
         </div>
         {/* form area */}
