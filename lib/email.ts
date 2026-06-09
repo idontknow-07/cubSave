@@ -13,7 +13,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM = process.env.EMAIL_FROM || "VaultChain <onboarding@resend.dev>";
+const FROM = process.env.EMAIL_FROM || "SecureChain <onboarding@resend.dev>";
 
 function base(title: string, body: string) {
   return `<!DOCTYPE html>
@@ -33,10 +33,10 @@ function base(title: string, body: string) {
         <table cellpadding="0" cellspacing="0">
           <tr>
             <td style="width:42px;height:42px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:11px;text-align:center;vertical-align:middle;">
-              <span style="font-size:13px;font-weight:900;color:#fff;line-height:42px;">VC</span>
+              <span style="font-size:13px;font-weight:900;color:#fff;line-height:42px;">SC</span>
             </td>
             <td style="padding-left:11px;vertical-align:middle;">
-              <span style="font-size:18px;font-weight:800;color:#0a1f17;letter-spacing:-0.02em;">Vault<span style="color:#15a35c;">Chain</span></span>
+              <span style="font-size:18px;font-weight:800;color:#0a1f17;letter-spacing:-0.02em;">Secure<span style="color:#15a35c;">Chain</span></span>
             </td>
           </tr>
         </table>
@@ -50,7 +50,7 @@ function base(title: string, body: string) {
       <!-- Footer -->
       <tr><td style="padding-top:24px;text-align:center;">
         <p style="font-size:12px;color:#7b8c84;margin:0;">
-          © ${new Date().getFullYear()} VaultChain · Your crypto, your control.
+          © ${new Date().getFullYear()} SecureChain · Your crypto, your control.
         </p>
         <p style="font-size:12px;color:#7b8c84;margin:6px 0 0;">
           If you did not request this email, you can safely ignore it.
@@ -70,7 +70,7 @@ export async function sendVerificationEmail(to: string, username: string, verify
       Verify your email
     </h2>
     <p style="font-size:15px;color:#51635b;margin:0 0 28px;line-height:1.6;">
-      Hey <strong style="color:#0a1f17;">${username}</strong>, click the button below to confirm your VaultChain account.
+      Hey <strong style="color:#0a1f17;">${username}</strong>, click the button below to confirm your SecureChain account.
     </p>
 
     <div style="text-align:center;margin-bottom:28px;">
@@ -91,7 +91,7 @@ export async function sendVerificationEmail(to: string, username: string, verify
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Verify your VaultChain account",
+    subject: "Verify your SecureChain account",
     html: base("Verify your email", body),
   });
 }
@@ -102,7 +102,7 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
       Reset your password
     </h2>
     <p style="font-size:15px;color:#51635b;margin:0 0 28px;line-height:1.6;">
-      Hey <strong style="color:#0a1f17;">${username}</strong>, use this code to reset your VaultChain password.
+      Hey <strong style="color:#0a1f17;">${username}</strong>, use this code to reset your SecureChain password.
     </p>
 
     <div style="background:#f4faf6;border:1px solid #e4efe9;border-radius:16px;padding:28px;text-align:center;margin-bottom:28px;">
@@ -123,7 +123,7 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `${code} — Reset your VaultChain password`,
+    subject: `${code} — Reset your SecureChain password`,
     html: base("Reset your password", body),
   });
 }
@@ -164,7 +164,7 @@ export async function sendDepositEmail(
     <div style="background:#fff8ed;border:1px solid #ffe4a0;border-radius:12px;padding:16px 18px;margin-bottom:8px;">
       <p style="font-size:13px;color:#92610a;margin:0;line-height:1.6;">
         <strong>Was this not you?</strong> If you did not authorise this deposit or believe this is an error, please
-        <a href="mailto:support@VaultChain.io" style="color:#c47d0e;font-weight:700;">contact our support team</a> immediately.
+        <a href="mailto:support@SecureChain.io" style="color:#c47d0e;font-weight:700;">contact our support team</a> immediately.
         Do not share your account details with anyone.
       </p>
     </div>
@@ -173,7 +173,7 @@ export async function sendDepositEmail(
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `+${amount} ${coin} deposited to your VaultChain wallet`,
+    subject: `+${amount} ${coin} deposited to your SecureChain wallet`,
     html: base("Deposit Received", body),
   });
 }

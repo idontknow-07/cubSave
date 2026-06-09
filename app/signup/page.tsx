@@ -230,7 +230,7 @@ function SignupInner() {
               </svg>
             </span>
             <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 17, color: "#0a1f17" }}>
-              Vault<span style={{ color: "#15a35c" }}>Chain</span>
+              Secure<span style={{ color: "#15a35c" }}>Chain</span>
             </span>
           </div>
           <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
@@ -423,7 +423,7 @@ function SignupInner() {
             </svg>
           </span>
           <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 19 }}>
-            Vault<span style={{ color: "#7deba3" }}>Chain</span>
+            Secure<span style={{ color: "#7deba3" }}>Chain</span>
           </span>
         </div>
         <div className="relative z-10 max-w-[420px]">
