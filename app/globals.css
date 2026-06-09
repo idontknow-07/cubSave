@@ -86,6 +86,11 @@ a, button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Safari zooms in on any input with font-size < 16px — force 16px minimum */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
 .num {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";

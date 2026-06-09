@@ -67,24 +67,35 @@ function base(title: string, body: string) {
 export async function sendVerificationEmail(to: string, username: string, verifyUrl: string) {
   const body = `
     <h2 style="font-size:22px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">
-      Verify your email
+      Confirm your email address
     </h2>
     <p style="font-size:15px;color:#51635b;margin:0 0 28px;line-height:1.6;">
-      Hey <strong style="color:#0a1f17;">${username}</strong>, click the button below to confirm your SecureChain account.
+      Hey <strong style="color:#0a1f17;">${username}</strong> 👋 — you&apos;re one step away from your SecureChain account. Tap the button below to verify your email and continue setup.
     </p>
 
-    <div style="text-align:center;margin-bottom:28px;">
+    <!-- CTA card -->
+    <div style="background:linear-gradient(135deg,#0c8048,#076c45);border-radius:18px;padding:36px 28px;text-align:center;margin-bottom:24px;">
+      <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:14px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:26px;line-height:1;">✉️</span>
+      </div>
+      <p style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.7);margin:0 0 6px;">
+        Email Verification
+      </p>
+      <p style="font-size:16px;font-weight:700;color:#ffffff;margin:0 0 24px;line-height:1.4;">
+        Click below to confirm<br/>it&apos;s really you
+      </p>
       <a href="${verifyUrl}"
-        style="display:inline-block;background:#15a35c;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 36px;border-radius:10px;letter-spacing:-0.01em;box-shadow:0 10px 26px rgba(21,163,92,0.28);">
-        Verify my email
+        style="display:inline-block;background:#ffffff;color:#0c8048;font-size:15px;font-weight:800;text-decoration:none;padding:15px 40px;border-radius:12px;letter-spacing:-0.01em;">
+        ✓ &nbsp;Verify my email
       </a>
+      <p style="font-size:12px;color:rgba(255,255,255,0.55);margin:20px 0 0;">
+        Link expires in 24 hours
+      </p>
     </div>
 
-    <p style="font-size:13px;color:#7b8c84;margin:0 0 8px;text-align:center;line-height:1.7;">
-      This link expires in <strong style="color:#51635b;">24 hours</strong>.
-    </p>
-    <p style="font-size:12px;color:#9db5a8;margin:0;text-align:center;word-break:break-all;">
-      Or copy this URL: ${verifyUrl}
+    <p style="font-size:12px;color:#9db5a8;margin:0;text-align:center;word-break:break-all;line-height:1.6;">
+      Button not working? Copy and paste this link:<br/>
+      <span style="color:#51635b;">${verifyUrl}</span>
     </p>
   `;
 

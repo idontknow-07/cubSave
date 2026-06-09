@@ -157,6 +157,19 @@ function SignupInner() {
   const stepIdx = steps.indexOf(step);
   const stepLabels = ["Account", "Email", "PIN", "Identity"];
 
+  const goBack = () => {
+    if (step === "form") router.push("/");
+    else if (step === "email") setStep("form");
+    else if (step === "pin") setStep("email");
+    else if (step === "identity") setStep("pin");
+  };
+
+  const resetToForm = () => {
+    setStep("form");
+    setForm({ email: "", username: "", password: "", country: "", phone: "" });
+    setUserId(""); setEmailTo(""); setError(""); setResent(false);
+  };
+
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); setLoading(true);
@@ -233,10 +246,10 @@ function SignupInner() {
               Secure<span style={{ color: "#15a35c" }}>Chain</span>
             </span>
           </div>
-          <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
+          <button onClick={goBack} className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
             Back
-          </Link>
+          </button>
         </div>
 
         <div className="flex-1 flex items-start justify-center px-5 sm:px-8 py-8 overflow-y-auto">
@@ -268,7 +281,7 @@ function SignupInner() {
                   <Field label="Username" placeholder="satoshi" value={form.username} onChange={v => setForm({ ...form, username: v })} autoComplete="username" />
                   <PasswordField label="Password" placeholder="Create a strong password" value={form.password} onChange={v => setForm({ ...form, password: v })} autoComplete="new-password" />
                   <SelectField label="Country" value={form.country} onChange={v => setForm({ ...form, country: v })} options={COUNTRIES} placeholder="Select your country" />
-                  <Field label="Phone number (optional)" type="tel" placeholder="+1 234 567 8900" value={form.phone} onChange={v => setForm({ ...form, phone: v })} autoComplete="tel" />
+                  <Field label="Phone number" type="tel" placeholder="+1 234 567 8900" value={form.phone} onChange={v => setForm({ ...form, phone: v })} autoComplete="tel" />
                   {error && <ErrorBox msg={error} />}
                   <GreenBtn type="submit" disabled={loading}>
                     {loading ? <Spinner /> : <span className="flex items-center gap-2">Continue <ArrowRight size={16} /></span>}
@@ -291,7 +304,7 @@ function SignupInner() {
                   Check your inbox
                 </h1>
                 <p className="text-[#51635b] text-[14px] mb-1 leading-relaxed">We sent a verification link to</p>
-                <p className="font-semibold text-[#0a1f17] text-[15px] mb-6 break-all">{emailTo}</p>
+                <p className="font-semibold text-[#0a1f17] text-[15px] mb-6 break-all select-all" style={{ pointerEvents: "none" }}>{emailTo}</p>
                 <div className="bg-[#f4faf6] border border-[#e4efe9] rounded-[14px] px-4 py-4 mb-7 text-[13px] text-[#51635b] leading-relaxed">
                   Click <strong className="text-[#0a1f17]">"Verify my email"</strong> in the email — you&apos;ll be brought right back here to finish setting up your account.
                 </div>
@@ -305,7 +318,8 @@ function SignupInner() {
                   {loading ? <Spinner /> : "Resend verification link"}
                 </GreenBtn>
                 <p className="text-center text-[12.5px] text-[#9db5a8] mt-4">
-                  Wrong email? <Link href="/signup" className="text-[#15a35c] hover:underline">Start over</Link>
+                  Wrong email?{" "}
+                  <button onClick={resetToForm} className="text-[#15a35c] hover:underline font-medium">Start over</button>
                 </p>
               </>
             )}

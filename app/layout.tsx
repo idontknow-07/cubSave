@@ -17,6 +17,10 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "SecureChain",
   description: "Your crypto, your control.",
+  other: {
+    /* Stop iOS Safari from auto-linking email addresses and phone numbers */
+    "format-detection": "telephone=no,email=no,address=no",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
