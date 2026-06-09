@@ -23,37 +23,37 @@ function base(title: string, body: string) {
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${title}</title>
 </head>
-<body style="margin:0;padding:0;background:#f4faf6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4faf6;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Sora','Segoe UI',Roboto,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:48px 20px;">
   <tr><td align="center">
-    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:540px;">
 
-      <!-- Logo -->
-      <tr><td style="padding-bottom:28px;">
-        <table cellpadding="0" cellspacing="0">
+      <!-- Logo Header -->
+      <tr><td style="padding-bottom:32px; text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
           <tr>
-            <td style="width:42px;height:42px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:11px;text-align:center;vertical-align:middle;">
-              <span style="font-size:13px;font-weight:900;color:#fff;line-height:42px;">SC</span>
+            <td style="width:40px;height:40px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:10px;text-align:center;vertical-align:middle;box-shadow:0 4px 12px rgba(21,163,92,0.2);">
+               <img src="https://securechain.io/favicon.ico" width="20" height="20" style="display:block; margin: 10px auto; filter: brightness(0) invert(1);" alt="logo"/>
             </td>
-            <td style="padding-left:11px;vertical-align:middle;">
-              <span style="font-size:18px;font-weight:800;color:#0a1f17;letter-spacing:-0.02em;">Secure<span style="color:#15a35c;">Chain</span></span>
+            <td style="padding-left:12px;vertical-align:middle;">
+              <span style="font-size:22px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;font-family:'Sora',sans-serif;">Secure<span style="color:#15a35c;">Chain</span></span>
             </td>
           </tr>
         </table>
       </td></tr>
 
-      <!-- Card -->
-      <tr><td style="background:#ffffff;border:1px solid #e4efe9;border-radius:20px;padding:36px 32px;">
+      <!-- Main Card -->
+      <tr><td style="background:#ffffff;border:1px solid #edf2f7;border-radius:24px;padding:48px 40px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
         ${body}
       </td></tr>
 
       <!-- Footer -->
-      <tr><td style="padding-top:24px;text-align:center;">
-        <p style="font-size:12px;color:#7b8c84;margin:0;">
-          © ${new Date().getFullYear()} SecureChain · Your crypto, your control.
+      <tr><td style="padding-top:32px;text-align:center;">
+        <p style="font-size:13px;color:#718096;margin:0;line-height:1.5;">
+          © ${new Date().getFullYear()} SecureChain · The most secure way to trade.
         </p>
-        <p style="font-size:12px;color:#7b8c84;margin:6px 0 0;">
-          If you did not request this email, you can safely ignore it.
+        <p style="font-size:12px;color:#a0aec0;margin:8px 0 0;">
+          If you didn't request this email, please ignore it.
         </p>
       </td></tr>
 
