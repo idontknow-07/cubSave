@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowRight, Shield, CreditCard, Lock, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Shield, Lock, CheckCircle2 } from "lucide-react";
 import { COUNTRIES } from "@/components/data";
 
 const ID_TYPES = ["National ID", "Passport", "Driver's License", "SSN", "NIN", "Voter's Card", "Government ID"];
@@ -372,8 +372,9 @@ function SignupInner() {
                   {loading ? <Spinner /> : <span className="flex items-center gap-2">Verify Email <ArrowRight size={16} /></span>}
                 </GreenBtn>
                 <button onClick={resendCode} disabled={loading}
-                  className="w-full mt-3 py-3 text-[14px] font-medium text-[#7b8c84] hover:text-[#15a35c] transition-colors">
-                  Didn&apos;t get it? Resend code
+                  className="w-full mt-3 py-3 text-[14px] font-medium transition-colors disabled:opacity-50">
+                  <span className="text-[#9db5a8]">Didn&apos;t get it?</span>{" "}
+                  <span className="font-semibold text-[#15a35c]">Resend code</span>
                 </button>
                 <p className="text-center text-[12.5px] text-[#9db5a8] mt-1">
                   Wrong email?{" "}
@@ -440,20 +441,13 @@ function SignupInner() {
                 <p className="text-[#51635b] text-[14px] mb-7 leading-relaxed">
                   A government-issued ID is required to secure your wallet. Your information is encrypted and never shared.
                 </p>
-                <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-2.5">ID Type</span>
-                <div className="grid grid-cols-2 gap-2 mb-5">
-                  {ID_TYPES.map(t => (
-                    <button key={t} type="button" onClick={() => setIdType(t)}
-                      className="p-3 rounded-[10px] text-[12.5px] font-semibold text-left flex items-center gap-2 transition-all"
-                      style={{
-                        background: idType === t ? "#eafaf1" : "#f4faf6",
-                        border: idType === t ? "1.5px solid #15a35c" : "1.5px solid #e4efe9",
-                        color: idType === t ? "#15a35c" : "#51635b",
-                      }}>
-                      <CreditCard size={13} className="shrink-0" /><span className="truncate">{t}</span>
-                    </button>
-                  ))}
-                </div>
+                <SelectField
+                  label="ID Type"
+                  value={idType}
+                  onChange={setIdType}
+                  options={ID_TYPES}
+                  placeholder="Select ID type"
+                />
                 <label className="block mb-2">
                   <span className="block text-[13.5px] font-medium text-[#0a1f17] mb-1.5">ID Number</span>
                   <input
