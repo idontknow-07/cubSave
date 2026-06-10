@@ -119,11 +119,11 @@ export default function DashboardSidebar() {
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, WebkitBackdropFilter: "blur(2px)", backdropFilter: "blur(2px)" }} />
 
           <div style={{
-            position: "fixed", top: 0, right: 0, bottom: 0,
+            position: "fixed", top: 0, left: 0, bottom: 0,
             width: "82%", maxWidth: 300,
             background: "var(--bg)", zIndex: 60,
             display: "flex", flexDirection: "column",
-            boxShadow: "-4px 0 32px rgba(0,0,0,0.18)",
+            boxShadow: "4px 0 32px rgba(0,0,0,0.18)",
             paddingTop: "env(safe-area-inset-top)",
             paddingBottom: "env(safe-area-inset-bottom)",
           }}>
