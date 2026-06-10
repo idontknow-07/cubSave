@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!user) return;
-    document.documentElement.classList.toggle("light", user.theme === "light");
+    document.documentElement.classList.toggle("dark", user.theme === "dark");
   }, [user]);
 
   const logout = async () => {

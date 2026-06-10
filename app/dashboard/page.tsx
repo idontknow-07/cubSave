@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import {
   Send, Download, ArrowLeftRight,
-  History, Settings2, Star, TrendingUp, TrendingDown,
+  Star, TrendingUp, TrendingDown,
 } from "lucide-react";
 import Link from "next/link";
 import ComingSoonModal from "@/components/ComingSoonModal";
@@ -13,7 +13,6 @@ import { formatCurrency, formatCrypto } from "@/lib/utils";
 import { getPriceCache, setPriceCache } from "@/lib/priceCache";
 import Sparkline from "@/components/Sparkline";
 import CoinIcon from "@/components/CoinIcon";
-import SettingsDropdown from "@/components/SettingsDropdown";
 
 type WalletData = { coin: string; network: string; balance: number };
 type Prices = Record<string, Record<string, number>>;
@@ -52,7 +51,6 @@ export default function DashboardPage() {
   const [wallets, setWallets] = useState<WalletData[]>([]);
   const [prices, setPrices] = useState<Prices>(() => getPriceCache() ?? {});
   const [pricesLoaded, setPricesLoaded] = useState(() => !!getPriceCache());
-  const [showSettings, setShowSettings] = useState(false);
   const [coming, setComing] = useState("");
   const [tab, setTab] = useState<"assets" | "watchlist">("assets");
   const [watchlist, setWatchlist] = useState<Set<string>>(() => loadWL());
@@ -154,20 +152,11 @@ export default function DashboardPage() {
 
       {/* Mobile top bar — hidden on desktop */}
       <div className="dash-mobile-top" style={{
-        display: "flex", alignItems: "center", justifyContent: "flex-end",
-        padding: "14px 16px 14px 66px", borderBottom: "1px solid var(--border)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "14px 66px", borderBottom: "1px solid var(--border)",
         background: "var(--surface)",
       }}>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={() => setShowSettings(true)}
-            style={{ width: 34, height: 34, borderRadius: 9, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-            <Settings2 size={16} color="var(--text-2)" />
-          </button>
-          <Link href="/dashboard/history"
-            style={{ width: 34, height: 34, borderRadius: 9, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
-            <History size={16} color="var(--text-2)" />
-          </Link>
-        </div>
+        <p style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", letterSpacing: "-0.01em", margin: 0 }}>SecureChain</p>
       </div>
 
       {/* Main content */}
@@ -337,7 +326,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {showSettings && <SettingsDropdown onClose={() => setShowSettings(false)} />}
       {coming && <ComingSoonModal label={coming} onClose={() => setComing("")} />}
 
       <style>{`

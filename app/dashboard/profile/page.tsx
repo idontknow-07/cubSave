@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Copy, Eye, EyeOff, CheckCircle2, ArrowLeft } from "lucide-react";
+import { Copy, Eye, EyeOff, CheckCircle2, ArrowLeft, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Profile = {
@@ -114,7 +114,7 @@ export default function ProfilePage() {
                 </button>
               </div>
               <p style={{ fontSize: 11, color: "var(--loss)", fontWeight: 600, marginTop: 6, display: "flex", alignItems: "center", gap: 4 }}>
-                ⚠ Never share this phrase with anyone.
+                <AlertTriangle size={12} /> Never share this phrase with anyone.
               </p>
             </div>
           </>

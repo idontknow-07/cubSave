@@ -376,10 +376,6 @@ function SignupInner() {
                   <span className="text-[#9db5a8]">Didn&apos;t get it?</span>{" "}
                   <span className="font-semibold text-[#15a35c]">Resend code</span>
                 </button>
-                <p className="text-center text-[12.5px] text-[#9db5a8] mt-1">
-                  Wrong email?{" "}
-                  <button onClick={resetToForm} className="text-[#15a35c] hover:underline font-medium">Start over</button>
-                </p>
               </>
             )}
 

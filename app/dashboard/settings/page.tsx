@@ -4,7 +4,7 @@ import React from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
   Palette, Sliders, Shield, Info, HeadphonesIcon,
-  Eye, EyeOff, ChevronRight,
+  Eye, EyeOff, ChevronRight, Moon, Sun, DollarSign, Euro, ChevronLeft,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -119,14 +119,14 @@ export default function SettingsPage() {
             onClick={() => { setPanel(null); setShowPhrase(false); }}
             style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--accent)", background: "none", border: "none", cursor: "pointer", marginBottom: 24 }}
           >
-            ← Back
+            <ChevronLeft size={16} /> Back
           </button>
 
           {panel === "theme" && (
             <div>
               <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>Appearance</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                {[{ value: "dark", emoji: "🌙", label: "Dark" }, { value: "light", emoji: "☀️", label: "Light" }].map(t => (
+                {([{ value: "dark", Icon: Moon, label: "Dark" }, { value: "light", Icon: Sun, label: "Light" }] as { value: string; Icon: React.ElementType; label: string }[]).map(t => (
                   <button key={t.value} onClick={() => updatePrefs({ theme: t.value })}
                     style={{
                       display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
@@ -136,7 +136,7 @@ export default function SettingsPage() {
                       color: user?.theme === t.value ? "var(--accent)" : "var(--text-2)",
                       fontWeight: 700, fontSize: 15, transition: "all 0.15s",
                     }}>
-                    <span style={{ fontSize: 32 }}>{t.emoji}</span>
+                    <t.Icon size={28} />
                     {t.label}
                     {user?.theme === t.value && (
                       <span style={{ fontSize: 11, color: "var(--accent)" }}>Active</span>
@@ -151,7 +151,7 @@ export default function SettingsPage() {
             <div>
               <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>Display Currency</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                {[{ value: "USD", flag: "🇺🇸", label: "US Dollar" }, { value: "EUR", flag: "🇪🇺", label: "Euro" }].map(c => (
+                {([{ value: "USD", Icon: DollarSign, label: "US Dollar" }, { value: "EUR", Icon: Euro, label: "Euro" }] as { value: string; Icon: React.ElementType; label: string }[]).map(c => (
                   <button key={c.value} onClick={() => updatePrefs({ currencyPref: c.value })}
                     style={{
                       display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
@@ -161,7 +161,7 @@ export default function SettingsPage() {
                       color: user?.currencyPref === c.value ? "var(--accent)" : "var(--text-2)",
                       fontWeight: 700, fontSize: 14, transition: "all 0.15s",
                     }}>
-                    <span style={{ fontSize: 32 }}>{c.flag}</span>
+                    <c.Icon size={28} />
                     {c.value} · {c.label}
                     {user?.currencyPref === c.value && (
                       <span style={{ fontSize: 11, color: "var(--accent)" }}>Active</span>

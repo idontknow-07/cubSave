@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard, Send, TrendingUp, Clock, Settings2,
-  LogOut, Download, ArrowLeftRight, User, Menu, X,
+  LogOut, Download, ArrowLeftRight, User, Menu, X, Link2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import ComingSoonModal from "./ComingSoonModal";
@@ -27,6 +27,7 @@ const LOGO_SVG = (
 function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
   const { logout } = useAuth();
   const [swapOpen, setSwapOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
 
   const rememberReturn = () => {
     const returnTo = path && !path.startsWith("/dashboard/withdraw") ? path : "/dashboard";
@@ -72,6 +73,12 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
           <ArrowLeftRight size={18} style={{ flexShrink: 0 }} />
           Swap
         </button>
+
+        <button onClick={() => setWalletOpen(true)}
+          style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 13, padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", cursor: "pointer", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5, width: "100%", textAlign: "left" }}>
+          <Link2 size={18} style={{ flexShrink: 0 }} />
+          Wallet Connect
+        </button>
       </nav>
 
       <div style={{ borderTop: "1px solid var(--border)", padding: "10px 12px 14px" }}>
@@ -83,6 +90,7 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
       </div>
 
       {swapOpen && <ComingSoonModal label="Swap" onClose={() => setSwapOpen(false)} />}
+      {walletOpen && <ComingSoonModal label="Wallet Connect" onClose={() => setWalletOpen(false)} />}
     </>
   );
 }

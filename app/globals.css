@@ -170,7 +170,7 @@ input, select, textarea {
 .input {
   width: 100%;
   padding: 13px 16px;
-  background: #ffffff;
+  background: var(--bg);
   color: var(--text);
   border: 1.5px solid var(--border);
   border-radius: 14px;
@@ -330,4 +330,22 @@ input, select, textarea {
 
 .pulse {
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* ── Dark Theme ───────────────────── */
+html.dark {
+  --bg: #0c1710;
+  --surface: #111e15;
+  --card: #162118;
+  --card-hover: #1c2b1f;
+  --border: #213027;
+  --border-2: #2e4237;
+  --text: #e4f0e8;
+  --text-2: #8aad96;
+  --text-3: #5e7a6a;
+  --accent-dim: rgba(21, 163, 92, 0.15);
+  --accent-glow: rgba(21, 163, 92, 0.22);
+  --gain-dim: rgba(21, 163, 92, 0.15);
+  --loss-dim: rgba(229, 57, 53, 0.15);
+  --yellow-dim: rgba(245, 158, 11, 0.15);
 }

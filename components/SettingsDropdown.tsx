@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
+import React from "react";
 import { useAuth } from "@/context/AuthContext";
-import { X, Shield, Palette, Sliders, Info, HeadphonesIcon, Wifi, LogOut, ChevronRight, Eye, EyeOff } from "lucide-react";
+import { X, Shield, Palette, Sliders, Info, HeadphonesIcon, Wifi, LogOut, ChevronRight, Eye, EyeOff, ChevronLeft, Moon, Sun, DollarSign, Euro, Link2 } from "lucide-react";
 
 type Panel = null | "security" | "theme" | "currency" | "about" | "support" | "wallet";
 
@@ -59,7 +60,7 @@ export default function SettingsDropdown({ onClose }: { onClose: () => void }) {
               onClick={() => { setPanel(null); setShowMnemonic(false); }}
               style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700, color: "var(--accent)", background: "none", border: "none", cursor: "pointer", marginBottom: 20 }}
             >
-              ← Back
+              <ChevronLeft size={15} /> Back
             </button>
             <PanelContent panel={panel} mnemonic={mnemonic} showMnemonic={showMnemonic}
               setShowMnemonic={setShowMnemonic} user={user} updatePrefs={updatePrefs} />
@@ -158,7 +159,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
     <div>
       <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>Appearance</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        {[{ value: "dark", emoji: "🌙", label: "Dark" }, { value: "light", emoji: "☀️", label: "Light" }].map(t => (
+        {([{ value: "dark", Icon: Moon, label: "Dark" }, { value: "light", Icon: Sun, label: "Light" }] as { value: string; Icon: React.ElementType; label: string }[]).map(t => (
           <button key={t.value} onClick={() => updatePrefs({ theme: t.value })}
             style={{
               display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
@@ -168,7 +169,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
               color: user?.theme === t.value ? "var(--accent)" : "var(--text-2)",
               fontWeight: 700, fontSize: 14,
             }}>
-            <span style={{ fontSize: 24 }}>{t.emoji}</span>
+            <t.Icon size={24} />
             {t.label}
           </button>
         ))}
@@ -180,7 +181,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
     <div>
       <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 16 }}>Display Currency</p>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        {[{ value: "USD", flag: "🇺🇸", label: "US Dollar" }, { value: "EUR", flag: "🇪🇺", label: "Euro" }].map(c => (
+        {([{ value: "USD", Icon: DollarSign, label: "US Dollar" }, { value: "EUR", Icon: Euro, label: "Euro" }] as { value: string; Icon: React.ElementType; label: string }[]).map(c => (
           <button key={c.value} onClick={() => updatePrefs({ currencyPref: c.value })}
             style={{
               display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
@@ -190,7 +191,7 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
               color: user?.currencyPref === c.value ? "var(--accent)" : "var(--text-2)",
               fontWeight: 700, fontSize: 13,
             }}>
-            <span style={{ fontSize: 24 }}>{c.flag}</span>
+            <c.Icon size={24} />
             {c.value} · {c.label}
           </button>
         ))}
@@ -200,7 +201,9 @@ function PanelContent({ panel, mnemonic, showMnemonic, setShowMnemonic, user, up
 
   if (panel === "wallet") return (
     <div style={{ textAlign: "center", padding: "16px 0" }}>
-      <div style={{ fontSize: 40, marginBottom: 12 }}>🔗</div>
+      <div style={{ width: 56, height: 56, borderRadius: 16, background: "var(--accent-dim)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+        <Link2 size={26} color="var(--accent)" />
+      </div>
       <p style={{ fontWeight: 800, fontSize: 16, color: "var(--text)", marginBottom: 8 }}>Wallet Connection</p>
       <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 20 }}>Connect an external wallet to manage assets across chains.</p>
       <button className="btn btn-ghost" style={{ fontSize: 14 }}>Connect Wallet <span style={{ color: "var(--text-3)", fontSize: 12 }}>(Soon)</span></button>

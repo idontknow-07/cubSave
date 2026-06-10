@@ -69,16 +69,8 @@ export default function MarketsPage() {
     <div style={{ background: "var(--bg)", minHeight: "100vh", padding: "0 0 60px" }}>
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "28px 24px 0", maxWidth: 900, margin: "0 auto" }}>
-        <div>
-          <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>Markets</h1>
-          <p style={{ fontSize: 13, color: "var(--text-3)", marginTop: 3, fontWeight: 500 }}>Live crypto prices</p>
-        </div>
-        {loaded && (
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--gain)", fontWeight: 700, background: "rgba(57,217,138,0.1)", padding: "5px 12px", borderRadius: 99, border: "1px solid rgba(57,217,138,0.2)" }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--gain)", display: "inline-block", animation: "pulse 2s infinite" }} /> Live
-          </div>
-        )}
+      <div className="markets-hd" style={{ padding: "28px 24px 0", maxWidth: 900, margin: "0 auto" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>Markets</h1>
       </div>
 
       {/* Search */}
@@ -232,6 +224,7 @@ export default function MarketsPage() {
           );
         })}
       </div>
+      <style>{`@media (max-width: 899px) { .markets-hd { padding-left: 66px !important; } }`}</style>
     </div>
   );
 }
