@@ -6,9 +6,9 @@ import InstallPrompt from "@/components/InstallPrompt";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
+      <div style={{ display: "flex", height: "100dvh", overflow: "hidden", background: "var(--bg)" }}>
         <DashboardSidebar />
-        <div style={{ flex: 1, minWidth: 0, overflowY: "auto" }}>
+        <div style={{ flex: 1, minWidth: 0, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
           <InstallPrompt />
           {children}
         </div>

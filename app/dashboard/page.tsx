@@ -150,22 +150,14 @@ export default function DashboardPage() {
   };
 
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
+    <div style={{ background: "var(--bg)", minHeight: "100dvh", paddingBottom: "max(88px, calc(64px + env(safe-area-inset-bottom)))" }}>
 
       {/* Mobile top bar — hidden on desktop */}
       <div className="dash-mobile-top" style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "14px 16px", borderBottom: "1px solid var(--border)",
+        display: "flex", alignItems: "center", justifyContent: "flex-end",
+        padding: "14px 16px 14px 66px", borderBottom: "1px solid var(--border)",
         background: "var(--surface)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
-                <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
-              </svg>
-            </div>
-          <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)" }}>SecureChain</span>
-        </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={() => setShowSettings(true)}
             style={{ width: 34, height: 34, borderRadius: 9, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>

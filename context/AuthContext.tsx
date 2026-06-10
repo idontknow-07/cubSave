@@ -43,13 +43,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Load cache immediately (sync) so UI shows without flicker
+    const cached = readCache();
+    if (cached) setUserState(cached);
+
+    // Then verify the cookie with the server
     fetch("/api/auth/me")
       .then((r) => r.json())
       .then((d) => {
         if (d.user) {
           setUser(d.user);
         } else {
-          // Cookie gone/expired — clear cached state
           setUserState(null);
           localStorage.removeItem(USER_KEY);
         }
