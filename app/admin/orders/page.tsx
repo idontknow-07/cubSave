@@ -117,8 +117,8 @@ export default function OrdersPage() {
       </div>
 
       {/* Controls */}
-      <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-        <div style={{ display: "flex", gap: 4, padding: 4, borderRadius: 12, background: "var(--card)", border: "1px solid var(--border)", flexShrink: 0 }}>
+      <div className="orders-controls" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+        <div style={{ display: "flex", gap: 4, padding: 4, borderRadius: 12, background: "var(--card)", border: "1px solid var(--border)", alignSelf: "flex-start" }}>
           {(["withdraw","deposit"] as const).map(t => {
             const a = tab === t;
             const Icon = t === "withdraw" ? ArrowUpCircle : ArrowDownCircle;
@@ -131,9 +131,9 @@ export default function OrdersPage() {
             );
           })}
         </div>
-        <div style={{ position: "relative", flex: 1, maxWidth: 340 }}>
+        <div style={{ position: "relative", width: "100%", maxWidth: 380 }}>
           <Search size={14} style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "var(--text-3)", pointerEvents: "none" }} />
-          <input className="input" style={{ paddingLeft: 38, paddingTop: 9, paddingBottom: 9, fontSize: 14 }} placeholder="Search by username…" value={search} onChange={e => { setLoading(true); setSearch(e.target.value); }} />
+          <input className="input" style={{ paddingLeft: 38, paddingTop: 10, paddingBottom: 10, fontSize: 15, width: "100%" }} placeholder="Search by username or email…" value={search} onChange={e => { setLoading(true); setSearch(e.target.value); }} />
         </div>
       </div>
 
