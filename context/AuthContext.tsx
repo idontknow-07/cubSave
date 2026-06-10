@@ -19,17 +19,42 @@ type AuthContextType = {
   updatePrefs: (prefs: Partial<Pick<User, "currencyPref" | "theme">>) => Promise<void>;
 };
 
+const USER_KEY = "sc_session_user";
+
+function readCache(): User | null {
+  try {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? (JSON.parse(raw) as User) : null;
+  } catch { return null; }
+}
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(readCache);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const setUser = (u: User | null) => {
+    setUserState(u);
+    if (u) localStorage.setItem(USER_KEY, JSON.stringify(u));
+    else localStorage.removeItem(USER_KEY);
+  };
 
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
-      .then((d) => { if (d.user) setUser(d.user); })
+      .then((d) => {
+        if (d.user) {
+          setUser(d.user);
+        } else {
+          // Cookie gone/expired — clear cached state
+          setUserState(null);
+          localStorage.removeItem(USER_KEY);
+        }
+      })
+      .catch(() => { /* network error — keep cached state, don't log out */ })
       .finally(() => setLoading(false));
   }, []);
 
@@ -40,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
+    setUser(null);          // also clears localStorage
     router.push("/login");
   };
 
@@ -51,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify(prefs),
     });
     const data = await res.json();
-    if (data.user) setUser(data.user);
+    if (data.user) setUser(data.user);   // caches updated prefs too
   };
 
   return (
