@@ -153,7 +153,7 @@ export default function DashboardPage() {
       {/* Mobile top bar — hidden on desktop */}
       <div className="dash-mobile-top" style={{
         display: "flex", alignItems: "center",
-        padding: "12px 66px 12px 16px",
+        height: 66, padding: "0 66px 0 16px",
         background: "var(--bg)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

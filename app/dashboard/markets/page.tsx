@@ -69,7 +69,7 @@ export default function MarketsPage() {
     <div style={{ background: "var(--bg)", minHeight: "100vh", padding: "0 0 60px" }}>
 
       {/* Mobile header — aligns with hamburger on right */}
-      <div className="markets-mobile-hd" style={{ display: "none", alignItems: "center", padding: "12px 66px 12px 16px", background: "var(--bg)" }}>
+      <div className="markets-mobile-hd" style={{ display: "none", alignItems: "center", height: 66, padding: "0 66px 0 16px", background: "var(--bg)" }}>
         <h1 style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", margin: 0 }}>Markets</h1>
       </div>
       {/* Desktop header */}
