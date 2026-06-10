@@ -16,17 +16,23 @@ const PUBLIC_PATHS = [
   "/login",
   "/signup",
   "/forgot-password",
+  "/reset-password",
   "/api/auth/",
 ];
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
-  if (pathname === "/") return NextResponse.next();
-
   const token = req.cookies.get("token")?.value;
   const payload = token ? decodeJwt(token) : null;
+
+  // Logged-in users don't need the landing/auth pages — send them to dashboard
+  if (payload && (pathname === "/" || PUBLIC_PATHS.some((p) => pathname.startsWith(p)))) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) return NextResponse.next();
+  if (pathname === "/") return NextResponse.next();
 
   if (!payload) {
     if (pathname.startsWith("/api/")) {
@@ -47,6 +53,11 @@ export function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
     "/dashboard",
     "/dashboard/:path*",
     "/admin",
