@@ -35,8 +35,8 @@ export default function BottomNav() {
         >
           <div style={{
             width: 56, height: 56, borderRadius: 18,
-            background: "#ffffff",
-            border: "1.5px solid #c8e8d5",
+            background: "var(--bg)",
+            border: "1.5px solid var(--border-2)",
             display: "flex", alignItems: "center", justifyContent: "center",
             boxShadow: "0 4px 18px rgba(21,163,92,0.15), 0 2px 8px rgba(0,0,0,0.06)",
           }}>

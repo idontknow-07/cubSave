@@ -68,8 +68,12 @@ export default function MarketsPage() {
   return (
     <div style={{ background: "var(--bg)", minHeight: "100vh", padding: "0 0 60px" }}>
 
-      {/* Header */}
-      <div className="markets-hd" style={{ padding: "28px 24px 0", maxWidth: 900, margin: "0 auto" }}>
+      {/* Mobile header — aligns with hamburger on right */}
+      <div className="markets-mobile-hd" style={{ display: "none", alignItems: "center", padding: "12px 66px 12px 16px", background: "var(--bg)" }}>
+        <h1 style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em", margin: 0 }}>Markets</h1>
+      </div>
+      {/* Desktop header */}
+      <div className="markets-desktop-hd" style={{ padding: "28px 24px 0", maxWidth: 900, margin: "0 auto" }}>
         <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>Markets</h1>
       </div>
 
@@ -224,7 +228,12 @@ export default function MarketsPage() {
           );
         })}
       </div>
-      <style>{`@media (max-width: 899px) { .markets-hd { padding-left: 66px !important; } }`}</style>
+      <style>{`
+        @media (max-width: 899px) {
+          .markets-mobile-hd { display: flex !important; }
+          .markets-desktop-hd { display: none !important; }
+        }
+      `}</style>
     </div>
   );
 }

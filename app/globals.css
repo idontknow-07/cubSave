@@ -267,11 +267,16 @@ input, select, textarea {
 
 /* ── Glass nav ───────────────────── */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid var(--border);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.06);
+}
+
+html.dark .glass-nav {
+  background: rgba(12, 23, 16, 0.96);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* ── Premium card ────────────────── */
@@ -348,4 +353,55 @@ html.dark {
   --gain-dim: rgba(21, 163, 92, 0.15);
   --loss-dim: rgba(229, 57, 53, 0.15);
   --yellow-dim: rgba(245, 158, 11, 0.15);
+}
+
+html.dark body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Inputs */
+html.dark .input {
+  background: var(--card);
+  border-color: var(--border-2);
+  color: var(--text);
+}
+
+html.dark .input:focus {
+  border-color: var(--accent);
+  background: var(--card);
+}
+
+/* Cards */
+html.dark .card-premium {
+  background: var(--card);
+  border-color: var(--border);
+}
+
+html.dark .card-premium:hover {
+  border-color: var(--border-2);
+}
+
+/* Buttons */
+html.dark .btn-ghost {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border-2);
+}
+
+html.dark .btn-ghost:hover:not(:disabled) {
+  background: var(--card-hover);
+  border-color: var(--border-2);
+}
+
+/* Scrollbar */
+html.dark ::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+}
+
+/* Safari webkit fixes */
+@supports (-webkit-touch-callout: none) {
+  .dash-layout-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
 }

@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <AuthProvider>
       <div style={{ display: "flex", height: "100dvh", overflow: "hidden", background: "var(--bg)" }}>
         <DashboardSidebar />
-        <div style={{ flex: 1, minWidth: 0, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
+        <div className="dash-layout-scroll" style={{ flex: 1, minWidth: 0, overflowY: "auto", WebkitOverflowScrolling: "touch", overscrollBehaviorY: "contain" }}>
           <InstallPrompt />
           {children}
         </div>

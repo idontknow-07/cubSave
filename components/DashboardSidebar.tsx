@@ -3,8 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
-  LayoutDashboard, Send, TrendingUp, Clock, Settings2,
-  LogOut, Download, ArrowLeftRight, User, Menu, X, Link2,
+  LayoutDashboard, TrendingUp, Clock, Settings2,
+  LogOut, User, Menu, X, Link2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import ComingSoonModal from "./ComingSoonModal";
@@ -16,7 +16,6 @@ const NAV = [
   { icon: User,             label: "Profile",   href: "/dashboard/profile", exact: false },
   { icon: Settings2,        label: "Settings",  href: "/dashboard/settings", exact: false },
 ];
-const WITHDRAW_RETURN_KEY = "cv_withdraw_return_to";
 
 const LOGO_SVG = (
   <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" width="17" height="17">
@@ -26,13 +25,7 @@ const LOGO_SVG = (
 
 function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
   const { logout } = useAuth();
-  const [swapOpen, setSwapOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
-
-  const rememberReturn = () => {
-    const returnTo = path && !path.startsWith("/dashboard/withdraw") ? path : "/dashboard";
-    window.sessionStorage.setItem(WITHDRAW_RETURN_KEY, returnTo);
-  };
 
   return (
     <>
@@ -56,26 +49,8 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
           );
         })}
 
-        <Link href="/dashboard/deposit" onClick={onNav}
-          style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 13, textDecoration: "none", padding: "12px 13px", borderRadius: 11, background: "var(--accent-dim)", border: "1px solid rgba(21,163,92,0.18)", color: "var(--accent)", fontWeight: 700, fontSize: 14.5 }}>
-          <Download size={18} style={{ flexShrink: 0 }} />
-          Deposit
-        </Link>
-
-        <Link href="/dashboard/withdraw" onClick={() => { rememberReturn(); onNav?.(); }}
-          style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 13, textDecoration: "none", padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5 }}>
-          <Send size={18} style={{ flexShrink: 0 }} />
-          Send
-        </Link>
-
-        <button onClick={() => setSwapOpen(true)}
-          style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 13, padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", cursor: "pointer", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5, width: "100%", textAlign: "left" }}>
-          <ArrowLeftRight size={18} style={{ flexShrink: 0 }} />
-          Swap
-        </button>
-
         <button onClick={() => setWalletOpen(true)}
-          style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 13, padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", cursor: "pointer", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5, width: "100%", textAlign: "left" }}>
+          style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 13, padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", cursor: "pointer", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5, width: "100%", textAlign: "left" }}>
           <Link2 size={18} style={{ flexShrink: 0 }} />
           Wallet Connect
         </button>
@@ -89,7 +64,6 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
         </button>
       </div>
 
-      {swapOpen && <ComingSoonModal label="Swap" onClose={() => setSwapOpen(false)} />}
       {walletOpen && <ComingSoonModal label="Wallet Connect" onClose={() => setWalletOpen(false)} />}
     </>
   );
@@ -100,9 +74,7 @@ export default function DashboardSidebar() {
   const path = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Close drawer on route change
   useEffect(() => { setDrawerOpen(false); }, [path]);
-  // Prevent body scroll when drawer open
   useEffect(() => {
     document.body.style.overflow = drawerOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -133,27 +105,25 @@ export default function DashboardSidebar() {
         <NavItems path={path} />
       </aside>
 
-      {/* ── Mobile hamburger button ──────────────── */}
+      {/* ── Mobile hamburger — fixed RIGHT ──────── */}
       <button className="cv-hamburger"
         onClick={() => setDrawerOpen(true)}
-        style={{ position: "fixed", top: 14, left: 14, zIndex: 40, width: 38, height: 38, borderRadius: 11, background: "var(--surface)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+        style={{ position: "fixed", top: 14, right: 14, zIndex: 40, width: 38, height: 38, borderRadius: 11, background: "var(--surface)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
         <Menu size={20} color="var(--text)" />
       </button>
 
-      {/* ── Mobile drawer overlay ────────────────── */}
+      {/* ── Mobile drawer — slides from RIGHT ───── */}
       {drawerOpen && (
         <>
-          {/* Backdrop */}
           <div onClick={() => setDrawerOpen(false)}
-            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, backdropFilter: "blur(2px)" }} />
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50, WebkitBackdropFilter: "blur(2px)", backdropFilter: "blur(2px)" }} />
 
-          {/* Drawer panel */}
           <div style={{
-            position: "fixed", top: 0, left: 0, bottom: 0,
+            position: "fixed", top: 0, right: 0, bottom: 0,
             width: "82%", maxWidth: 300,
             background: "var(--bg)", zIndex: 60,
             display: "flex", flexDirection: "column",
-            boxShadow: "4px 0 32px rgba(0,0,0,0.15)",
+            boxShadow: "-4px 0 32px rgba(0,0,0,0.18)",
             paddingTop: "env(safe-area-inset-top)",
             paddingBottom: "env(safe-area-inset-bottom)",
           }}>

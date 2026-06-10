@@ -152,11 +152,18 @@ export default function DashboardPage() {
 
       {/* Mobile top bar — hidden on desktop */}
       <div className="dash-mobile-top" style={{
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "14px 66px", borderBottom: "1px solid var(--border)",
-        background: "var(--surface)",
+        display: "flex", alignItems: "center",
+        padding: "12px 66px 12px 16px",
+        background: "var(--bg)",
       }}>
-        <p style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", letterSpacing: "-0.01em", margin: 0 }}>SecureChain</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 9, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" width="15" height="15">
+              <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
+            </svg>
+          </div>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", letterSpacing: "-0.01em" }}>SecureChain</span>
+        </div>
       </div>
 
       {/* Main content */}
