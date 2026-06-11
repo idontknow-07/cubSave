@@ -1,116 +1,183 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.EMAIL_FROM || "SecureChain <onboarding@resend.dev>";
+const FROM = process.env.EMAIL_FROM || "SecureChain <noreply@securechain.app>";
 
-const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="display:block;margin:10px auto;"><path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/></svg>`;
-
-function base(title: string, body: string) {
+/* ─────────────────────────────────────────
+   Base layout — dark gradient header,
+   white card body, clean footer.
+   SVG is intentionally avoided — Gmail strips it.
+   Logo mark uses a styled table cell with text.
+───────────────────────────────────────── */
+function base(title: string, preheader: string, body: string) {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="x-apple-disable-message-reformatting"/>
 <title>${title}</title>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
 </head>
-<body style="margin:0;padding:0;background:#f0f5f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f5f2;padding:44px 20px;">
-  <tr><td align="center">
-    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+<body style="margin:0;padding:0;background:#f0f4f2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
-      <!-- Logo -->
-      <tr><td style="padding-bottom:24px;text-align:center;">
-        <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
-          <tr>
-            <td style="width:42px;height:42px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:11px;text-align:center;vertical-align:middle;">
-              ${LOGO_SVG}
-            </td>
-            <td style="padding-left:11px;vertical-align:middle;">
-              <span style="font-size:20px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;">Secure<span style="color:#15a35c;">Chain</span></span>
-            </td>
-          </tr>
-        </table>
-      </td></tr>
+<!-- Preheader (hidden preview text in inbox) -->
+<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#f0f4f2;">
+  ${preheader}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;
+</div>
 
-      <!-- Card -->
-      <tr><td style="background:#ffffff;border:1px solid #dde8e2;border-radius:22px;padding:44px 40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
-        ${body}
-      </td></tr>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f4f2;">
+<tr><td align="center" style="padding:44px 16px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:540px;">
 
-      <!-- Footer -->
-      <tr><td style="padding-top:26px;text-align:center;">
-        <p style="font-size:12px;color:#91a89e;margin:0;line-height:1.6;">© ${new Date().getFullYear()} SecureChain · The most secure way to trade.</p>
-        <p style="font-size:11.5px;color:#aabcb5;margin:5px 0 0;">If you didn't request this email, you can safely ignore it.</p>
-      </td></tr>
-
+  <!-- ── Header card ── -->
+  <tr><td style="background:linear-gradient(150deg,#062912 0%,#0d4a22 50%,#15a35c 100%);border-radius:20px 20px 0 0;padding:36px 40px 32px;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td valign="middle">
+          <!-- Logo mark -->
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="width:40px;height:40px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:11px;text-align:center;vertical-align:middle;">
+                <span style="font-size:16px;font-weight:900;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:40px;display:block;letter-spacing:-0.04em;">SC</span>
+              </td>
+              <td style="padding-left:12px;vertical-align:middle;">
+                <span style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">SecureChain</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td align="right" valign="middle">
+          <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;">Secure &amp; Private</span>
+        </td>
+      </tr>
     </table>
   </td></tr>
+
+  <!-- ── White body card ── -->
+  <tr><td style="background:#ffffff;padding:40px 40px 36px;border-left:1px solid #dde8e2;border-right:1px solid #dde8e2;">
+    ${body}
+  </td></tr>
+
+  <!-- ── Footer strip ── -->
+  <tr><td style="background:#f8faf8;border:1px solid #dde8e2;border-top:none;border-radius:0 0 20px 20px;padding:24px 40px;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td>
+          <p style="margin:0;font-size:12px;color:#8fa898;line-height:1.6;">© ${new Date().getFullYear()} SecureChain. All rights reserved.</p>
+          <p style="margin:4px 0 0;font-size:11.5px;color:#a8b8af;line-height:1.6;">Your crypto, your control.</p>
+        </td>
+        <td align="right" valign="middle">
+          <span style="display:inline-block;width:28px;height:28px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:8px;text-align:center;line-height:28px;font-size:11px;font-weight:900;color:#ffffff;letter-spacing:-0.03em;font-family:-apple-system,sans-serif;">SC</span>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <!-- ── Disclaimer ── -->
+  <tr><td style="padding:20px 0 0;text-align:center;">
+    <p style="font-size:11px;color:#b0bcb8;margin:0;line-height:1.7;">
+      If you didn't request this email, no action is needed — you can safely ignore it.<br/>
+      This message was sent to you because your email is registered with SecureChain.
+    </p>
+  </td></tr>
+
+</table>
+</td></tr>
 </table>
 </body>
 </html>`;
 }
 
+/* OTP digit boxes */
 function otpBoxes(code: string) {
   const cells = code.split("").map((d, i) =>
-    `<td style="width:50px;height:60px;background:#f2fbf6;border:2px solid #b8dfc8;border-radius:12px;text-align:center;vertical-align:middle;font-size:30px;font-weight:900;color:#15a35c;font-family:monospace,monospace;">${d}</td>${i < 5 ? '<td style="width:8px;"></td>' : ''}`
+    `<td style="width:54px;height:64px;background:#f4fdf8;border:2px solid #15a35c;border-radius:13px;text-align:center;vertical-align:middle;font-size:32px;font-weight:900;color:#15a35c;font-family:Courier,monospace;">${d}</td>${i < 5 ? '<td style="width:8px;"></td>' : ''}`
   ).join("");
-  return `<table cellpadding="0" cellspacing="0" style="margin:0 auto;"><tr>${cells}</tr></table>`;
+  return `<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>${cells}</tr></table>`;
 }
+
+/* Divider */
+const DIVIDER = `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0;"><tr><td style="border-top:1px solid #eef2f0;"></td></tr></table>`;
+
+/* ─── Email senders ─────────────────── */
 
 export async function sendVerificationEmail(to: string, username: string, code: string) {
   const body = `
-    <h2 style="font-size:23px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">Verify your email</h2>
-    <p style="font-size:15px;color:#4a6358;margin:0 0 32px;line-height:1.65;">
-      Hey <strong style="color:#0a1f17;">${username}</strong> — enter this code to confirm your SecureChain account.
+    <!-- Title -->
+    <h1 style="margin:0 0 10px;font-size:26px;font-weight:900;color:#0a1f17;letter-spacing:-0.03em;line-height:1.2;">Verify your email</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#4a6358;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;">${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
     </p>
 
+    <!-- OTP -->
     ${otpBoxes(code)}
 
-    <p style="font-size:12.5px;color:#91a89e;text-align:center;margin:18px 0 32px;line-height:1.6;">
-      Expires in <strong style="color:#4a6358;">15 minutes</strong> &nbsp;·&nbsp; Never share this code with anyone
-    </p>
+    <!-- Expiry note -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:22px 0;">
+      <tr>
+        <td align="center">
+          <span style="font-size:12.5px;color:#8fa898;">Expires in&nbsp;</span>
+          <span style="font-size:12.5px;font-weight:700;color:#4a6358;">15 minutes</span>
+          <span style="font-size:12.5px;color:#8fa898;">&nbsp;·&nbsp; Never share this code</span>
+        </td>
+      </tr>
+    </table>
 
-    <div style="background:#f7fdf9;border:1px solid #ddefea;border-radius:14px;padding:16px 20px;">
-      <p style="font-size:13px;color:#4a6358;margin:0;line-height:1.6;text-align:center;">
-        Didn't sign up? You can safely ignore this email — your address won't be added.
-      </p>
-    </div>
+    ${DIVIDER}
+
+    <!-- Safety note -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;background:#f8faf8;border-left:3px solid #15a35c;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13px;color:#4a6358;line-height:1.65;">
+            Didn't create an account? This email was sent because someone entered your address on SecureChain. Your email won't be added unless this code is used.
+          </p>
+        </td>
+      </tr>
+    </table>
   `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `${code} is your SecureChain verification code`,
-    html: base("Verify your email", body),
+    subject: `${code} — Your SecureChain verification code`,
+    html: base("Verify your email", `Your verification code is ${code}`, body),
   });
 }
 
 export async function sendPasswordResetEmail(to: string, username: string, code: string) {
   const body = `
-    <h2 style="font-size:23px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">Reset your password</h2>
-    <p style="font-size:15px;color:#4a6358;margin:0 0 32px;line-height:1.65;">
-      Hey <strong style="color:#0a1f17;">${username}</strong> — use this code to reset your SecureChain password.
+    <!-- Title -->
+    <h1 style="margin:0 0 10px;font-size:26px;font-weight:900;color:#0a1f17;letter-spacing:-0.03em;line-height:1.2;">Reset your password</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#4a6358;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;">${username}</strong> — use the code below to reset your password. It expires in 15 minutes.
     </p>
 
+    <!-- OTP -->
     ${otpBoxes(code)}
 
-    <p style="font-size:12.5px;color:#91a89e;text-align:center;margin:18px 0 32px;line-height:1.6;">
-      Expires in <strong style="color:#4a6358;">15 minutes</strong>
-    </p>
+    <p style="margin:20px 0 0;font-size:12.5px;color:#8fa898;text-align:center;">One-time code · Do not share</p>
 
-    <div style="background:#fff8ed;border:1px solid #fde4a0;border-radius:14px;padding:16px 20px;">
-      <p style="font-size:13px;color:#92610a;margin:0;line-height:1.6;">
-        <strong>Didn't request this?</strong> Your password hasn't changed. If you're concerned, contact
-        <a href="mailto:support@securechain.io" style="color:#c47d0e;font-weight:700;">support</a> right away.
-      </p>
-    </div>
+    ${DIVIDER}
+
+    <!-- Warning -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;background:#fffbf0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13px;color:#92610a;line-height:1.65;">
+            <strong>Didn't request this?</strong> Your password has not been changed. If you're concerned about your account security, please contact our support team immediately.
+          </p>
+        </td>
+      </tr>
+    </table>
   `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `${code} — Reset your SecureChain password`,
-    html: base("Reset your password", body),
+    subject: `Reset your SecureChain password`,
+    html: base("Reset your password", "A password reset was requested for your account", body),
   });
 }
 
@@ -122,43 +189,80 @@ export async function sendDepositEmail(
   network: string,
   usdValue: number | null,
 ) {
-  const usdLine = usdValue != null
-    ? `<p style="font-size:14px;color:#4a6358;margin:8px 0 0;text-align:center;">≈ <strong style="color:#0a1f17;">$${usdValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</strong></p>`
-    : "";
+  const fmtUsd = usdValue != null
+    ? usdValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : null;
 
   const body = `
-    <h2 style="font-size:23px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">Deposit Received</h2>
-    <p style="font-size:15px;color:#4a6358;margin:0 0 28px;line-height:1.65;">
-      Hey <strong style="color:#0a1f17;">${username}</strong> — your wallet has been credited successfully.
+    <!-- Title -->
+    <h1 style="margin:0 0 10px;font-size:26px;font-weight:900;color:#0a1f17;letter-spacing:-0.03em;line-height:1.2;">Deposit Confirmed</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#4a6358;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;">${username}</strong> — your wallet has been credited. The funds are now available in your balance.
     </p>
 
-    <!-- Amount card -->
-    <div style="border:1.5px solid #c8e8d5;border-radius:18px;padding:32px 24px;text-align:center;margin-bottom:28px;background:#fafffe;">
-      <table cellpadding="0" cellspacing="0" style="margin:0 auto 18px;">
-        <tr>
-          <td style="background:#eafaf1;border:1px solid #c8e8d5;border-radius:8px;padding:4px 14px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#15a35c;white-space:nowrap;">
-            ${coin} &nbsp;·&nbsp; ${network}
-          </td>
-        </tr>
-      </table>
-      <p style="font-size:52px;font-weight:900;color:#15a35c;margin:0;line-height:1;letter-spacing:-0.02em;">+${amount}</p>
-      <p style="font-size:16px;font-weight:700;color:#4a6358;margin:8px 0 0;">${coin}</p>
-      ${usdLine}
-      <p style="font-size:13px;color:#91a89e;margin:14px 0 0;">deposited to your wallet</p>
-    </div>
+    <!-- Amount hero card -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+      <tr>
+        <td style="background:linear-gradient(150deg,#062912,#0d4a22);border-radius:16px;padding:32px 24px;text-align:center;">
 
-    <div style="background:#fff8ed;border:1px solid #fde4a0;border-radius:14px;padding:16px 20px;">
-      <p style="font-size:13px;color:#92610a;margin:0;line-height:1.6;">
-        <strong>Wasn't you?</strong> Contact <a href="mailto:support@securechain.io" style="color:#c47d0e;font-weight:700;">support immediately</a> and do not share your account details with anyone.
-      </p>
-    </div>
+          <!-- Coin + network badge -->
+          <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 20px;">
+            <tr>
+              <td style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:99px;padding:6px 18px;">
+                <span style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);text-transform:uppercase;letter-spacing:0.12em;">${coin} &nbsp;·&nbsp; ${network}</span>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Amount -->
+          <p style="margin:0;font-size:58px;font-weight:900;color:#ffffff;line-height:1;letter-spacing:-0.03em;">+${amount}</p>
+          <p style="margin:8px 0 0;font-size:18px;font-weight:700;color:rgba(255,255,255,0.75);">${coin}</p>
+
+          ${fmtUsd ? `
+          <!-- USD value -->
+          <table cellpadding="0" cellspacing="0" border="0" style="margin:16px auto 0;">
+            <tr>
+              <td style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 20px;text-align:center;">
+                <span style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);">≈&nbsp;</span>
+                <span style="font-size:16px;font-weight:800;color:#ffffff;">$${fmtUsd} USD</span>
+              </td>
+            </tr>
+          </table>` : ""}
+
+          <!-- Status badge -->
+          <table cellpadding="0" cellspacing="0" border="0" style="margin:20px auto 0;">
+            <tr>
+              <td style="background:#15a35c;border-radius:99px;padding:6px 20px;">
+                <span style="font-size:12px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:0.08em;">&#10003;&nbsp; Credited to wallet</span>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+    ${DIVIDER}
+
+    <!-- Security notice -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;background:#fff8f0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13px;color:#92610a;line-height:1.65;">
+            <strong>Wasn't you?</strong> If you did not initiate this deposit, contact
+            <a href="mailto:support@securechain.app" style="color:#c47d0e;font-weight:700;text-decoration:none;">support@securechain.app</a>
+            immediately and secure your account.
+          </p>
+        </td>
+      </tr>
+    </table>
   `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `+${amount} ${coin} deposited to your SecureChain wallet`,
-    html: base("Deposit Received", body),
+    subject: `+${amount} ${coin} credited to your SecureChain wallet`,
+    html: base("Deposit Confirmed", `${amount} ${coin} has been added to your wallet`, body),
   });
 }
 
@@ -170,42 +274,66 @@ export async function sendWithdrawalStatusEmail(
   status: "approved" | "rejected",
 ) {
   const isApproved = status === "approved";
-  const accent = isApproved ? "#15a35c" : "#e03e3e";
-  const cardBg = isApproved ? "#fafffe" : "#fffafa";
-  const cardBorder = isApproved ? "#c8e8d5" : "#f5c6c6";
-  const tagBg = isApproved ? "#eafaf1" : "#fff0f0";
-  const tagBorder = isApproved ? "#c8e8d5" : "#f5c6c6";
-  const statusLabel = isApproved ? "Approved" : "Rejected";
-  const note = isApproved
-    ? "Your funds are on their way. Processing time varies by network."
-    : `Your withdrawal was not approved. <a href="mailto:support@securechain.io" style="color:#15a35c;font-weight:700;">Contact support</a> if you have questions.`;
+
+  const statusColor  = isApproved ? "#15a35c" : "#e03e3e";
+  const statusBg     = isApproved ? "linear-gradient(150deg,#062912,#0d4a22)" : "linear-gradient(150deg,#1f0606,#4a0d0d)";
+  const badgeBg      = isApproved ? "#15a35c" : "#e03e3e";
+  const statusLabel  = isApproved ? "Approved" : "Rejected";
+  const statusSymbol = isApproved ? "&#10003;" : "&#10005;";
+
+  const noticeStyle = isApproved
+    ? "background:#f4fdf8;border-left:3px solid #15a35c;"
+    : "background:#fff4f4;border-left:3px solid #e03e3e;";
+  const noticeTextColor = isApproved ? "#2a6348" : "#922020";
+  const noticeText = isApproved
+    ? "Your funds are on the way. Transfer times vary by network — typically 10–60 minutes."
+    : `Your withdrawal request was not approved. Please contact <a href="mailto:support@securechain.app" style="color:${statusColor};font-weight:700;text-decoration:none;">support@securechain.app</a> if you believe this is an error.`;
 
   const body = `
-    <h2 style="font-size:23px;font-weight:800;color:#0a1f17;margin:0 0 8px;letter-spacing:-0.02em;">Withdrawal ${statusLabel}</h2>
-    <p style="font-size:15px;color:#4a6358;margin:0 0 28px;line-height:1.65;">
-      Hey <strong style="color:#0a1f17;">${username}</strong> — your withdrawal request has been <strong style="color:${accent};">${status}</strong>.
+    <!-- Title -->
+    <h1 style="margin:0 0 10px;font-size:26px;font-weight:900;color:#0a1f17;letter-spacing:-0.03em;line-height:1.2;">Withdrawal ${statusLabel}</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#4a6358;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;">${username}</strong> — your withdrawal request has been reviewed.
     </p>
 
-    <!-- Amount card -->
-    <div style="border:1.5px solid ${cardBorder};border-radius:18px;padding:32px 24px;text-align:center;margin-bottom:28px;background:${cardBg};">
-      <table cellpadding="0" cellspacing="0" style="margin:0 auto 18px;">
-        <tr>
-          <td style="background:${tagBg};border:1px solid ${tagBorder};border-radius:8px;padding:4px 16px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${accent};">
-            ${statusLabel}
-          </td>
-        </tr>
-      </table>
-      <p style="font-size:52px;font-weight:900;color:${accent};margin:0;line-height:1;letter-spacing:-0.02em;">${amount}</p>
-      <p style="font-size:16px;font-weight:700;color:#4a6358;margin:8px 0 0;">${coin}</p>
-    </div>
+    <!-- Amount hero card -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+      <tr>
+        <td style="background:${statusBg};border-radius:16px;padding:32px 24px;text-align:center;">
 
-    <p style="font-size:14px;color:#4a6358;text-align:center;margin:0;line-height:1.7;">${note}</p>
+          <!-- Status badge -->
+          <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 20px;">
+            <tr>
+              <td style="background:${badgeBg};border-radius:99px;padding:6px 20px;">
+                <span style="font-size:12px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:0.08em;">${statusSymbol}&nbsp; ${statusLabel}</span>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Amount -->
+          <p style="margin:0;font-size:58px;font-weight:900;color:#ffffff;line-height:1;letter-spacing:-0.03em;">${amount}</p>
+          <p style="margin:8px 0 0;font-size:18px;font-weight:700;color:rgba(255,255,255,0.75);">${coin}</p>
+
+        </td>
+      </tr>
+    </table>
+
+    ${DIVIDER}
+
+    <!-- Notice -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;${noticeStyle}border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13px;color:${noticeTextColor};line-height:1.65;">${noticeText}</p>
+        </td>
+      </tr>
+    </table>
   `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `Withdrawal ${status}: ${amount} ${coin} — SecureChain`,
-    html: base(`Withdrawal ${statusLabel}`, body),
+    subject: `Withdrawal ${statusLabel}: ${amount} ${coin} — SecureChain`,
+    html: base(`Withdrawal ${statusLabel}`, `Your ${amount} ${coin} withdrawal has been ${status}`, body),
   });
 }
