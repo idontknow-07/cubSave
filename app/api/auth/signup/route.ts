@@ -13,8 +13,20 @@ export async function POST(req: NextRequest) {
   try {
     const { email, username, password, country, phone } = await req.json();
 
-    if (!email || !username || !password) {
-      return NextResponse.json({ error: "All fields required" }, { status: 400 });
+    if (!email || !username || !password || !country || !phone) {
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Enter a valid email address" }, { status: 400 });
+    }
+    if (username.trim().length < 3) {
+      return NextResponse.json({ error: "Username must be at least 3 characters" }, { status: 400 });
+    }
+    if (password.length < 8) {
+      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    }
+    if (String(phone).replace(/\D/g, "").length < 7) {
+      return NextResponse.json({ error: "Enter a valid phone number" }, { status: 400 });
     }
 
     const existing = await prisma.user.findFirst({ where: { OR: [{ email }, { username }] } });

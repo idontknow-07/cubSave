@@ -175,7 +175,19 @@ function SignupInner() {
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); setLoading(true);
+    setError("");
+
+    if (!form.email.trim()) { setError("Email is required"); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError("Enter a valid email address"); return; }
+    if (!form.username.trim()) { setError("Username is required"); return; }
+    if (form.username.trim().length < 3) { setError("Username must be at least 3 characters"); return; }
+    if (!form.password) { setError("Password is required"); return; }
+    if (form.password.length < 8) { setError("Password must be at least 8 characters"); return; }
+    if (!form.country) { setError("Please select your country"); return; }
+    if (!form.phone.trim()) { setError("Phone number is required"); return; }
+    if (form.phone.replace(/\D/g, "").length < 7) { setError("Enter a valid phone number"); return; }
+
+    setLoading(true);
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST", headers: { "Content-Type": "application/json" },
