@@ -38,8 +38,8 @@ function base(title: string, preheader: string, body: string) {
           <!-- Logo mark -->
           <table cellpadding="0" cellspacing="0" border="0">
             <tr>
-              <td style="width:40px;height:40px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:11px;text-align:center;vertical-align:middle;">
-                <span style="font-size:16px;font-weight:900;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:40px;display:block;letter-spacing:-0.04em;">SC</span>
+              <td style="vertical-align:middle;">
+                <img src="https://securechain.app/pwa-192x192.png" width="40" height="40" alt="SecureChain" style="display:block;border-radius:11px;border:0;" />
               </td>
               <td style="padding-left:12px;vertical-align:middle;">
                 <span style="font-size:19px;font-weight:800;color:#ffffff;letter-spacing:-0.03em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">SecureChain</span>
@@ -68,7 +68,7 @@ function base(title: string, preheader: string, body: string) {
           <p style="margin:4px 0 0;font-size:11.5px;color:#a8b8af;line-height:1.6;">Your crypto, your control.</p>
         </td>
         <td align="right" valign="middle">
-          <span style="display:inline-block;width:28px;height:28px;background:linear-gradient(135deg,#15a35c,#047857);border-radius:8px;text-align:center;line-height:28px;font-size:11px;font-weight:900;color:#ffffff;letter-spacing:-0.03em;font-family:-apple-system,sans-serif;">SC</span>
+          <img src="https://securechain.app/pwa-192x192.png" width="28" height="28" alt="SC" style="display:block;border-radius:8px;border:0;" />
         </td>
       </tr>
     </table>
