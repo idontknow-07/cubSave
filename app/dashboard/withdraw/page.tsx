@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FUNCTIONAL_COINS } from "@/lib/coins";
-import { ArrowLeft, Eye, EyeOff, Check, ChevronRight, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Check, ChevronRight, AlertTriangle, Lock } from "lucide-react";
 import CoinIcon from "@/components/CoinIcon";
 import { formatCrypto } from "@/lib/utils";
 
@@ -288,7 +288,7 @@ export default function WithdrawPage() {
               display: "flex", alignItems: "center", justifyContent: "center",
               background: "rgba(240,180,41,0.12)", border: "1px solid rgba(240,180,41,0.2)",
             }}>
-              <span style={{ fontSize: 26 }}>🔐</span>
+              <Lock size={26} color="#f0b429" strokeWidth={1.8} />
             </div>
             <p style={{ fontWeight: 800, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>
               Withdrawal PIN

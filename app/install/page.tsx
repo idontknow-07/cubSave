@@ -6,6 +6,7 @@ import {
   ArrowLeft, Download, Share2, Plus, Monitor,
   CheckCircle2, Smartphone, Zap, WifiOff, Bell, Info,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Platform = "ios" | "android" | "desktop";
 
@@ -67,6 +68,7 @@ function StepList({ steps }: { steps: { title: string; body: string }[] }) {
 }
 
 export default function InstallPage() {
+  const router = useRouter();
   const [platform, setPlatform] = useState<Platform>("ios");
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [installed, setInstalled] = useState(false);
@@ -118,9 +120,9 @@ export default function InstallPage() {
     <div style={{ minHeight: "100dvh", background: "#f4faf6", fontFamily: "'Manrope', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       {/* Top bar */}
       <div style={{ background: "#fff", borderBottom: "1px solid #e4efe9", padding: "16px 20px", display: "flex", alignItems: "center", gap: 12, position: "sticky", top: 0, zIndex: 10 }}>
-        <Link href="/" style={{ width: 36, height: 36, borderRadius: 10, background: "#f4faf6", border: "1px solid #e4efe9", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+        <button onClick={() => router.back()} style={{ width: 36, height: 36, borderRadius: 10, background: "#f4faf6", border: "1px solid #e4efe9", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
           <ArrowLeft size={16} color="#51635b" />
-        </Link>
+        </button>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {LOGO(14)}

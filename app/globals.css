@@ -405,3 +405,11 @@ html.dark ::-webkit-scrollbar-thumb {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* iOS PWA: prevent rubber-band / overscroll on the root */
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: auto;
+  }
+}

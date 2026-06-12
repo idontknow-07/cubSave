@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import ComingSoonModal from "@/components/ComingSoonModal";
 import { ALL_COINS, FUNCTIONAL_COINS } from "@/lib/coins";
-import { formatCurrency, formatCrypto } from "@/lib/utils";
+import { formatCurrency, formatCurrencyCompact, formatCrypto } from "@/lib/utils";
 import { getPriceCache, setPriceCache } from "@/lib/priceCache";
 import Sparkline from "@/components/Sparkline";
 import CoinIcon from "@/components/CoinIcon";
@@ -154,8 +154,7 @@ export default function DashboardPage() {
       <div className="dash-mobile-top" style={{
         display: "flex", alignItems: "flex-end",
         minHeight: 66,
-        padding: "0 66px 12px 16px",
-        paddingTop: "max(12px, env(safe-area-inset-top, 12px))",
+        padding: "12px 66px 12px 16px",
         background: "var(--bg)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -176,8 +175,8 @@ export default function DashboardPage() {
           <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-3)", marginBottom: 10 }}>
             Current Balance
           </p>
-          <p className="num" style={{ fontSize: 52, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 12 }}>
-            {formatCurrency(totalBalance, currency)}
+          <p className="num" style={{ fontSize: "clamp(28px, 10vw, 52px)", fontWeight: 900, color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 12, whiteSpace: "nowrap" }}>
+            {formatCurrencyCompact(totalBalance, currency)}
           </p>
           {pricesLoaded && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 14px", borderRadius: 99, background: dayChange >= 0 ? "rgba(57,217,138,0.1)" : "rgba(255,77,77,0.1)", border: `1px solid ${dayChange >= 0 ? "rgba(57,217,138,0.2)" : "rgba(255,77,77,0.2)"}` }}>

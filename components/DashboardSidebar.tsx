@@ -141,17 +141,6 @@ export default function DashboardSidebar() {
               </button>
             </div>
 
-            {/* User info */}
-            <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 42, height: 42, borderRadius: "50%", background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 18, color: "#fff", flexShrink: 0 }}>
-                {user?.username?.[0]?.toUpperCase()}
-              </div>
-              <div style={{ minWidth: 0 }}>
-                <p style={{ fontWeight: 700, fontSize: 14, color: "var(--text)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.username}</p>
-                <p style={{ fontSize: 12, color: "var(--text-3)", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</p>
-              </div>
-            </div>
-
             <NavItems path={path} onNav={() => setDrawerOpen(false)} />
           </div>
         </>

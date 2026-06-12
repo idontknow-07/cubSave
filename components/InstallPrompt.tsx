@@ -1,20 +1,19 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Download } from "lucide-react";
-
-
-const DISMISSED_KEY = "sc_pwa_dismissed";
+import { useRouter } from "next/navigation";
 
 export default function InstallPrompt() {
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // Don't show if already installed (standalone mode)
     if (window.matchMedia("(display-mode: standalone)").matches) return;
-    if (localStorage.getItem(DISMISSED_KEY)) return;
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -23,45 +22,42 @@ export default function InstallPrompt() {
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(ios);
 
-    const show = () => {
+    const showBanner = () => {
       setShow(true);
-      // Animate in after mount
       requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
-      // Auto-dismiss after 3s
-      setTimeout(() => dismiss(), 3000);
+      // Auto-dismiss after 3 seconds
+      timerRef.current = setTimeout(() => hideBanner(), 3000);
     };
 
-    if (ios) { show(); return; }
+    if (ios) {
+      showBanner();
+      return;
+    }
 
     const handler = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
-      show();
+      showBanner();
     };
     window.addEventListener("beforeinstallprompt", handler as EventListener);
     return () => window.removeEventListener("beforeinstallprompt", handler as EventListener);
   }, []);
 
-  const install = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") dismiss();
-    setDeferredPrompt(null);
+  const hideBanner = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setVisible(false);
+    setTimeout(() => setShow(false), 300);
   };
 
-  const dismiss = () => {
-    setVisible(false);
-    setTimeout(() => {
-      localStorage.setItem(DISMISSED_KEY, "1");
-      setShow(false);
-    }, 300);
+  const goToInstall = () => {
+    hideBanner();
+    router.push("/install");
   };
 
   if (!show) return null;
 
   return (
     <div
+      onClick={goToInstall}
       style={{
         position: "fixed",
         bottom: `calc(env(safe-area-inset-bottom, 0px) + 76px)`,
@@ -79,6 +75,7 @@ export default function InstallPrompt() {
         opacity: visible ? 1 : 0,
         transition: "transform 0.3s ease, opacity 0.3s ease",
         pointerEvents: visible ? "auto" : "none",
+        cursor: "pointer",
       }}
     >
       <div style={{
@@ -95,35 +92,26 @@ export default function InstallPrompt() {
         <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "var(--text, #0a1f17)", lineHeight: 1.3 }}>
           Install SecureChain
         </p>
-        {isIOS ? (
-          <p style={{ margin: "2px 0 0", fontSize: 11.5, color: "var(--text-2, #51635b)", lineHeight: 1.4 }}>
-            Tap <strong style={{ color: "#15a35c" }}>Share</strong> → <strong style={{ color: "#15a35c" }}>Add to Home Screen</strong>
-          </p>
-        ) : (
-          <p style={{ margin: "2px 0 0", fontSize: 11.5, color: "var(--text-2, #51635b)", lineHeight: 1.4 }}>
-            Get faster access — no browser bar
-          </p>
-        )}
+        <p style={{ margin: "2px 0 0", fontSize: 11.5, color: "var(--text-2, #51635b)", lineHeight: 1.4 }}>
+          {isIOS ? "Tap to see install instructions" : "Add to home screen — tap to install"}
+        </p>
       </div>
 
-      {!isIOS && (
-        <button
-          onClick={install}
-          style={{
-            flexShrink: 0, height: 32, padding: "0 12px",
-            background: "#15a35c", color: "#fff",
-            border: "none", borderRadius: 9,
-            fontSize: 12, fontWeight: 700, cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 5,
-          }}
-        >
-          <Download size={12} strokeWidth={2.5} />
-          Install
-        </button>
-      )}
+      <div style={{
+        flexShrink: 0, height: 30, padding: "0 10px",
+        background: "#15a35c", color: "#fff",
+        border: "none", borderRadius: 8,
+        fontSize: 12, fontWeight: 700,
+        display: "flex", alignItems: "center", gap: 4,
+      }}
+        onClick={e => { e.stopPropagation(); goToInstall(); }}
+      >
+        <Download size={12} strokeWidth={2.5} />
+        Install
+      </div>
 
       <button
-        onClick={dismiss}
+        onClick={e => { e.stopPropagation(); hideBanner(); }}
         style={{
           flexShrink: 0, background: "none", border: "none",
           cursor: "pointer", color: "var(--text-3, #9db5a8)", padding: 4,
