@@ -4,7 +4,8 @@ import { X } from "lucide-react";
 export default function ComingSoonModal({ label, onClose }: { label: string; onClose: () => void }) {
   return (
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 60, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: "0 16px 24px" }}
+      style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: "0 16px 24px" }}
+      className="ios-modal-pb"
       onClick={onClose}
     >
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }} />

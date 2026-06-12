@@ -406,10 +406,26 @@ html.dark ::-webkit-scrollbar-thumb {
   }
 }
 
-/* iOS PWA: prevent rubber-band / overscroll on the root */
-@media (display-mode: standalone) {
-  body {
-    overscroll-behavior-y: none;
-    -webkit-overflow-scrolling: auto;
+/* iOS PWA Safe Area Fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-safe-top {
+    padding-top: env(safe-area-inset-top, 0px) !important;
+  }
+
+  .ios-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  /* Specific padding for modals and sheets to clear home indicator */
+  .ios-modal-pb {
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .ios-sheet-pb {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .ios-dvh {
+    min-height: 100dvh !important;
   }
 }

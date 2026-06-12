@@ -50,7 +50,7 @@ interface AuthLayoutProps {
 export default function AuthLayout({ title, subtitle, children, footer, brandSide = "left" }: AuthLayoutProps) {
   const right = brandSide === "right";
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-white font-manrope text-[#0a1f17]">
+    <div className="min-h-[100dvh] grid lg:grid-cols-2 bg-white font-manrope text-[#0a1f17] ios-safe-top">
       <BrandPanel className={right ? "lg:order-2" : ""} />
       <div className={`flex flex-col ${right ? "lg:order-1" : ""}`}>
         {/* top bar (mobile logo + back home) */}

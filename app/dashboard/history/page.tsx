@@ -59,11 +59,12 @@ function TxDetailSheet({ tx, onClose }: { tx: Tx; onClose: () => void }) {
     <div
       onClick={onClose}
       style={{
-        position: "fixed", inset: 0, zIndex: 100,
+        position: "fixed", inset: 0, zIndex: 9999,
         background: "rgba(0,0,0,0.65)",
         display: "flex", alignItems: "flex-end",
         backdropFilter: "blur(4px)",
       }}
+      className="ios-sheet-pb"
     >
       <div
         onClick={e => e.stopPropagation()}
