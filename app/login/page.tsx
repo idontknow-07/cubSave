@@ -100,7 +100,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form area */}
-        <div className="flex-1 flex items-start justify-center px-6 sm:px-10 pt-12 pb-10 lg:items-center lg:pt-0">
+        <div className="flex-1 flex items-center justify-center px-6 sm:px-10 py-10">
           <div className="w-full max-w-[420px] fade-up">
             <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 30, letterSpacing: "-0.02em", color: "#0a1f17" }}>
               Welcome back

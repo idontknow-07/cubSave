@@ -108,7 +108,7 @@ export default function DashboardSidebar() {
       {/* ── Mobile hamburger — fixed RIGHT ──────── */}
       <button className="cv-hamburger"
         onClick={() => setDrawerOpen(true)}
-        style={{ position: "fixed", top: 14, right: 14, zIndex: 40, width: 38, height: 38, borderRadius: 11, background: "var(--surface)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+        style={{ position: "fixed", top: "max(14px, calc(env(safe-area-inset-top, 0px) + 14px))", right: 14, zIndex: 40, width: 38, height: 38, borderRadius: 11, background: "var(--surface)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
         <Menu size={20} color="var(--text)" />
       </button>
 
