@@ -6,7 +6,7 @@ const FROM = process.env.EMAIL_FROM || "SecureChain <noreply@securechain.app>";
 /* ─────────────────────────────────────────
    Premium light email — clean white base,
    vivid green accents, clean typography.
-   Gmail-safe: no SVG, all inline styles.
+   Gmail-safe: forced light mode using gradient hacks.
 ───────────────────────────────────────── */
 function base(title: string, preheader: string, body: string) {
   return `<!DOCTYPE html>
@@ -15,18 +15,19 @@ function base(title: string, preheader: string, body: string) {
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="x-apple-disable-message-reformatting"/>
-<meta name="color-scheme" content="light"/>
+<meta name="color-scheme" content="light only"/>
+<meta name="supported-color-schemes" content="light only"/>
 <title>${title}</title>
 <!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
 </head>
-<body style="margin:0;padding:0;background:#f4faf6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<body style="margin:0;padding:0;background-color:#f4faf6;background-image:linear-gradient(#f4faf6,#f4faf6);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 
 <!-- Preheader (hidden) -->
-<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#f4faf6;">
+<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#f4faf6;-webkit-text-fill-color:#f4faf6;">
   ${preheader}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;
 </div>
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4faf6;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4faf6;background-image:linear-gradient(#f4faf6,#f4faf6);">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;box-shadow:0 12px 32px rgba(10,31,23,0.06);border-radius:18px;">
 
@@ -41,30 +42,30 @@ function base(title: string, preheader: string, body: string) {
                 <img src="https://securechain.app/pwa-192x192.png" width="36" height="36" alt="SC" style="display:block;border-radius:9px;border:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
               </td>
               <td style="padding-left:12px;vertical-align:middle;">
-                <span style="font-size:18px;font-weight:800;color:#ffffff;letter-spacing:-0.02em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">SecureChain</span>
+                <span style="font-size:18px;font-weight:800;color:#ffffff;-webkit-text-fill-color:#ffffff;letter-spacing:-0.02em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">SecureChain</span>
               </td>
             </tr>
           </table>
         </td>
         <td align="right" valign="middle">
-          <span style="font-size:10.5px;font-weight:800;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:0.14em;background:rgba(0,0,0,0.15);padding:4px 8px;border-radius:6px;">Secure &amp; Private</span>
+          <span style="font-size:10.5px;font-weight:800;color:#ffffff;-webkit-text-fill-color:#ffffff;text-transform:uppercase;letter-spacing:0.14em;background:rgba(0,0,0,0.15);padding:4px 8px;border-radius:6px;">Secure &amp; Private</span>
         </td>
       </tr>
     </table>
   </td></tr>
 
   <!-- ── Body card ── -->
-  <tr><td style="background:#ffffff;border-left:1px solid #e4efe9;border-right:1px solid #e4efe9;padding:40px 32px 32px;">
+  <tr><td style="background-color:#ffffff;background-image:linear-gradient(#ffffff,#ffffff);border-left:1px solid #e4efe9;border-right:1px solid #e4efe9;padding:40px 32px 32px;">
     ${body}
   </td></tr>
 
   <!-- ── Footer ── -->
-  <tr><td style="background:#fafdfb;border:1px solid #e4efe9;border-top:none;border-radius:0 0 18px 18px;padding:24px 32px;">
+  <tr><td style="background-color:#fafdfb;background-image:linear-gradient(#fafdfb,#fafdfb);border:1px solid #e4efe9;border-top:none;border-radius:0 0 18px 18px;padding:24px 32px;">
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td>
-          <p style="margin:0;font-size:12px;color:#7b8c84;line-height:1.6;">© ${new Date().getFullYear()} SecureChain. All rights reserved.</p>
-          <p style="margin:3px 0 0;font-size:11.5px;color:#9db5a8;line-height:1.6;">Your crypto, your control.</p>
+          <p style="margin:0;font-size:12px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;line-height:1.6;">© ${new Date().getFullYear()} SecureChain. All rights reserved.</p>
+          <p style="margin:3px 0 0;font-size:11.5px;color:#9db5a8;-webkit-text-fill-color:#9db5a8;line-height:1.6;">Your crypto, your control.</p>
         </td>
         <td align="right" valign="middle">
           <img src="https://securechain.app/pwa-192x192.png" width="28" height="28" alt="SC" style="display:block;border-radius:7px;border:0;opacity:0.2;" />
@@ -78,7 +79,7 @@ function base(title: string, preheader: string, body: string) {
 <!-- ── Disclaimer ── -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;">
   <tr><td style="padding:20px 0 0;text-align:center;">
-    <p style="font-size:11.5px;color:#7b8c84;margin:0;line-height:1.7;">
+    <p style="font-size:11.5px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;margin:0;line-height:1.7;">
       If you didn't request this email, you can safely ignore it.<br/>
       Sent because your email is registered with SecureChain.
     </p>
@@ -94,7 +95,7 @@ function base(title: string, preheader: string, body: string) {
 /* OTP digit boxes */
 function otpBoxes(code: string) {
   const cells = code.split("").map((d, i) =>
-    `<td style="width:48px;height:56px;background:#ffffff;border:1.5px solid #cdd9d2;border-radius:10px;text-align:center;vertical-align:middle;font-size:26px;font-weight:800;color:#0a1f17;font-family:Courier,monospace;box-shadow:0 2px 8px rgba(0,0,0,0.02);">${d}</td>${i < 5 ? '<td style="width:8px;"></td>' : ''}`
+    `<td style="width:48px;height:56px;background-color:#ffffff;background-image:linear-gradient(#ffffff,#ffffff);border:1.5px solid #cdd9d2;border-radius:10px;text-align:center;vertical-align:middle;font-size:26px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;font-family:Courier,monospace;box-shadow:0 2px 8px rgba(0,0,0,0.02);">${d}</td>${i < 5 ? '<td style="width:8px;"></td>' : ''}`
   ).join("");
   return `<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>${cells}</tr></table>`;
 }
@@ -106,9 +107,9 @@ const DIVIDER = `<table width="100%" cellpadding="0" cellspacing="0" border="0" 
 
 export async function sendVerificationEmail(to: string, username: string, code: string) {
   const body = `
-    <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Verify your email</h1>
-    <p style="margin:0 0 32px;font-size:15px;color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;">${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
+    <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Verify your email</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
     </p>
 
     ${otpBoxes(code)}
@@ -116,9 +117,9 @@ export async function sendVerificationEmail(to: string, username: string, code: 
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 0;">
       <tr>
         <td align="center">
-          <span style="font-size:13px;color:#7b8c84;">Expires in&nbsp;</span>
-          <span style="font-size:13px;font-weight:700;color:#15a35c;">15 minutes</span>
-          <span style="font-size:13px;color:#7b8c84;">&nbsp;·&nbsp; Never share this code</span>
+          <span style="font-size:13px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;">Expires in&nbsp;</span>
+          <span style="font-size:13px;font-weight:700;color:#15a35c;-webkit-text-fill-color:#15a35c;">15 minutes</span>
+          <span style="font-size:13px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;">&nbsp;·&nbsp; Never share this code</span>
         </td>
       </tr>
     </table>
@@ -127,8 +128,8 @@ export async function sendVerificationEmail(to: string, username: string, code: 
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="padding:16px 20px;background:#f4faf6;border-left:3px solid #15a35c;border-radius:0 10px 10px 0;">
-          <p style="margin:0;font-size:13.5px;color:#51635b;line-height:1.6;">
+        <td style="padding:16px 20px;background-color:#f4faf6;background-image:linear-gradient(#f4faf6,#f4faf6);border-left:3px solid #15a35c;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13.5px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.6;">
             Didn't create an account? Your email won't be added unless this code is used.
           </p>
         </td>
