@@ -19,7 +19,7 @@ export default function Security() {
         <img
           src="/security.png"
           alt="Security"
-          className="w-full h-full object-contain p-10"
+          className="w-[800px] max-w-[1000%] h-auto object-contain"
         />
       }
     />

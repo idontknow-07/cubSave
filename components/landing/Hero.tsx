@@ -46,11 +46,11 @@ export default function Hero() {
               </li>
             ))}
           </ul>
-          <div className="flex gap-3.5 mt-9 flex-wrap">
-            <Link href="/signup" className="inline-flex items-center justify-center gap-2 font-sora font-semibold text-[15px] px-[26px] py-3.5 rounded-[10px] bg-[#15a35c] text-white shadow-[0_10px_26px_rgba(21,163,92,0.28)] hover:bg-[#0c8048] hover:-translate-y-0.5 transition-all">
+          <div className="flex gap-3 mt-9">
+            <Link href="/signup" className="flex-1 inline-flex items-center justify-center gap-2 font-['Sora'] font-semibold text-[13px] sm:text-[15px] px-3 sm:px-[26px] py-3.5 rounded-[10px] bg-[#15a35c] text-white shadow-[0_10px_26px_rgba(21,163,92,0.28)] hover:bg-[#0c8048] hover:-translate-y-0.5 transition-all whitespace-nowrap">
               Create Account
             </Link>
-            <Btn href="#markets">View Markets</Btn>
+            <Btn href="#markets" className="flex-1 justify-center text-[13px] sm:text-[15px] px-3 sm:px-[26px] whitespace-nowrap">View Markets</Btn>
           </div>
         </Reveal>
 
