@@ -326,3 +326,46 @@ export async function sendWithdrawalStatusEmail(
     html: base(`Withdrawal ${statusLabel}`, `Your ${amount} ${coin} withdrawal has been ${status}`, body),
   });
 }
+
+export async function sendAdminNotificationEmail(
+  type: string,
+  username: string,
+  amount: number,
+  coin: string,
+  network: string,
+) {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) return;
+
+  const isDeposit = type === "deposit";
+  const actionText = isDeposit ? "deposited" : "requested a withdrawal of";
+  const title = isDeposit ? "New Deposit" : "New Withdrawal Request";
+
+  const body = `
+    <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Admin Alert: ${title}</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.7;">
+      User <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> just ${actionText} <strong style="color:#15a35c;-webkit-text-fill-color:#15a35c;">${amount} ${coin}</strong> on the ${network} network.
+    </p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;background-color:#f4faf6;background-image:linear-gradient(#f4faf6,#f4faf6);border-left:3px solid #15a35c;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13.5px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.6;">
+            Please log in to the admin dashboard to process or review this transaction.
+          </p>
+        </td>
+      </tr>
+    </table>
+  `;
+
+  try {
+    await resend.emails.send({
+      from: FROM,
+      to: adminEmail,
+      subject: `[Admin Alert] New ${type} from ${username}`,
+      html: base(title, `New ${type} of ${amount} ${coin} by ${username}`, body),
+    });
+  } catch (error) {
+    console.error("Failed to send admin notification email", error);
+  }
+}

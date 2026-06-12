@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyToken } from "@/lib/auth";
-import { comparePin } from "@/lib/auth";
+import { verifyToken, comparePin } from "@/lib/auth";
+import { sendAdminNotificationEmail } from "@/lib/email";
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
@@ -68,6 +68,11 @@ export async function POST(req: NextRequest) {
         status: "pending",
       },
     });
+
+    const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+    if (user) {
+      await sendAdminNotificationEmail(type, user.username, parseFloat(String(amount)), coin, network);
+    }
 
     return NextResponse.json({ transaction: tx });
   } catch (err) {

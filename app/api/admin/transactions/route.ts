@@ -17,10 +17,12 @@ export async function GET(req: NextRequest) {
   const type = searchParams.get("type");
   const search = searchParams.get("search");
   const userId = searchParams.get("userId");
+  const status = searchParams.get("status");
 
   const where: Record<string, unknown> = {};
   if (type) where.type = type;
   if (userId) where.userId = userId;
+  if (status) where.status = status;
 
   let transactions = await prisma.transaction.findMany({
     where,

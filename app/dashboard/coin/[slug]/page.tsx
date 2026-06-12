@@ -8,6 +8,7 @@ import { ArrowLeft, Send, Download, ArrowUpRight, ArrowDownLeft, ExternalLink } 
 import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import ComingSoonModal from "@/components/ComingSoonModal";
 import CoinIcon from "@/components/CoinIcon";
+import TxDetailSheet from "@/components/TxDetailSheet";
 import { getPriceCache, setPriceCache } from "@/lib/priceCache";
 
 const COIN_COLORS: Record<string, string> = {
@@ -81,9 +82,10 @@ export default function CoinDetailPage() {
   /* Load from cache instantly — no blank flash while fetching */
   const [prices, setPrices] = useState<Record<string, Record<string, number>>>(() => getPriceCache() ?? {});
   const [wallets, setWallets] = useState<{ coin: string; network: string; balance: number }[]>([]);
-  const [txs, setTxs] = useState<{ id: string; type: string; amount: number; status: string; createdAt: string }[]>([]);
+  const [txs, setTxs] = useState<{ id: string; type: string; amount: number; status: string; createdAt: string; coin: string; network: string; address: string | null }[]>([]);
   const [tf, setTf] = useState<TF>("1D");
   const [showComing, setShowComing] = useState(false);
+  const [selectedTx, setSelectedTx] = useState<any>(null);
 
   const [coinName, network] = useMemo(() => {
     const parts = slug.split("-");
@@ -314,7 +316,7 @@ export default function CoinDetailPage() {
               {txs.slice(0, 6).map(tx => {
                 const isDeposit = tx.type === "deposit";
                 return (
-                  <div key={tx.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "var(--card)", border: "1px solid var(--border)" }}>
+                  <div key={tx.id} onClick={() => setSelectedTx(tx)} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, background: "var(--card)", border: "1px solid var(--border)", cursor: "pointer" }}>
                     <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: isDeposit ? "rgba(57,217,138,0.12)" : "rgba(255,77,77,0.12)" }}>
                       {isDeposit ? <ArrowDownLeft size={16} color="#39d98a" /> : <ArrowUpRight size={16} color="#ff4d4d" />}
                     </div>
@@ -341,6 +343,7 @@ export default function CoinDetailPage() {
       )}
 
       {showComing && <ComingSoonModal label="Explorer" onClose={() => setShowComing(false)} />}
+      {selectedTx && <TxDetailSheet tx={selectedTx} onClose={() => setSelectedTx(null)} />}
     </div>
   );
 }

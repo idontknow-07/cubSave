@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { ClipboardList, CreditCard, LogOut, Menu, X, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const NAV = [
   { label: "Orders", icon: ClipboardList, href: "/admin/orders" },
@@ -13,6 +13,16 @@ const NAV = [
 function SidebarContent({ close }: { close?: () => void }) {
   const path = usePathname();
   const { user, logout } = useAuth();
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/admin/transactions?status=pending")
+      .then(r => r.json())
+      .then(d => {
+        if (d.transactions) setPendingCount(d.transactions.length);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -58,12 +68,28 @@ function SidebarContent({ close }: { close?: () => void }) {
                   borderLeft: active ? "2px solid var(--accent)" : "2px solid transparent",
                   transition: "all 0.12s",
                   position: "relative",
+                  justifyContent: "space-between",
                 }}
                 onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = "var(--surface)"; }}
                 onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
               >
-                <Icon size={17} style={{ flexShrink: 0 }} />
-                {label}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <Icon size={17} style={{ flexShrink: 0 }} />
+                  {label}
+                </div>
+                {label === "Orders" && pendingCount > 0 && (
+                  <span style={{
+                    background: "var(--red)",
+                    color: "#fff",
+                    fontSize: 10,
+                    fontWeight: 800,
+                    padding: "2px 6px",
+                    borderRadius: 99,
+                    boxShadow: "0 2px 4px rgba(240,68,68,0.2)"
+                  }}>
+                    {pendingCount}
+                  </span>
+                )}
               </Link>
             );
           })}
