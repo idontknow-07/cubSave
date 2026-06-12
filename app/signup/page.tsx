@@ -268,7 +268,7 @@ function SignupInner() {
   };
 
   return (
-    <div className="min-h-[100dvh] lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
+    <div className="min-h-[100dvh] ios-safe-top lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
 
       {/* Form panel */}
       <div className="flex flex-col min-h-[100dvh] lg:min-h-0 bg-white">

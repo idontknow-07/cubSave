@@ -32,7 +32,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
+    <div className="min-h-screen ios-safe-top lg:grid lg:grid-cols-2 bg-white text-[#0a1f17]" style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
 
       {/* ── Brand panel (desktop) ── */}
       <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden text-white"

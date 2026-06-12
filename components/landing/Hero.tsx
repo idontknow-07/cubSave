@@ -14,7 +14,7 @@ const POINTS = [
 
 export default function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-white mt-[-40px]">
+    <section id="top" className="relative overflow-hidden bg-white">
       <div
         className="absolute inset-0 z-0"
         style={{ background: "radial-gradient(900px 480px at 80% 0%, rgba(21,163,92,.10), transparent 60%), radial-gradient(700px 420px at 0% 100%, rgba(4,120,87,.07), transparent 60%)" }}

@@ -416,9 +416,14 @@ html.dark ::-webkit-scrollbar-thumb {
     padding-bottom: env(safe-area-inset-bottom, 0px) !important;
   }
 
-  /* Specific padding for modals and sheets to clear home indicator */
+  /* Specific padding for modals and sheets to clear home indicator and mobile nav */
   .ios-modal-pb {
-    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  @media (min-width: 900px) {
+    .ios-modal-pb {
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    }
   }
 
   .ios-sheet-pb {

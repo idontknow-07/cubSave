@@ -9,7 +9,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-[100] bg-white/85 backdrop-blur-[14px] border-b border-[#e4efe9]">
+    <header className="fixed top-0 left-0 right-0 z-[100] bg-white/85 backdrop-blur-[14px] border-b border-[#e4efe9] ios-safe-top">
       <Wrap className="flex items-center justify-between h-[72px]">
         <Logo />
         <nav className="hidden lg:flex items-center gap-[34px]">

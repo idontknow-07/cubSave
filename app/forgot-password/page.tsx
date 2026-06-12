@@ -69,7 +69,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4faf6] flex items-center justify-center px-4 py-12"
+    <div className="min-h-screen ios-safe-top bg-[#f4faf6] flex items-center justify-center px-4 py-12"
       style={{ fontFamily: "var(--font-manrope, Manrope), sans-serif" }}>
       <div className="w-full max-w-[420px]">
 
