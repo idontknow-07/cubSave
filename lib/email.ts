@@ -88,30 +88,30 @@ function base(title: string, preheader: string, body: string) {
 </td></tr>
 </table>
 </body>
-</html>\`;
+</html>`;
 }
 
 /* OTP digit boxes */
 function otpBoxes(code: string) {
   const cells = code.split("").map((d, i) =>
-    \`<td style="width:48px;height:56px;background:#ffffff;border:1.5px solid #cdd9d2;border-radius:10px;text-align:center;vertical-align:middle;font-size:26px;font-weight:800;color:#0a1f17;font-family:Courier,monospace;box-shadow:0 2px 8px rgba(0,0,0,0.02);">\${d}</td>\${i < 5 ? '<td style="width:8px;"></td>' : ''}\`
+    `<td style="width:48px;height:56px;background:#ffffff;border:1.5px solid #cdd9d2;border-radius:10px;text-align:center;vertical-align:middle;font-size:26px;font-weight:800;color:#0a1f17;font-family:Courier,monospace;box-shadow:0 2px 8px rgba(0,0,0,0.02);">${d}</td>${i < 5 ? '<td style="width:8px;"></td>' : ''}`
   ).join("");
-  return \`<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>\${cells}</tr></table>\`;
+  return `<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>${cells}</tr></table>`;
 }
 
 /* Divider */
-const DIVIDER = \`<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:32px 0;"><tr><td style="border-top:1px solid #e4efe9;"></td></tr></table>\`;
+const DIVIDER = `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:32px 0;"><tr><td style="border-top:1px solid #e4efe9;"></td></tr></table>`;
 
 /* ─── Email senders ─────────────────── */
 
 export async function sendVerificationEmail(to: string, username: string, code: string) {
-  const body = \`
+  const body = `
     <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Verify your email</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;">\${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
+      Hi <strong style="color:#0a1f17;">${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
     </p>
 
-    \${otpBoxes(code)}
+    ${otpBoxes(code)}
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 0;">
       <tr>
@@ -123,7 +123,7 @@ export async function sendVerificationEmail(to: string, username: string, code: 
       </tr>
     </table>
 
-    \${DIVIDER}
+    ${DIVIDER}
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
@@ -134,28 +134,28 @@ export async function sendVerificationEmail(to: string, username: string, code: 
         </td>
       </tr>
     </table>
-  \`;
+  `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: \`\${code} — Your SecureChain verification code\`,
-    html: base("Verify your email", \`Your verification code is \${code}\`, body),
+    subject: `${code} — Your SecureChain verification code`,
+    html: base("Verify your email", `Your verification code is ${code}`, body),
   });
 }
 
 export async function sendPasswordResetEmail(to: string, username: string, code: string) {
-  const body = \`
+  const body = `
     <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Reset your password</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;">\${username}</strong> — use the code below to reset your password. It expires in 15 minutes.
+      Hi <strong style="color:#0a1f17;">${username}</strong> — use the code below to reset your password. It expires in 15 minutes.
     </p>
 
-    \${otpBoxes(code)}
+    ${otpBoxes(code)}
 
     <p style="margin:20px 0 0;font-size:13px;color:#7b8c84;text-align:center;">One-time code · Do not share</p>
 
-    \${DIVIDER}
+    ${DIVIDER}
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
@@ -167,12 +167,12 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
         </td>
       </tr>
     </table>
-  \`;
+  `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: \`Reset your SecureChain password\`,
+    subject: `Reset your SecureChain password`,
     html: base("Reset your password", "A password reset was requested for your account", body),
   });
 }
@@ -189,10 +189,10 @@ export async function sendDepositEmail(
     ? usdValue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     : null;
 
-  const body = \`
+  const body = `
     <h1 style="margin:0 0 8px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Deposit Confirmed</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;">\${username}</strong> — your wallet has been credited. The funds are now available in your balance.
+      Hi <strong style="color:#0a1f17;">${username}</strong> — your wallet has been credited. The funds are now available in your balance.
     </p>
 
     <!-- Amount hero card -->
@@ -204,25 +204,25 @@ export async function sendDepositEmail(
           <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 24px;">
             <tr>
               <td style="background:#ffffff;border:1px solid #cdd9d2;border-radius:99px;padding:6px 16px;box-shadow:0 2px 6px rgba(0,0,0,0.02);">
-                <span style="font-size:11.5px;font-weight:700;color:#51635b;text-transform:uppercase;letter-spacing:0.12em;">\${coin}&nbsp;·&nbsp;\${network}</span>
+                <span style="font-size:11.5px;font-weight:700;color:#51635b;text-transform:uppercase;letter-spacing:0.12em;">${coin}&nbsp;·&nbsp;${network}</span>
               </td>
             </tr>
           </table>
 
           <!-- Amount -->
-          <p style="margin:0;font-size:56px;font-weight:800;color:#0a1f17;line-height:1;letter-spacing:-0.03em;">+\${amount}</p>
-          <p style="margin:8px 0 0;font-size:15px;font-weight:700;color:#7b8c84;">\${coin}</p>
+          <p style="margin:0;font-size:56px;font-weight:800;color:#0a1f17;line-height:1;letter-spacing:-0.03em;">+${amount}</p>
+          <p style="margin:8px 0 0;font-size:15px;font-weight:700;color:#7b8c84;">${coin}</p>
 
-          \${fmtUsd ? \`
+          ${fmtUsd ? `
           <!-- USD value -->
           <table cellpadding="0" cellspacing="0" border="0" style="margin:16px auto 0;">
             <tr>
               <td style="background:#eafaf1;border:1px solid #cdeedd;border-radius:8px;padding:7px 18px;">
                 <span style="font-size:13px;color:#15a35c;">≈&nbsp;</span>
-                <span style="font-size:14px;font-weight:700;color:#0c8048;">$\${fmtUsd} USD</span>
+                <span style="font-size:14px;font-weight:700;color:#0c8048;">$${fmtUsd} USD</span>
               </td>
             </tr>
-          </table>\` : ""}
+          </table>` : ""}
 
           <!-- Status badge -->
           <table cellpadding="0" cellspacing="0" border="0" style="margin:24px auto 0;">
@@ -237,7 +237,7 @@ export async function sendDepositEmail(
       </tr>
     </table>
 
-    \${DIVIDER}
+    ${DIVIDER}
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
@@ -250,13 +250,13 @@ export async function sendDepositEmail(
         </td>
       </tr>
     </table>
-  \`;
+  `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: \`+\${amount} \${coin} credited to your SecureChain wallet\`,
-    html: base("Deposit Confirmed", \`\${amount} \${coin} has been added to your wallet\`, body),
+    subject: `+${amount} ${coin} credited to your SecureChain wallet`,
+    html: base("Deposit Confirmed", `${amount} ${coin} has been added to your wallet`, body),
   });
 }
 
@@ -279,49 +279,49 @@ export async function sendWithdrawalStatusEmail(
   const noticeBorder = isApproved ? "#15a35c" : "#dc2626";
   const noticeText   = isApproved
     ? "Your funds are on the way. Transfer times vary by network — typically 10–60 minutes."
-    : \`Your withdrawal was not approved. Contact <a href="mailto:support@securechain.app" style="color:#dc2626;font-weight:700;text-decoration:none;">support@securechain.app</a> if you believe this is an error.\`;
+    : `Your withdrawal was not approved. Contact <a href="mailto:support@securechain.app" style="color:#dc2626;font-weight:700;text-decoration:none;">support@securechain.app</a> if you believe this is an error.`;
   const noticeColor  = isApproved ? "#51635b" : "#991b1b";
 
-  const body = \`
-    <h1 style="margin:0 0 8px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Withdrawal \${statusLabel}</h1>
+  const body = `
+    <h1 style="margin:0 0 8px;font-size:24px;font-weight:800;color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Withdrawal ${statusLabel}</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;">\${username}</strong> — your withdrawal request has been reviewed.
+      Hi <strong style="color:#0a1f17;">${username}</strong> — your withdrawal request has been reviewed.
     </p>
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
       <tr>
-        <td style="background:\${cardBg};border:1px solid \${cardBorder};border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.03);">
+        <td style="background:${cardBg};border:1px solid ${cardBorder};border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.03);">
 
           <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 24px;">
             <tr>
-              <td style="background:\${badgeBg};border-radius:99px;padding:7px 22px;box-shadow:0 4px 12px \${isApproved ? 'rgba(21,163,92,0.2)' : 'rgba(220,38,38,0.2)'};">
-                <span style="font-size:12px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:0.10em;">\${statusSymbol}&nbsp; \${statusLabel}</span>
+              <td style="background:${badgeBg};border-radius:99px;padding:7px 22px;box-shadow:0 4px 12px ${isApproved ? 'rgba(21,163,92,0.2)' : 'rgba(220,38,38,0.2)'};">
+                <span style="font-size:12px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:0.10em;">${statusSymbol}&nbsp; ${statusLabel}</span>
               </td>
             </tr>
           </table>
 
-          <p style="margin:0;font-size:56px;font-weight:800;color:#0a1f17;line-height:1;letter-spacing:-0.03em;">\${amount}</p>
-          <p style="margin:8px 0 0;font-size:15px;font-weight:700;color:#7b8c84;">\${coin}</p>
+          <p style="margin:0;font-size:56px;font-weight:800;color:#0a1f17;line-height:1;letter-spacing:-0.03em;">${amount}</p>
+          <p style="margin:8px 0 0;font-size:15px;font-weight:700;color:#7b8c84;">${coin}</p>
 
         </td>
       </tr>
     </table>
 
-    \${DIVIDER}
+    ${DIVIDER}
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        <td style="padding:16px 20px;background:\${noticeBg};border-left:3px solid \${noticeBorder};border-radius:0 10px 10px 0;">
-          <p style="margin:0;font-size:13.5px;color:\${noticeColor};line-height:1.6;">\${noticeText}</p>
+        <td style="padding:16px 20px;background:${noticeBg};border-left:3px solid ${noticeBorder};border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13.5px;color:${noticeColor};line-height:1.6;">${noticeText}</p>
         </td>
       </tr>
     </table>
-  \`;
+  `;
 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: \`Withdrawal \${statusLabel}: \${amount} \${coin} — SecureChain\`,
-    html: base(\`Withdrawal \${statusLabel}\`, \`Your \${amount} \${coin} withdrawal has been \${status}\`, body),
+    subject: `Withdrawal ${statusLabel}: ${amount} ${coin} — SecureChain`,
+    html: base(`Withdrawal ${statusLabel}`, `Your ${amount} ${coin} withdrawal has been ${status}`, body),
   });
 }

@@ -89,8 +89,8 @@ export function CountStat({ target, suffix = "", label }: CountStatProps) {
   );
 }
 
-export const Wrap = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`max-w-7xl mx-auto px-6 ${className}`}>{children}</div>
+export const Wrap = ({ children, className = "", style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) => (
+  <div className={`max-w-7xl mx-auto px-6 ${className}`} style={style}>{children}</div>
 );
 
 export const Eyebrow = ({ children, center }: { children: ReactNode; center?: boolean }) => (
