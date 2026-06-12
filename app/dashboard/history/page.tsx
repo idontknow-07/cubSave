@@ -73,6 +73,7 @@ function TxDetailSheet({ tx, onClose }: { tx: Tx; onClose: () => void }) {
           background: "var(--surface)", borderRadius: "24px 24px 0 0",
           border: "1px solid var(--border)", borderBottom: "none",
           padding: "0 0 40px",
+          maxHeight: "92dvh", overflowY: "auto",
           animation: "slideUp 0.25s ease",
         }}
       >
@@ -83,6 +84,18 @@ function TxDetailSheet({ tx, onClose }: { tx: Tx; onClose: () => void }) {
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 20px 16px" }}>
+          <button onClick={onClose}
+            style={{ 
+              fontSize: 14, 
+              fontWeight: 600, 
+              color: "var(--text-3)", 
+              background: "none", 
+              border: "none", 
+              cursor: "pointer",
+              padding: "4px 0"
+            }}>
+            Cancel
+          </button>
           <p style={{ fontWeight: 800, fontSize: 17, color: "var(--text)" }}>Transaction Details</p>
           <button onClick={onClose}
             style={{ width: 32, height: 32, borderRadius: 10, border: "1px solid var(--border)", background: "var(--card2)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>

@@ -28,7 +28,10 @@ export default function Hero() {
           maskImage: "radial-gradient(1000px 600px at 70% 20%,#000,transparent 75%)",
         }}
       />
-      <Wrap className="relative z-[2] grid lg:grid-cols-2 gap-14 items-center pt-[104px] pb-[90px]">
+      <Wrap 
+        className="relative z-[2] grid lg:grid-cols-2 gap-14 items-center pb-[90px]"
+        style={{ paddingTop: "calc(104px + env(safe-area-inset-top, 0px))" }}
+      >
         <Reveal>
           <Eyebrow>Crypto Exchange &amp; Trading</Eyebrow>
           <h1 className="font-sora font-bold leading-[1.08] tracking-[-0.02em] text-[clamp(40px,5.4vw,68px)] text-[#0a1f17] mt-[22px]">

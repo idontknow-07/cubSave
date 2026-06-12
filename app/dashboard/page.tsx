@@ -230,6 +230,16 @@ export default function DashboardPage() {
             </div>
             <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>Deposit</span>
           </button>
+
+          <button onClick={() => setComing("Swap")}
+            className="cv-action-desktop-swap"
+            style={{ display: "none", flexDirection: "column", alignItems: "center", gap: 9, background: "none", border: "none", cursor: "pointer" }}>
+            <div className="action-btn-circle"
+              style={{ width: 62, height: 62, borderRadius: 20, background: "var(--card)", border: "1px solid var(--border-2)", display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.18s" }}>
+              <ArrowLeftRight size={22} color="var(--text)" strokeWidth={1.8} />
+            </div>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-2)" }}>Swap</span>
+          </button>
         </div>
 
         {/* Portfolio allocation bar */}
@@ -343,7 +353,8 @@ export default function DashboardPage() {
           .dash-mobile-top   { display: none !important; }
           .cv-action-mobile-deposit,
           .cv-action-mobile-swap { display: none !important; }
-          .cv-action-desktop-deposit { display: flex !important; }
+          .cv-action-desktop-deposit,
+          .cv-action-desktop-swap { display: flex !important; }
         }
         .action-btn-circle:hover {
           border-color: var(--accent) !important;
