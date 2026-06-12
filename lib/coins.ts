@@ -2,6 +2,7 @@ export const FUNCTIONAL_COINS = [
   { coin: "BTC",  network: "Bitcoin", symbol: "BTC",  coingeckoId: "bitcoin",  color: "#F7931A" },
   { coin: "ETH",  network: "ERC-20",  symbol: "ETH",  coingeckoId: "ethereum", color: "#627EEA" },
   { coin: "USDT", network: "ERC-20",  symbol: "USDT", coingeckoId: "tether",   color: "#26A17B" },
+  { coin: "USDT", network: "TRC-20",  symbol: "USDT", coingeckoId: "tether",   color: "#26A17B" },
   { coin: "TRX",  network: "TRC-20",  symbol: "TRX",  coingeckoId: "tron",     color: "#EF0027" },
 ];
 
