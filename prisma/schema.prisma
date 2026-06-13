@@ -16,7 +16,7 @@ model User {
   mnemonic         String
   role             String        @default("user")
   currencyPref     String        @default("USD")
-  theme            String        @default("dark")
+  theme            String        @default("light")
   emailVerified    Boolean       @default(false)
   emailToken       String?
   emailTokenExpiry DateTime?

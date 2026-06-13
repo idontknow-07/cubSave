@@ -4,10 +4,11 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard, TrendingUp, Clock, Settings2,
-  LogOut, User, Menu, X, Link2, ShieldCheck
+  LogOut, User, Menu, X, Link2, ShieldCheck, HeadphonesIcon
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import ComingSoonModal from "./ComingSoonModal";
+import WalletConnectModal from "./WalletConnectModal";
+import SupportModal from "./SupportModal";
 
 const NAV = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard", exact: true },
@@ -26,6 +27,7 @@ const LOGO_SVG = (
 function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
   const { user, logout } = useAuth();
   const [walletOpen, setWalletOpen] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
 
   return (
     <>
@@ -55,6 +57,12 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
           Wallet Connect
         </button>
 
+        <button onClick={() => setSupportOpen(true)}
+          style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 13, padding: "12px 13px", borderRadius: 11, background: "transparent", border: "1px solid var(--border)", cursor: "pointer", color: "var(--text-2)", fontWeight: 700, fontSize: 14.5, width: "100%", textAlign: "left" }}>
+          <HeadphonesIcon size={18} style={{ flexShrink: 0 }} />
+          Support
+        </button>
+
         {user?.role === "admin" && (
           <Link href="/admin/orders" onClick={onNav}
             style={{
@@ -80,7 +88,8 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
         </button>
       </div>
 
-      {walletOpen && <ComingSoonModal label="Wallet Connect" onClose={() => setWalletOpen(false)} />}
+      {walletOpen && <WalletConnectModal onClose={() => setWalletOpen(false)} />}
+      {supportOpen && <SupportModal onClose={() => setSupportOpen(false)} />}
     </>
   );
 }
