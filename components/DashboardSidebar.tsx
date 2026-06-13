@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import {
   LayoutDashboard, TrendingUp, Clock, Settings2,
-  LogOut, User, Menu, X, Link2,
+  LogOut, User, Menu, X, Link2, ShieldCheck
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import ComingSoonModal from "./ComingSoonModal";
@@ -24,7 +24,7 @@ const LOGO_SVG = (
 );
 
 function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [walletOpen, setWalletOpen] = useState(false);
 
   return (
@@ -54,6 +54,22 @@ function NavItems({ onNav, path }: { onNav?: () => void; path: string }) {
           <Link2 size={18} style={{ flexShrink: 0 }} />
           Wallet Connect
         </button>
+
+        {user?.role === "admin" && (
+          <Link href="/admin/orders" onClick={onNav}
+            style={{
+              marginTop: 10, display: "flex", alignItems: "center", gap: 13,
+              padding: "11px 13px", borderRadius: 11, textDecoration: "none",
+              background: "transparent",
+              color: "var(--accent)",
+              fontWeight: 600, fontSize: 14.5,
+              borderLeft: "2px solid transparent",
+              transition: "all 0.12s",
+            }}>
+            <ShieldCheck size={18} style={{ flexShrink: 0 }} />
+            Admin Panel
+          </Link>
+        )}
       </nav>
 
       <div style={{ borderTop: "1px solid var(--border)", padding: "10px 12px 14px" }}>

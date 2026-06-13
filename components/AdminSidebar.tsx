@@ -2,12 +2,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { ClipboardList, CreditCard, LogOut, Menu, X, ShieldCheck } from "lucide-react";
+import { ClipboardList, CreditCard, LogOut, Menu, X, ShieldCheck, LayoutDashboard } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const NAV = [
   { label: "Orders", icon: ClipboardList, href: "/admin/orders" },
   { label: "Credit", icon: CreditCard, href: "/admin/credit" },
+  { label: "User Dashboard", icon: LayoutDashboard, href: "/dashboard" },
 ];
 
 function SidebarContent({ close }: { close?: () => void }) {
