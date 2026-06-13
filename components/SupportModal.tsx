@@ -36,13 +36,13 @@ export default function SupportModal({ onClose }: { onClose: () => void }) {
               <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>support@securechain.app</p>
             </div>
           </a>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", border: "1px solid var(--border)", opacity: 0.7 }}>
-            <MessageSquare size={18} color="var(--text-2)" />
+          <a href="https://wa.me/447442695877" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>
+            <MessageSquare size={18} color="#25D366" />
             <div style={{ textAlign: "left" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>Live Chat</p>
-              <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>Currently busy, try email</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>WhatsApp Support</p>
+              <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>Message us directly</p>
             </div>
-          </div>
+          </a>
         </div>
 
         <button className="btn btn-primary" onClick={onClose}>Close</button>
