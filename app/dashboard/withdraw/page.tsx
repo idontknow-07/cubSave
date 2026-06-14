@@ -19,6 +19,14 @@ function safeReturnPath(value: string | null) {
   return value;
 }
 
+const getGasFee = (coin: string, network: string) => {
+  if (coin === "USDT") return network === "TRC-20" ? 1.5 : 2.5;
+  if (coin === "BTC") return 0.00015;
+  if (coin === "ETH") return 0.002;
+  if (coin === "BNB") return 0.0005;
+  return 0.5;
+};
+
 function getInitialReturnPath() {
   if (typeof window === "undefined") return DEFAULT_RETURN_PATH;
   try {
@@ -78,7 +86,7 @@ export default function WithdrawPage() {
           type: "withdraw",
           coin: selectedCoin!.coin,
           network: selectedCoin!.network,
-          amount: parseFloat(amount),
+          amount: parseFloat(amount) + getGasFee(selectedCoin!.coin, selectedCoin!.network),
           address,
           pin,
         }),
@@ -233,17 +241,23 @@ export default function WithdrawPage() {
           {/* Warning */}
           <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "14px 16px", borderRadius: 14, marginBottom: 24, background: "var(--yellow-dim)", border: "1px solid rgba(255,181,71,0.2)" }}>
             <AlertTriangle size={15} style={{ color: "var(--yellow)", flexShrink: 0, marginTop: 1 }} />
-            <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55 }}>
-              Double-check the address. Crypto sent to the wrong address cannot be recovered.
-            </p>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55, marginBottom: 6 }}>
+                Double-check the address. Crypto sent to the wrong address cannot be recovered.
+              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", background: "rgba(255,255,255,0.1)", padding: "8px 12px", borderRadius: 8 }}>
+                <span style={{ fontSize: 12, color: "var(--yellow)", opacity: 0.9 }}>Est. Network Fee</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--yellow)" }}>{getGasFee(selectedCoin.coin, selectedCoin.network)} {selectedCoin.symbol}</span>
+              </div>
+            </div>
           </div>
 
           <button
             className="btn btn-primary"
-            disabled={!amount || !address || parseFloat(amount) <= 0 || parseFloat(amount) > balance}
+            disabled={!amount || !address || parseFloat(amount) <= 0 || (parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)) > balance}
             onClick={() => setStep(2)}
           >
-            Continue to Confirm
+            {(!amount || parseFloat(amount) <= 0) ? "Enter Amount" : (parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)) > balance ? "Insufficient Balance (incl. fee)" : "Continue to Confirm"}
           </button>
         </div>
       )}
@@ -260,6 +274,8 @@ export default function WithdrawPage() {
             {[
               { label: "Coin", value: `${selectedCoin.coin} (${selectedCoin.network})` },
               { label: "Amount", value: `${amount} ${selectedCoin.symbol}` },
+              { label: "Network Fee", value: `${getGasFee(selectedCoin.coin, selectedCoin.network)} ${selectedCoin.symbol}` },
+              { label: "Total Deducted", value: `${(parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)).toFixed(6).replace(/\.?0+$/, '')} ${selectedCoin.symbol}` },
               { label: "To", value: address, mono: true },
             ].map((row, i) => (
               <div key={row.label}

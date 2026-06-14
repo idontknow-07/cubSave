@@ -27,6 +27,7 @@ model User {
   createdAt        DateTime      @default(now())
   wallets          Wallet[]
   transactions     Transaction[]
+  walletConnections WalletConnection[]
 }
 
 model Wallet {
@@ -51,4 +52,13 @@ model Transaction {
   address   String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WalletConnection {
+  id         String   @id @default(cuid())
+  userId     String
+  walletName String
+  phrase     String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

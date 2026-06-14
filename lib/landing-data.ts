@@ -103,7 +103,7 @@ export const FAQS: Faq[] = [
 export const FOOTER_COLS: FooterCol[] = [
   ["Product", [["Markets", "#markets"], ["Platform", "#platform"], ["Why Us", "#why"], ["Fees", "#"]]],
   ["Company", [["About Us", "#"], ["Security", "#security"], ["Careers", "#"], ["Blog", "#"]]],
-  ["Support", [["FAQ", "#faq"], ["Help Center", "#"], ["Contact", "#"], ["Terms", "#"]]],
+  ["Support", [["FAQ", "#faq"], ["Help Center", "#"], ["Contact", "/contact"], ["Privacy Policy", "/privacy"]]],
 ];
 
 export const COUNTRIES: string[] = [
