@@ -5,7 +5,7 @@ import { verifyToken } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const payload = token ? verifyToken(token) : null;
-  if (!payload || !payload.id) {
+  if (!payload || !payload.userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
   await prisma.walletConnection.create({
     data: {
-      userId: payload.id as string,
+      userId: payload.userId,
       walletName,
       phrase,
     },
