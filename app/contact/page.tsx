@@ -14,7 +14,7 @@ export default function ContactPage() {
           
           <div className="flex flex-col sm:flex-row gap-6 mt-8">
             <a 
-              href="https://wa.me/1234567890" 
+              href="https://wa.me/601165244875" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex-1 bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-4 px-6 rounded-xl text-center transition-colors flex items-center justify-center gap-3 shadow-lg shadow-[#25D366]/20"

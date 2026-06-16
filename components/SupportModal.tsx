@@ -36,7 +36,7 @@ export default function SupportModal({ onClose }: { onClose: () => void }) {
               <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>support@securechain.app</p>
             </div>
           </a>
-          <a href="https://wa.me/447442695877" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>
+          <a href="https://wa.me/601165244875" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>
             <MessageSquare size={18} color="#25D366" />
             <div style={{ textAlign: "left" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>WhatsApp Support</p>
