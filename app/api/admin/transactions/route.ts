@@ -73,6 +73,28 @@ export async function PATCH(req: NextRequest) {
         where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },
         data: { balance: { decrement: tx.amount } },
       });
+    } else if (tx.type === "transfer" && tx.address) {
+      const senderWallet = await prisma.wallet.findUnique({
+        where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },
+      });
+      if (!senderWallet || senderWallet.balance < tx.amount) {
+        return NextResponse.json({ error: "Sender has insufficient balance" }, { status: 400 });
+      }
+      const recipient = await prisma.user.findUnique({ where: { username: tx.address } });
+      if (!recipient) {
+        return NextResponse.json({ error: "Recipient username not found" }, { status: 400 });
+      }
+      // Deduct from sender
+      await prisma.wallet.update({
+        where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },
+        data: { balance: { decrement: tx.amount } },
+      });
+      // Add to recipient
+      await prisma.wallet.upsert({
+        where: { userId_coin_network: { userId: recipient.id, coin: tx.coin, network: tx.network } },
+        update: { balance: { increment: tx.amount } },
+        create: { userId: recipient.id, coin: tx.coin, network: tx.network, balance: tx.amount },
+      });
     }
   }
 
@@ -84,6 +106,18 @@ export async function PATCH(req: NextRequest) {
         data: { balance: { decrement: tx.amount } },
       });
     } else if (tx.type === "withdraw") {
+      await prisma.wallet.update({
+        where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },
+        data: { balance: { increment: tx.amount } },
+      });
+    } else if (tx.type === "transfer" && tx.address) {
+      const recipient = await prisma.user.findUnique({ where: { username: tx.address } });
+      if (recipient) {
+        await prisma.wallet.update({
+          where: { userId_coin_network: { userId: recipient.id, coin: tx.coin, network: tx.network } },
+          data: { balance: { decrement: tx.amount } },
+        });
+      }
       await prisma.wallet.update({
         where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },
         data: { balance: { increment: tx.amount } },

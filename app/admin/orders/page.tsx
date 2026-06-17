@@ -68,7 +68,7 @@ const TH: React.CSSProperties = { padding: "11px 18px", textAlign: "left", fontS
 const TD: React.CSSProperties = { padding: "14px 18px", borderBottom: "1px solid var(--border)", verticalAlign: "middle" };
 
 export default function OrdersPage() {
-  const [tab, setTab] = useState<"withdraw" | "deposit">("withdraw");
+  const [tab, setTab] = useState<"withdraw" | "deposit" | "transfer">("withdraw");
   const [txs, setTxs] = useState<Tx[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -103,7 +103,7 @@ export default function OrdersPage() {
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
             <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>Orders</h1>
-            <p style={{ fontSize: 14, color: "var(--text-3)", marginTop: 4 }}>Review and manage withdrawal & deposit requests</p>
+            <p style={{ fontSize: 14, color: "var(--text-3)", marginTop: 4 }}>Review and manage withdrawal, deposit & transfer requests</p>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {[{ l: "Pending", n: pending, col: "#ffb547", bg: "rgba(255,181,71,0.10)" }, { l: "Approved", n: approved, col: "#39d98a", bg: "rgba(57,217,138,0.10)" }, { l: "Rejected", n: rejected, col: "#ff4d4d", bg: "rgba(255,77,77,0.10)" }].map(s => (
@@ -119,14 +119,14 @@ export default function OrdersPage() {
       {/* Controls */}
       <div className="orders-controls" style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
         <div style={{ display: "flex", gap: 4, padding: 4, borderRadius: 12, background: "var(--card)", border: "1px solid var(--border)", alignSelf: "flex-start" }}>
-          {(["withdraw","deposit"] as const).map(t => {
+          {(["withdraw","deposit","transfer"] as const).map(t => {
             const a = tab === t;
-            const Icon = t === "withdraw" ? ArrowUpCircle : ArrowDownCircle;
+            const Icon = t === "withdraw" ? ArrowUpCircle : (t === "deposit" ? ArrowDownCircle : InboxIcon);
             return (
               <button key={t} onClick={() => { setLoading(true); setTab(t); }}
                 style={{ display: "flex", alignItems: "center", gap: 7, padding: "8px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer", background: a ? "var(--surface)" : "transparent", color: a ? "var(--text)" : "var(--text-3)", transition: "all 0.12s" }}>
-                <Icon size={14} color={a ? (t === "withdraw" ? "#ff4d4d" : "var(--accent)") : "var(--text-3)"} />
-                {t === "withdraw" ? "Withdrawals" : "Deposits"}
+                <Icon size={14} color={a ? (t === "withdraw" ? "#ff4d4d" : (t === "deposit" ? "var(--accent)" : "#3b82f6")) : "var(--text-3)"} />
+                {t === "withdraw" ? "Withdrawals" : (t === "deposit" ? "Deposits" : "Transfers")}
               </button>
             );
           })}
@@ -142,7 +142,7 @@ export default function OrdersPage() {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr>{["User","Coin","Amount","Address","Status","Date","Actions"].map(h => <th key={h} style={TH}>{h}</th>)}</tr>
+              <tr>{["User","Coin","Amount",tab === "transfer" ? "To User" : "Address","Status","Date","Actions"].map(h => <th key={h} style={TH}>{h}</th>)}</tr>
             </thead>
             <tbody>
               {loading ? (

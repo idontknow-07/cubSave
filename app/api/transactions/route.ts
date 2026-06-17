@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    if (type === "withdraw") {
+    if (type === "withdraw" || type === "transfer") {
       if (!pin) return NextResponse.json({ error: "PIN required" }, { status: 400 });
 
       const user = await prisma.user.findUnique({ where: { id: payload.userId } });
@@ -88,7 +88,15 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Insufficient balance" }, { status: 400 });
       }
 
-      // Fee and minimum withdrawal checks
+      if (type === "transfer") {
+        if (!address) return NextResponse.json({ error: "Recipient username required" }, { status: 400 });
+        const targetUser = await prisma.user.findUnique({ where: { username: address } });
+        if (!targetUser) return NextResponse.json({ error: "Recipient username not found" }, { status: 404 });
+        if (targetUser.id === payload.userId) return NextResponse.json({ error: "Cannot send to yourself" }, { status: 400 });
+      }
+
+      // Fee and minimum withdrawal checks only for external withdrawals
+      if (type === "withdraw") {
       const coinDef = FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network);
       if (coinDef) {
         const [ethUsd, coinUsd] = await Promise.all([

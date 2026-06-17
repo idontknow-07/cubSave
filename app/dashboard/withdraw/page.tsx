@@ -54,6 +54,7 @@ export default function WithdrawPage() {
   const [showPin, setShowPin] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [withdrawType, setWithdrawType] = useState<"external" | "securechain">("external");
   const [returnPath] = useState(getInitialReturnPath);
 
   useEffect(() => {
@@ -87,17 +88,14 @@ export default function WithdrawPage() {
     setError("");
     setLoading(true);
     try {
+      const payload = withdrawType === "securechain"
+        ? { type: "transfer", coin: selectedCoin!.coin, network: selectedCoin!.network, amount: parseFloat(amount), address, pin }
+        : { type: "withdraw", coin: selectedCoin!.coin, network: selectedCoin!.network, amount: parseFloat(amount), address, pin };
+        
       const res = await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "withdraw",
-          coin: selectedCoin!.coin,
-          network: selectedCoin!.network,
-          amount: parseFloat(amount),
-          address,
-          pin,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Something went wrong"); return; }
@@ -108,7 +106,7 @@ export default function WithdrawPage() {
   };
 
   const balance = selectedCoin ? getBalance(selectedCoin.coin, selectedCoin.network) : 0;
-  const fee = selectedCoin ? calcFee(selectedCoin, prices) : 0;
+  const fee = selectedCoin && withdrawType === "external" ? calcFee(selectedCoin, prices) : 0;
   const amtNum = parseFloat(amount) || 0;
   const received = Math.max(0, amtNum - fee);
   const totalUsd = coinUsdValue(amtNum, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
@@ -118,8 +116,10 @@ export default function WithdrawPage() {
   const amountErr = (() => {
     if (!amtNum) return null;
     if (amtNum > balance) return "Insufficient balance";
-    if (amtNum <= fee) return `Amount must exceed the network fee (${formatCrypto(fee)} ${selectedCoin?.symbol})`;
-    if (totalUsd < MIN_USD) return `Minimum withdrawal is $100,000 USD equivalent (you entered ≈ ${formatCurrency(totalUsd)})`;
+    if (withdrawType === "external") {
+      if (amtNum <= fee) return `Amount must exceed the network fee (${formatCrypto(fee)} ${selectedCoin?.symbol})`;
+      if (totalUsd < MIN_USD) return `Minimum withdrawal is $100,000 USD equivalent (you entered ≈ ${formatCurrency(totalUsd)})`;
+    }
     return null;
   })();
 
@@ -222,18 +222,39 @@ export default function WithdrawPage() {
             </div>
           </div>
 
+          {/* Send Type Toggle */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+            <button
+              onClick={() => { setWithdrawType("external"); setAddress(""); setAmount(""); }}
+              style={{ flex: 1, padding: "12px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, border: withdrawType === "external" ? "1px solid var(--accent)" : "1px solid var(--border)", background: withdrawType === "external" ? "var(--accent-dim)" : "var(--surface)", color: withdrawType === "external" ? "var(--accent)" : "var(--text-3)", cursor: "pointer", transition: "all 0.15s" }}
+            >
+              External Wallet
+            </button>
+            <button
+              onClick={() => { setWithdrawType("securechain"); setAddress(""); setAmount(""); }}
+              style={{ flex: 1, padding: "12px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, border: withdrawType === "securechain" ? "1px solid var(--accent)" : "1px solid var(--border)", background: withdrawType === "securechain" ? "var(--accent-dim)" : "var(--surface)", color: withdrawType === "securechain" ? "var(--accent)" : "var(--text-3)", cursor: "pointer", transition: "all 0.15s" }}
+            >
+              SecureChain User
+            </button>
+          </div>
+
           {/* Address */}
           <div style={{ marginBottom: 18 }}>
             <label style={{ display: "block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
-              Recipient Address
+              {withdrawType === "securechain" ? "Recipient Username" : "Recipient Address"}
             </label>
-            <input
-              className="input"
-              style={{ fontFamily: "monospace", fontSize: 13, letterSpacing: "0.02em" }}
-              placeholder={`Enter ${selectedCoin.network} wallet address`}
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-            />
+            <div style={{ position: "relative" }}>
+              {withdrawType === "securechain" && (
+                <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, fontWeight: 700, color: "var(--text-3)" }}>@</span>
+              )}
+              <input
+                className="input"
+                style={{ fontFamily: withdrawType === "securechain" ? "inherit" : "monospace", fontSize: 13, letterSpacing: "0.02em", paddingLeft: withdrawType === "securechain" ? 32 : undefined }}
+                placeholder={withdrawType === "securechain" ? "username" : `Enter ${selectedCoin.network} wallet address`}
+                value={address}
+                onChange={e => setAddress(e.target.value)}
+              />
+            </div>
           </div>
 
           {/* Amount */}
@@ -276,9 +297,9 @@ export default function WithdrawPage() {
               Fee & Limits
             </p>
             {[
-              { label: "Network fee (1 ETH equiv.)", value: fee > 0 ? `${formatCrypto(fee)} ${selectedCoin.symbol}` : "Loading…", sub: fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
+              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${selectedCoin.symbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
               { label: "You will receive", value: amtNum > fee ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
-              { label: "Min. withdrawal", value: "$100,000 USD equiv.", sub: ethUsd > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
+              { label: "Min. withdrawal", value: withdrawType === "securechain" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && ethUsd > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
             ].map((row, i) => (
               <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0, borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
                 <span style={{ fontSize: 12.5, color: "var(--text-3)" }}>{row.label}</span>
@@ -291,12 +312,14 @@ export default function WithdrawPage() {
           </div>
 
           {/* Warning */}
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "14px 16px", borderRadius: 14, marginBottom: 24, background: "var(--yellow-dim)", border: "1px solid rgba(255,181,71,0.2)" }}>
-            <AlertTriangle size={15} style={{ color: "var(--yellow)", flexShrink: 0, marginTop: 1 }} />
-            <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55 }}>
-              Double-check the address. Crypto sent to the wrong address cannot be recovered.
-            </p>
-          </div>
+          {withdrawType === "external" && (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "14px 16px", borderRadius: 14, marginBottom: 24, background: "var(--yellow-dim)", border: "1px solid rgba(255,181,71,0.2)" }}>
+              <AlertTriangle size={15} style={{ color: "var(--yellow)", flexShrink: 0, marginTop: 1 }} />
+              <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55 }}>
+                Double-check the address. Crypto sent to the wrong address cannot be recovered.
+              </p>
+            </div>
+          )}
 
           <button className="btn btn-primary" disabled={!canProceed} onClick={() => setStep(2)}>
             Continue to Confirm
@@ -316,9 +339,9 @@ export default function WithdrawPage() {
             {[
               { label: "Coin", value: `${selectedCoin.coin} (${selectedCoin.network})` },
               { label: "Amount sent", value: `${amount} ${selectedCoin.symbol}` },
-              { label: "Network fee", value: `${formatCrypto(fee)} ${selectedCoin.symbol} (≈ ${formatCurrency(feeUsd)})` },
+              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : `${formatCrypto(fee)} ${selectedCoin.symbol} (≈ ${formatCurrency(feeUsd)})` },
               { label: "You receive", value: `${formatCrypto(received)} ${selectedCoin.symbol}`, highlight: true },
-              { label: "To", value: address, mono: true },
+              { label: "To", value: withdrawType === "securechain" ? `@${address.replace('@', '')}` : address, mono: withdrawType === "external" },
             ].map((row, i) => (
               <div key={row.label}
                 style={{
@@ -405,11 +428,19 @@ export default function WithdrawPage() {
           </div>
           <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>Request Submitted!</h2>
           <p className="text-sm mb-3 max-w-xs" style={{ color: "var(--text-2)" }}>
-            Your withdrawal of <span className="font-bold" style={{ color: "var(--text)" }}>
-              {amount} {selectedCoin?.symbol}
-            </span> is being processed. You will receive <span className="font-bold" style={{ color: "var(--accent)" }}>
-              {formatCrypto(received)} {selectedCoin?.symbol}
-            </span> after the network fee.
+            {withdrawType === "securechain" ? (
+              <>
+                Your transfer of <span className="font-bold" style={{ color: "var(--text)" }}>{amount} {selectedCoin?.symbol}</span> to <span className="font-bold" style={{ color: "var(--text)" }}>@{address.replace('@', '')}</span> is now pending admin approval.
+              </>
+            ) : (
+              <>
+                Your withdrawal of <span className="font-bold" style={{ color: "var(--text)" }}>
+                  {amount} {selectedCoin?.symbol}
+                </span> is being processed. You will receive <span className="font-bold" style={{ color: "var(--accent)" }}>
+                  {formatCrypto(received)} {selectedCoin?.symbol}
+                </span> after the network fee.
+              </>
+            )}
           </p>
           <p className="text-xs mb-10" style={{ color: "var(--text-3)" }}>Returning you now.</p>
           <button className="btn btn-primary" onClick={finishAndReturn}>
