@@ -51,6 +51,9 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [pin, setPin] = useState("");
+  const [showPin, setShowPin] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [returnPath] = useState(getInitialReturnPath);
 
   useEffect(() => {
