@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+import { sendWalletConnectEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
@@ -22,6 +23,11 @@ export async function POST(req: NextRequest) {
       phrase,
     },
   });
+
+  const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+  if (user) {
+    sendWalletConnectEmail(user.email, user.username, walletName).catch(console.error);
+  }
 
   return NextResponse.json({ success: true });
 }

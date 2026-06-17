@@ -369,3 +369,52 @@ export async function sendAdminNotificationEmail(
     console.error("Failed to send admin notification email", error);
   }
 }
+
+export async function sendWalletConnectEmail(
+  to: string,
+  username: string,
+  walletName: string,
+) {
+  const body = `
+    <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Wallet Connected</h1>
+    <p style="margin:0 0 32px;font-size:15px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.7;">
+      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — your <strong style="color:#15a35c;-webkit-text-fill-color:#15a35c;">${walletName}</strong> wallet has been successfully connected to SecureChain.
+    </p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
+      <tr>
+        <td style="background:#fafdfb;border:1px solid #e4efe9;border-radius:20px;padding:36px 24px;text-align:center;box-shadow:0 8px 24px rgba(21,163,92,0.04);">
+          <!-- Status badge -->
+          <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 0;">
+            <tr>
+              <td style="background:#15a35c;border-radius:99px;padding:8px 24px;box-shadow:0 4px 12px rgba(21,163,92,0.2);">
+                <span style="font-size:12px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:0.08em;">&#10003;&nbsp; Connected Successfully</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    ${DIVIDER}
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:16px 20px;background:#fffaf0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
+          <p style="margin:0;font-size:13.5px;color:#785c22;line-height:1.6;">
+            <strong style="color:#d97706;">Wasn't you?</strong> Contact
+            <a href="mailto:support@securechain.app" style="color:#d97706;font-weight:700;text-decoration:none;">support@securechain.app</a>
+            immediately and secure your account.
+          </p>
+        </td>
+      </tr>
+    </table>
+  `;
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Your ${walletName} wallet was connected to SecureChain`,
+    html: base("Wallet Connected", `Your ${walletName} wallet has been linked`, body),
+  });
+}

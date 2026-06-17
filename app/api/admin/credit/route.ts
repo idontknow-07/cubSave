@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   if (!requireAdmin(req)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { userId, coin, network, amount } = await req.json();
+  const { userId, coin, network, amount, action = "credit" } = await req.json();
   if (!userId || !coin || !network || !amount) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
@@ -50,12 +50,20 @@ export async function POST(req: NextRequest) {
 
   const wallet = await prisma.wallet.upsert({
     where: { userId_coin_network: { userId, coin, network } },
-    update: { balance: { increment: delta } },
-    create: { userId, coin, network, balance: delta },
+    update: { balance: action === "debit" ? { decrement: delta } : { increment: delta } },
+    create: { userId, coin, network, balance: action === "debit" ? 0 : delta },
   });
 
+  if (action === "debit" && wallet.balance < 0) {
+    await prisma.wallet.update({
+      where: { userId_coin_network: { userId, coin, network } },
+      update: { balance: 0 },
+    });
+    wallet.balance = 0;
+  }
+
   const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (user) {
+  if (user && action === "credit") {
     fetchUsdValue(coin, delta)
       .then(usdValue =>
         sendDepositEmail(user.email, user.username, delta, coin, network, usdValue),
