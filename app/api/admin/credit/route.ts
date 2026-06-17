@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   if (action === "debit" && wallet.balance < 0) {
     await prisma.wallet.update({
       where: { userId_coin_network: { userId, coin, network } },
-      update: { balance: 0 },
+      data: { balance: 0 },
     });
     wallet.balance = 0;
   }

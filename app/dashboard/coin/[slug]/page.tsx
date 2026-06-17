@@ -2,9 +2,9 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { ALL_COINS, FUNCTIONAL_COINS } from "@/lib/coins";
+import { ALL_COINS, FUNCTIONAL_COINS, DEPOSIT_ADDRESSES } from "@/lib/coins";
 import { formatCurrency, formatCrypto } from "@/lib/utils";
-import { ArrowLeft, Send, Download, ArrowUpRight, ArrowDownLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, Send, Download, ArrowUpRight, ArrowDownLeft, ExternalLink, Copy, Check } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 import ComingSoonModal from "@/components/ComingSoonModal";
 import CoinIcon from "@/components/CoinIcon";
@@ -86,6 +86,7 @@ export default function CoinDetailPage() {
   const [tf, setTf] = useState<TF>("1D");
   const [showComing, setShowComing] = useState(false);
   const [selectedTx, setSelectedTx] = useState<any>(null);
+  const [copiedAddress, setCopiedAddress] = useState(false);
 
   const [coinName, network] = useMemo(() => {
     const parts = slug.split("-");
@@ -148,6 +149,14 @@ export default function CoinDetailPage() {
     }
     window.sessionStorage.setItem(WITHDRAW_RETURN_KEY, `/dashboard/coin/${slug}`);
     router.push("/dashboard/withdraw");
+  };
+
+  const copyAddress = () => {
+    if (!coinDef) return;
+    const addr = DEPOSIT_ADDRESSES[coinDef.network] || "";
+    navigator.clipboard.writeText(addr);
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2000);
   };
 
   if (!coinDef) return (
@@ -233,7 +242,7 @@ export default function CoinDetailPage() {
 
       {/* ── Balance (functional only) ── */}
       {isFunctional && (
-        <div style={{ margin: "0 16px 12px", padding: "18px 20px", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ margin: "0 16px 16px", padding: "18px 20px", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 5 }}>Your Balance</p>
             <p style={{ fontSize: 26, fontWeight: 900, color: "var(--text)", letterSpacing: "-0.02em" }}>
@@ -249,19 +258,42 @@ export default function CoinDetailPage() {
         </div>
       )}
 
-      {/* ── Send / Deposit ── */}
-      <div style={{ display: "flex", gap: 10, padding: "0 16px 20px" }}>
+      {/* ── Deposit Address (functional only) ── */}
+      {isFunctional && (
+        <div style={{ margin: "0 16px 16px", padding: "16px 18px", borderRadius: 14, background: "var(--card)", border: "1px solid var(--border)" }}>
+          <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
+            {coinDef.network} Deposit Address
+          </p>
+          <p style={{ fontSize: 12, fontFamily: "monospace", color: "var(--text)", wordBreak: "break-all", lineHeight: 1.7, marginBottom: 12 }}>
+            {DEPOSIT_ADDRESSES[coinDef.network] || "Address unavailable"}
+          </p>
+          <button
+            onClick={copyAddress}
+            style={{
+              width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+              padding: "10px 0", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer",
+              background: copiedAddress ? "var(--accent-dim)" : "var(--surface)",
+              color: copiedAddress ? "var(--accent)" : "var(--text-3)",
+              border: `1px solid ${copiedAddress ? "rgba(21,163,92,0.25)" : "var(--border)"}`,
+              transition: "all 0.15s",
+            }}
+          >
+            {copiedAddress ? <Check size={14} /> : <Copy size={14} />}
+            {copiedAddress ? "Address Copied!" : "Copy Address"}
+          </button>
+          <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 12, lineHeight: 1.5 }}>
+            Send only {coinDef.coin} via {coinDef.network} to this address.
+          </p>
+        </div>
+      )}
+
+      {/* ── Send ── */}
+      <div style={{ padding: "0 16px 20px" }}>
         <button
           onClick={openWithdraw}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px 0", borderRadius: 14, fontWeight: 700, fontSize: 14, cursor: "pointer", background: "var(--card)", color: "var(--text)", border: "1px solid var(--border-2)" }}
+          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px 0", borderRadius: 14, fontWeight: 800, fontSize: 14, cursor: "pointer", background: isFunctional ? "var(--accent)" : "var(--card)", color: isFunctional ? "#000" : "var(--text-3)", border: isFunctional ? "none" : "1px solid var(--border)", boxShadow: isFunctional ? "0 4px 16px var(--accent-glow)" : "none" }}
         >
-          <Send size={16} /> Send
-        </button>
-        <button
-          onClick={() => isFunctional ? router.push("/dashboard/deposit") : setShowComing(true)}
-          style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "14px 0", borderRadius: 14, fontWeight: 800, fontSize: 14, cursor: "pointer", background: "var(--accent)", color: "#000", border: "none", boxShadow: "0 4px 16px var(--accent-glow)" }}
-        >
-          <Download size={16} /> Deposit
+          <Send size={16} /> Send {coinDef.coin}
         </button>
       </div>
 
