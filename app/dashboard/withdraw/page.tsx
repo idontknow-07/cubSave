@@ -4,13 +4,15 @@ import { useRouter } from "next/navigation";
 import { FUNCTIONAL_COINS } from "@/lib/coins";
 import { ArrowLeft, Eye, EyeOff, Check, ChevronRight, AlertTriangle, Lock } from "lucide-react";
 import CoinIcon from "@/components/CoinIcon";
-import { formatCrypto } from "@/lib/utils";
+import { formatCrypto, formatCurrency } from "@/lib/utils";
 
 type Wallet = { coin: string; network: string; balance: number };
+type Prices = Record<string, Record<string, number>>;
 
 const STEPS = ["Select", "Details", "Confirm", "Done"];
 const WITHDRAW_RETURN_KEY = "cv_withdraw_return_to";
 const DEFAULT_RETURN_PATH = "/dashboard";
+const MIN_USD = 100_000;
 
 function safeReturnPath(value: string | null) {
   if (!value || !value.startsWith("/dashboard") || value.startsWith("//") || value.startsWith("/dashboard/withdraw")) {
@@ -18,14 +20,6 @@ function safeReturnPath(value: string | null) {
   }
   return value;
 }
-
-const getGasFee = (coin: string, network: string) => {
-  if (coin === "USDT") return network === "TRC-20" ? 1.5 : 2.5;
-  if (coin === "BTC") return 0.00015;
-  if (coin === "ETH") return 0.002;
-  if (coin === "BNB") return 0.0005;
-  return 0.5;
-};
 
 function getInitialReturnPath() {
   if (typeof window === "undefined") return DEFAULT_RETURN_PATH;
@@ -36,11 +30,24 @@ function getInitialReturnPath() {
   }
 }
 
+/* Fee = 1 ETH denominated in whatever coin the user is sending */
+function calcFee(coin: typeof FUNCTIONAL_COINS[0], prices: Prices): number {
+  const ethUsd = prices["ethereum"]?.usd ?? 0;
+  const coinUsd = prices[coin.coingeckoId]?.usd ?? 0;
+  if (!ethUsd || !coinUsd) return 0;
+  return ethUsd / coinUsd;
+}
+
+function coinUsdValue(amount: number, coin: typeof FUNCTIONAL_COINS[0], prices: Prices): number {
+  return amount * (prices[coin.coingeckoId]?.usd ?? 0);
+}
+
 export default function WithdrawPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [selectedCoin, setSelectedCoin] = useState<typeof FUNCTIONAL_COINS[0] | null>(null);
   const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [prices, setPrices] = useState<Prices>({});
   const [amount, setAmount] = useState("");
   const [address, setAddress] = useState("");
   const [pin, setPin] = useState("");
@@ -51,6 +58,7 @@ export default function WithdrawPage() {
 
   useEffect(() => {
     fetch("/api/wallet").then(r => r.json()).then(d => setWallets(d.wallets || []));
+    fetch("/api/prices").then(r => r.json()).then(d => setPrices(d));
   }, []);
 
   useEffect(() => {
@@ -86,7 +94,7 @@ export default function WithdrawPage() {
           type: "withdraw",
           coin: selectedCoin!.coin,
           network: selectedCoin!.network,
-          amount: parseFloat(amount) + getGasFee(selectedCoin!.coin, selectedCoin!.network),
+          amount: parseFloat(amount),
           address,
           pin,
         }),
@@ -100,6 +108,22 @@ export default function WithdrawPage() {
   };
 
   const balance = selectedCoin ? getBalance(selectedCoin.coin, selectedCoin.network) : 0;
+  const fee = selectedCoin ? calcFee(selectedCoin, prices) : 0;
+  const amtNum = parseFloat(amount) || 0;
+  const received = Math.max(0, amtNum - fee);
+  const totalUsd = coinUsdValue(amtNum, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
+  const feeUsd = coinUsdValue(fee, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
+  const ethUsd = prices["ethereum"]?.usd ?? 0;
+
+  const amountErr = (() => {
+    if (!amtNum) return null;
+    if (amtNum > balance) return "Insufficient balance";
+    if (amtNum <= fee) return `Amount must exceed the network fee (${formatCrypto(fee)} ${selectedCoin?.symbol})`;
+    if (totalUsd < MIN_USD) return `Minimum withdrawal is $100,000 USD equivalent (you entered ≈ ${formatCurrency(totalUsd)})`;
+    return null;
+  })();
+
+  const canProceed = amtNum > 0 && address.trim().length > 0 && !amountErr;
 
   return (
     <div style={{ maxWidth: 520, margin: "0 auto", padding: "20px 20px 80px", minHeight: "100vh" }}>
@@ -108,7 +132,7 @@ export default function WithdrawPage() {
       <div className="flex items-center gap-3 mb-6">
         <button onClick={back}
           className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
-          style={{ background: "var(--card2)", border: "1px solid var(--border)" }}>
+          style={{ background: "var(--card)", border: "1px solid var(--border)" }}>
           <ArrowLeft size={18} color="var(--text)" />
         </button>
         <div>
@@ -126,7 +150,7 @@ export default function WithdrawPage() {
         <div className="flex gap-1.5 mb-8">
           {STEPS.slice(0, 3).map((_, i) => (
             <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
-              style={{ background: i <= step ? "var(--accent)" : "var(--card2)" }} />
+              style={{ background: i <= step ? "var(--accent)" : "var(--card)" }} />
           ))}
         </div>
       )}
@@ -198,7 +222,7 @@ export default function WithdrawPage() {
             </div>
           </div>
 
-          {/* Address field */}
+          {/* Address */}
           <div style={{ marginBottom: 18 }}>
             <label style={{ display: "block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
               Recipient Address
@@ -212,10 +236,10 @@ export default function WithdrawPage() {
             />
           </div>
 
-          {/* Amount field */}
-          <div style={{ marginBottom: 24 }}>
+          {/* Amount */}
+          <div style={{ marginBottom: amountErr ? 10 : 16 }}>
             <label style={{ display: "block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
-              Amount
+              Amount to withdraw
             </label>
             <div style={{ position: "relative" }}>
               <input
@@ -229,7 +253,7 @@ export default function WithdrawPage() {
               <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: 8 }}>
                 <button
                   onClick={() => setAmount(String(balance))}
-                  style={{ fontSize: 11, fontWeight: 800, padding: "4px 10px", borderRadius: 8, background: "var(--accent-dim)", border: "1px solid rgba(170,255,71,0.2)", color: "var(--accent)", cursor: "pointer", letterSpacing: "0.05em" }}
+                  style={{ fontSize: 11, fontWeight: 800, padding: "4px 10px", borderRadius: 8, background: "var(--accent-dim)", border: "1px solid rgba(21,163,92,0.2)", color: "var(--accent)", cursor: "pointer", letterSpacing: "0.05em" }}
                 >
                   MAX
                 </button>
@@ -238,26 +262,44 @@ export default function WithdrawPage() {
             </div>
           </div>
 
+          {/* Inline amount error */}
+          {amountErr && (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "10px 14px", borderRadius: 12, marginBottom: 16, background: "rgba(240,68,68,0.08)", border: "1px solid rgba(240,68,68,0.18)" }}>
+              <AlertTriangle size={14} style={{ color: "#e53935", flexShrink: 0, marginTop: 1 }} />
+              <p style={{ fontSize: 13, color: "#e53935", lineHeight: 1.5 }}>{amountErr}</p>
+            </div>
+          )}
+
+          {/* Fee & minimum info card */}
+          <div style={{ padding: "14px 16px", borderRadius: 14, marginBottom: 24, background: "var(--card)", border: "1px solid var(--border)" }}>
+            <p style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-3)", marginBottom: 12 }}>
+              Fee & Limits
+            </p>
+            {[
+              { label: "Network fee (1 ETH equiv.)", value: fee > 0 ? `${formatCrypto(fee)} ${selectedCoin.symbol}` : "Loading…", sub: fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
+              { label: "You will receive", value: amtNum > fee ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
+              { label: "Min. withdrawal", value: "$100,000 USD equiv.", sub: ethUsd > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
+            ].map((row, i) => (
+              <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0, borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
+                <span style={{ fontSize: 12.5, color: "var(--text-3)" }}>{row.label}</span>
+                <div style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{row.value}</span>
+                  {row.sub && <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 1 }}>{row.sub}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+
           {/* Warning */}
           <div style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "14px 16px", borderRadius: 14, marginBottom: 24, background: "var(--yellow-dim)", border: "1px solid rgba(255,181,71,0.2)" }}>
             <AlertTriangle size={15} style={{ color: "var(--yellow)", flexShrink: 0, marginTop: 1 }} />
-            <div style={{ flex: 1 }}>
-              <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55, marginBottom: 6 }}>
-                Double-check the address. Crypto sent to the wrong address cannot be recovered.
-              </p>
-              <div style={{ display: "flex", justifyContent: "space-between", background: "rgba(255,255,255,0.1)", padding: "8px 12px", borderRadius: 8 }}>
-                <span style={{ fontSize: 12, color: "var(--yellow)", opacity: 0.9 }}>Est. Network Fee</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--yellow)" }}>{getGasFee(selectedCoin.coin, selectedCoin.network)} {selectedCoin.symbol}</span>
-              </div>
-            </div>
+            <p style={{ fontSize: 13, color: "var(--yellow)", lineHeight: 1.55 }}>
+              Double-check the address. Crypto sent to the wrong address cannot be recovered.
+            </p>
           </div>
 
-          <button
-            className="btn btn-primary"
-            disabled={!amount || !address || parseFloat(amount) <= 0 || (parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)) > balance}
-            onClick={() => setStep(2)}
-          >
-            {(!amount || parseFloat(amount) <= 0) ? "Enter Amount" : (parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)) > balance ? "Insufficient Balance (incl. fee)" : "Continue to Confirm"}
+          <button className="btn btn-primary" disabled={!canProceed} onClick={() => setStep(2)}>
+            Continue to Confirm
           </button>
         </div>
       )}
@@ -273,9 +315,9 @@ export default function WithdrawPage() {
             </p>
             {[
               { label: "Coin", value: `${selectedCoin.coin} (${selectedCoin.network})` },
-              { label: "Amount", value: `${amount} ${selectedCoin.symbol}` },
-              { label: "Network Fee", value: `${getGasFee(selectedCoin.coin, selectedCoin.network)} ${selectedCoin.symbol}` },
-              { label: "Total Deducted", value: `${(parseFloat(amount) + getGasFee(selectedCoin.coin, selectedCoin.network)).toFixed(6).replace(/\.?0+$/, '')} ${selectedCoin.symbol}` },
+              { label: "Amount sent", value: `${amount} ${selectedCoin.symbol}` },
+              { label: "Network fee", value: `${formatCrypto(fee)} ${selectedCoin.symbol} (≈ ${formatCurrency(feeUsd)})` },
+              { label: "You receive", value: `${formatCrypto(received)} ${selectedCoin.symbol}`, highlight: true },
               { label: "To", value: address, mono: true },
             ].map((row, i) => (
               <div key={row.label}
@@ -285,20 +327,23 @@ export default function WithdrawPage() {
                   borderTop: i > 0 ? "1px solid var(--border)" : "none",
                 }}>
                 <span style={{ fontSize: 13, color: "var(--text-3)", flexShrink: 0 }}>{row.label}</span>
-                <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", textAlign: "right", wordBreak: "break-all", fontFamily: row.mono ? "monospace" : "inherit" }}>
+                <span style={{
+                  fontSize: 13, fontWeight: 700, textAlign: "right", wordBreak: "break-all",
+                  fontFamily: (row as { mono?: boolean }).mono ? "monospace" : "inherit",
+                  color: (row as { highlight?: boolean }).highlight ? "var(--accent)" : "var(--text)",
+                }}>
                   {row.value}
                 </span>
               </div>
             ))}
           </div>
 
-          {/* PIN section */}
+          {/* PIN */}
           <div style={{
             padding: "28px 24px 24px", borderRadius: 18,
             background: "var(--card)", border: "1px solid var(--border)",
-            display: "flex", flexDirection: "column", alignItems: "center", gap: 0,
+            display: "flex", flexDirection: "column", alignItems: "center",
           }}>
-            {/* Lock icon */}
             <div style={{
               width: 60, height: 60, borderRadius: 18, marginBottom: 14,
               display: "flex", alignItems: "center", justifyContent: "center",
@@ -306,14 +351,9 @@ export default function WithdrawPage() {
             }}>
               <Lock size={26} color="#f0b429" strokeWidth={1.8} />
             </div>
-            <p style={{ fontWeight: 800, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>
-              Withdrawal PIN
-            </p>
-            <p style={{ fontSize: 13, color: "var(--text-3)", marginBottom: 20 }}>
-              Enter your PIN to confirm
-            </p>
+            <p style={{ fontWeight: 800, fontSize: 16, color: "var(--text)", marginBottom: 4 }}>Withdrawal PIN</p>
+            <p style={{ fontSize: 13, color: "var(--text-3)", marginBottom: 20 }}>Enter your PIN to confirm</p>
 
-            {/* PIN input */}
             <div style={{ position: "relative", width: "100%", marginBottom: 12 }}>
               <input
                 type={showPin ? "text" : "password"}
@@ -329,16 +369,14 @@ export default function WithdrawPage() {
               <button
                 style={{ position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 4 }}
                 onClick={() => setShowPin(!showPin)}>
-                {showPin
-                  ? <EyeOff size={18} color="var(--text-3)" />
-                  : <Eye size={18} color="var(--text-3)" />}
+                {showPin ? <EyeOff size={18} color="var(--text-3)" /> : <Eye size={18} color="var(--text-3)" />}
               </button>
             </div>
 
             {error && (
               <div style={{ width: "100%", display: "flex", alignItems: "center", gap: 8, padding: "10px 14px", borderRadius: 12, marginBottom: 12, background: "rgba(240,68,68,0.1)", border: "1px solid rgba(240,68,68,0.2)" }}>
-                <AlertTriangle size={14} style={{ color: "var(--red)", flexShrink: 0 }} />
-                <p style={{ fontSize: 13, fontWeight: 500, color: "var(--red)" }}>{error}</p>
+                <AlertTriangle size={14} style={{ color: "#e53935", flexShrink: 0 }} />
+                <p style={{ fontSize: 13, fontWeight: 500, color: "#e53935" }}>{error}</p>
               </div>
             )}
 
@@ -361,19 +399,19 @@ export default function WithdrawPage() {
       {/* ── Step 3 — Done ── */}
       {step === 3 && (
         <div className="fade-up flex flex-col items-center text-center pt-12">
-          <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6 glow-green"
-            style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-h))" }}>
-            <Check size={40} color="#000" strokeWidth={3} />
+          <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6"
+            style={{ background: "linear-gradient(135deg, var(--accent), #047857)", boxShadow: "0 0 40px var(--accent-glow)" }}>
+            <Check size={40} color="#fff" strokeWidth={3} />
           </div>
           <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>Request Submitted!</h2>
           <p className="text-sm mb-3 max-w-xs" style={{ color: "var(--text-2)" }}>
             Your withdrawal of <span className="font-bold" style={{ color: "var(--text)" }}>
               {amount} {selectedCoin?.symbol}
-            </span> is being processed.
+            </span> is being processed. You will receive <span className="font-bold" style={{ color: "var(--accent)" }}>
+              {formatCrypto(received)} {selectedCoin?.symbol}
+            </span> after the network fee.
           </p>
-          <p className="text-xs mb-10" style={{ color: "var(--text-3)" }}>
-            Returning you now.
-          </p>
+          <p className="text-xs mb-10" style={{ color: "var(--text-3)" }}>Returning you now.</p>
           <button className="btn btn-primary" onClick={finishAndReturn}>
             {returnPath === DEFAULT_RETURN_PATH ? "Back to Home" : "Back to Previous Page"}
           </button>

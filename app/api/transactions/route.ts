@@ -2,6 +2,38 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken, comparePin } from "@/lib/auth";
 import { sendAdminNotificationEmail } from "@/lib/email";
+import { FUNCTIONAL_COINS } from "@/lib/coins";
+
+const MIN_WITHDRAWAL_USD = 100_000;
+const ETH_FEE_USD_FALLBACK = 3500;
+
+async function getEthUsd(): Promise<number> {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
+      { next: { revalidate: 60 } }
+    );
+    if (res.ok) {
+      const d = await res.json();
+      return d?.ethereum?.usd ?? ETH_FEE_USD_FALLBACK;
+    }
+  } catch { /* ignore */ }
+  return ETH_FEE_USD_FALLBACK;
+}
+
+async function getCoinUsd(coingeckoId: string): Promise<number> {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`,
+      { next: { revalidate: 60 } }
+    );
+    if (res.ok) {
+      const d = await res.json();
+      return d?.[coingeckoId]?.usd ?? 0;
+    }
+  } catch { /* ignore */ }
+  return 0;
+}
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
@@ -54,6 +86,32 @@ export async function POST(req: NextRequest) {
       });
       if (!wallet || wallet.balance < parseFloat(amount)) {
         return NextResponse.json({ error: "Insufficient balance" }, { status: 400 });
+      }
+
+      // Fee and minimum withdrawal checks
+      const coinDef = FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network);
+      if (coinDef) {
+        const [ethUsd, coinUsd] = await Promise.all([
+          getEthUsd(),
+          getCoinUsd(coinDef.coingeckoId),
+        ]);
+        if (coinUsd > 0 && ethUsd > 0) {
+          const feeCoin = ethUsd / coinUsd;
+          const amtNum = parseFloat(amount);
+          if (amtNum <= feeCoin) {
+            return NextResponse.json(
+              { error: "Amount is insufficient to cover the network fee (1 ETH equivalent)." },
+              { status: 400 }
+            );
+          }
+          const withdrawalUsd = amtNum * coinUsd;
+          if (withdrawalUsd < MIN_WITHDRAWAL_USD) {
+            return NextResponse.json(
+              { error: `Minimum withdrawal is $100,000 USD equivalent. Your withdrawal is approximately $${Math.round(withdrawalUsd).toLocaleString()}.` },
+              { status: 400 }
+            );
+          }
+        }
       }
     }
 

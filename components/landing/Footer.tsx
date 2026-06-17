@@ -8,7 +8,14 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           <div className="col-span-2 md:col-span-1">
             <Logo light />
-            <p className="text-[#9fb3a9] text-[14px] mt-4 max-w-[300px]">A modern cryptocurrency exchange built for secure, transparent, and seamless trading.</p>
+            <p className="text-[#9fb3a9] text-[14px] mt-4 mb-5 max-w-[300px]">A modern cryptocurrency exchange built for secure, transparent, and seamless trading.</p>
+            <address className="not-italic text-[13px] text-[#6f867c] leading-[1.8]">
+              SecureChain Ltd<br />
+              71–75 Shelton Street<br />
+              Covent Garden, London<br />
+              WC2H 9JQ, United Kingdom<br />
+              <a href="tel:+442039707422" className="hover:text-[#27e89a] transition-colors">+44 20 3970 7422</a>
+            </address>
           </div>
           {FOOTER_COLS.map(([h, links]) => (
             <div key={h}>

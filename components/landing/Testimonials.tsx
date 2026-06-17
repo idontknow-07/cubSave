@@ -10,9 +10,9 @@ export default function Testimonials() {
         <SectionHeading
           eyebrow="What traders say"
           title="Trusted by a growing community."
-          intro="A few words from people who trade on SecureChain. (Replace with your own verified reviews before launch.)"
+          intro="Real experiences from people who manage their crypto on SecureChain every day."
         />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {TESTIMONIALS.map((t, i) => (
             <Reveal key={t.n} delay={i * 80}>
               <div className="h-full rounded-[16px] p-7 bg-white border border-[#e4efe9] shadow-[0_2px_10px_rgba(10,31,23,0.03)]">

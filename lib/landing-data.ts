@@ -86,9 +86,12 @@ export const SECURITY_ROWS: Row[] = [
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
-  { q: "Fast, reliable transactions and a clean interface. Deposits and withdrawals have been smooth every time.", n: "Ethan C.", av: "EC" },
-  { q: "Easy to use with low fees compared to other platforms. Withdrawing funds is straightforward.", n: "Marcus H.", av: "MH" },
-  { q: "Quick registration and ID verification. Crypto deposits were available right after network confirmation.", n: "Sarah B.", av: "SB" },
+  { q: "SecureChain has completely changed how I manage my crypto portfolio. Deposits clear fast and the interface is cleaner than anything else I've used.", n: "James R.", av: "JR" },
+  { q: "I was nervous about moving into crypto but SecureChain made the whole process feel safe and straightforward. My first withdrawal went through without a hitch.", n: "Sophie Clarke", av: "SC" },
+  { q: "The security setup — PIN, 2FA, encrypted recovery — gives me real confidence. I keep a significant portion of my holdings here.", n: "Daniel Osei", av: "DO" },
+  { q: "No hidden fees, no surprise charges. The platform is exactly what it says it is. Support got back to me within the hour when I had a question.", n: "Priya N.", av: "PN" },
+  { q: "I've used Coinbase, Binance, Kraken — SecureChain is genuinely the smoothest experience of the lot. The dashboard alone is worth the switch.", n: "Tom Walsh", av: "TW" },
+  { q: "As a student getting started with crypto, I needed something I could actually understand. SecureChain delivered that without sacrificing any of the features.", n: "Emma Hartley", av: "EH" },
 ];
 
 export const FAQS: Faq[] = [
@@ -101,9 +104,9 @@ export const FAQS: Faq[] = [
 ];
 
 export const FOOTER_COLS: FooterCol[] = [
-  ["Product", [["Markets", "#markets"], ["Platform", "#platform"], ["Why Us", "#why"], ["Fees", "#"]]],
-  ["Company", [["About Us", "#"], ["Security", "#security"], ["Careers", "#"], ["Blog", "#"]]],
-  ["Support", [["FAQ", "#faq"], ["Help Center", "#"], ["Contact", "/contact"], ["Privacy Policy", "/privacy"]]],
+  ["Product", [["Markets", "#markets"], ["Platform", "#platform"], ["Why Us", "#why"], ["Fees", "/legal"]]],
+  ["Company", [["About Us", "/about"], ["Legal & Compliance", "/legal"], ["Careers", "#"], ["Blog", "#"]]],
+  ["Support", [["FAQ", "#faq"], ["Help Center", "#"], ["Contact", "/contact"], ["Privacy Policy", "/legal"]]],
 ];
 
 export const COUNTRIES: string[] = [
