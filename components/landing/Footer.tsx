@@ -14,7 +14,7 @@ export default function Footer() {
               71–75 Shelton Street<br />
               Covent Garden, London<br />
               WC2H 9JQ, United Kingdom<br />
-              <a href="tel:+442039707422" className="hover:text-[#27e89a] transition-colors">+44 20 3970 7422</a>
+              <a href="tel:+601165244875" className="hover:text-[#27e89a] transition-colors">+60 11 6524 4875</a>
             </address>
           </div>
           {FOOTER_COLS.map(([h, links]) => (

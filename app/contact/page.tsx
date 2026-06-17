@@ -9,9 +9,9 @@ const CONTACT_CARDS = [
       </svg>
     ),
     label: "Phone",
-    value: "+44 20 3970 7422",
+    value: "+60 11 6524 4875",
     sub: "Mon – Fri, 9am – 6pm GMT",
-    href: "tel:+442039707422",
+    href: "tel:+601165244875",
     cta: "Call us",
     color: "#15a35c",
   },
