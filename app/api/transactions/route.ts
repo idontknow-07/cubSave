@@ -122,6 +122,7 @@ export async function POST(req: NextRequest) {
         }
       }
     }
+    }
 
     const tx = await prisma.transaction.create({
       data: {
