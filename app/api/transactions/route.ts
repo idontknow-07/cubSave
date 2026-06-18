@@ -7,6 +7,14 @@ import { FUNCTIONAL_COINS } from "@/lib/coins";
 const MIN_WITHDRAWAL_USD = 100_000;
 const ETH_FEE_USD_FALLBACK = 3500;
 
+const NATIVE_MAP: Record<string, string> = {
+  "Bitcoin": "BTC",
+  "ERC-20": "ETH",
+  "TRC-20": "TRX",
+  "BEP20": "BNB",
+  "Solana": "SOL"
+};
+
 async function getEthUsd(): Promise<number> {
   try {
     const res = await fetch(
@@ -97,31 +105,49 @@ export async function POST(req: NextRequest) {
 
       // Fee and minimum withdrawal checks only for external withdrawals
       if (type === "withdraw") {
-      const coinDef = FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network);
-      if (coinDef) {
-        const [ethUsd, coinUsd] = await Promise.all([
-          getEthUsd(),
-          getCoinUsd(coinDef.coingeckoId),
-        ]);
-        if (coinUsd > 0 && ethUsd > 0) {
-          const feeCoin = ethUsd / coinUsd;
-          const amtNum = parseFloat(amount);
-          if (amtNum <= feeCoin) {
-            return NextResponse.json(
-              { error: "Amount is insufficient to cover the network fee (1 ETH equivalent)." },
-              { status: 400 }
-            );
-          }
-          const withdrawalUsd = amtNum * coinUsd;
-          if (withdrawalUsd < MIN_WITHDRAWAL_USD) {
-            return NextResponse.json(
-              { error: `Minimum withdrawal is $100,000 USD equivalent. Your withdrawal is approximately $${Math.round(withdrawalUsd).toLocaleString()}.` },
-              { status: 400 }
-            );
+        const nativeSymbol = NATIVE_MAP[network] || coin;
+        const isNative = nativeSymbol === coin;
+        const nativeCoinDef = FUNCTIONAL_COINS.find(c => c.symbol === nativeSymbol && c.network === network) || FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network);
+
+        if (nativeCoinDef) {
+          const [ethUsd, nativeUsd, tokenUsd] = await Promise.all([
+            getEthUsd(),
+            getCoinUsd(nativeCoinDef.coingeckoId),
+            isNative ? 0 : getCoinUsd(FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network)?.coingeckoId || "")
+          ]);
+
+          if (nativeUsd > 0 && ethUsd > 0) {
+            const feeNative = ethUsd / nativeUsd;
+            const amtNum = parseFloat(amount);
+
+            if (isNative) {
+              if (amtNum <= feeNative) {
+                return NextResponse.json({ error: `Amount must exceed the network fee (${feeNative.toFixed(6)} ${nativeSymbol}).` }, { status: 400 });
+              }
+            } else {
+              const nativeWallet = await prisma.wallet.findUnique({
+                where: { userId_coin_network: { userId: payload.userId, coin: nativeSymbol, network } }
+              });
+              if (!nativeWallet || nativeWallet.balance < feeNative) {
+                return NextResponse.json({ error: `Insufficient ${nativeSymbol} balance for network fee.` }, { status: 400 });
+              }
+              // Deduct native fee immediately since the admin approval only touches the target token
+              await prisma.wallet.update({
+                where: { id: nativeWallet.id },
+                data: { balance: { decrement: feeNative } }
+              });
+            }
+
+            const withdrawalUsd = amtNum * (isNative ? nativeUsd : tokenUsd);
+            if (withdrawalUsd < MIN_WITHDRAWAL_USD) {
+              return NextResponse.json(
+                { error: `Minimum withdrawal is $100,000 USD equivalent. Your withdrawal is approximately $${Math.round(withdrawalUsd).toLocaleString()}.` },
+                { status: 400 }
+              );
+            }
           }
         }
       }
-    }
     }
 
     const tx = await prisma.transaction.create({

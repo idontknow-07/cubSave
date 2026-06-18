@@ -14,6 +14,14 @@ const WITHDRAW_RETURN_KEY = "cv_withdraw_return_to";
 const DEFAULT_RETURN_PATH = "/dashboard";
 const MIN_USD = 100_000;
 
+const NATIVE_MAP: Record<string, string> = {
+  "Bitcoin": "BTC",
+  "ERC-20": "ETH",
+  "TRC-20": "TRX",
+  "BEP20": "BNB",
+  "Solana": "SOL"
+};
+
 function safeReturnPath(value: string | null) {
   if (!value || !value.startsWith("/dashboard") || value.startsWith("//") || value.startsWith("/dashboard/withdraw")) {
     return DEFAULT_RETURN_PATH;
@@ -106,18 +114,27 @@ export default function WithdrawPage() {
   };
 
   const balance = selectedCoin ? getBalance(selectedCoin.coin, selectedCoin.network) : 0;
-  const fee = selectedCoin && withdrawType === "external" ? calcFee(selectedCoin, prices) : 0;
+  
+  const nativeSymbol = NATIVE_MAP[selectedCoin?.network || ""] || selectedCoin?.symbol;
+  const nativeCoinDef = FUNCTIONAL_COINS.find(c => c.symbol === nativeSymbol && c.network === selectedCoin?.network) || selectedCoin;
+  const nativeBalance = nativeCoinDef ? getBalance(nativeCoinDef.coin, nativeCoinDef.network) : 0;
+  
+  const fee = nativeCoinDef && withdrawType === "external" ? calcFee(nativeCoinDef, prices) : 0;
+  const isNative = selectedCoin?.symbol === nativeSymbol;
+  
   const amtNum = parseFloat(amount) || 0;
-  const received = Math.max(0, amtNum - fee);
+  const received = isNative ? Math.max(0, amtNum - fee) : amtNum;
+  
   const totalUsd = coinUsdValue(amtNum, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
-  const feeUsd = coinUsdValue(fee, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
+  const feeUsd = coinUsdValue(fee, nativeCoinDef ?? FUNCTIONAL_COINS[0], prices);
   const ethUsd = prices["ethereum"]?.usd ?? 0;
 
   const amountErr = (() => {
     if (!amtNum) return null;
     if (amtNum > balance) return "Insufficient balance";
     if (withdrawType === "external") {
-      if (amtNum <= fee) return `Amount must exceed the network fee (${formatCrypto(fee)} ${selectedCoin?.symbol})`;
+      if (isNative && amtNum <= fee) return `Amount must exceed the network fee (${formatCrypto(fee)} ${nativeSymbol})`;
+      if (!isNative && nativeBalance < fee) return `Insufficient ${nativeSymbol} balance for network fee (requires ${formatCrypto(fee)} ${nativeSymbol})`;
       if (totalUsd < MIN_USD) return `Minimum withdrawal is $100,000 USD equivalent (you entered ≈ ${formatCurrency(totalUsd)})`;
     }
     return null;
@@ -297,8 +314,8 @@ export default function WithdrawPage() {
               Fee & Limits
             </p>
             {[
-              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${selectedCoin.symbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
-              { label: "You will receive", value: amtNum > fee ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
+              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${nativeSymbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
+              { label: "You will receive", value: amtNum > 0 ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
               { label: "Min. withdrawal", value: withdrawType === "securechain" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && ethUsd > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
             ].map((row, i) => (
               <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0, borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
@@ -339,7 +356,7 @@ export default function WithdrawPage() {
             {[
               { label: "Coin", value: `${selectedCoin.coin} (${selectedCoin.network})` },
               { label: "Amount sent", value: `${amount} ${selectedCoin.symbol}` },
-              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : `${formatCrypto(fee)} ${selectedCoin.symbol} (≈ ${formatCurrency(feeUsd)})` },
+              { label: "Network fee", value: withdrawType === "securechain" ? "0 (Free)" : `${formatCrypto(fee)} ${nativeSymbol} (≈ ${formatCurrency(feeUsd)})` },
               { label: "You receive", value: `${formatCrypto(received)} ${selectedCoin.symbol}`, highlight: true },
               { label: "To", value: withdrawType === "securechain" ? `@${address.replace('@', '')}` : address, mono: withdrawType === "external" },
             ].map((row, i) => (
