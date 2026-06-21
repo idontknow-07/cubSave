@@ -28,7 +28,7 @@ const IOS_STEPS = [
   { title: "Open in Safari", body: "Make sure you're using Safari — Chrome and Firefox don't support this on iOS." },
   { title: "Tap the Share button", body: "At the bottom center of Safari, tap the square with an arrow pointing up." },
   { title: 'Tap "Add to Home Screen"', body: "Scroll down in the share sheet and select this option." },
-  { title: "Confirm with Add", body: 'Tap "Add" in the top right corner. SecureChain will appear on your home screen.' },
+  { title: "Confirm with Add", body: 'Tap "Add" in the top right corner. CubSave will appear on your home screen.' },
 ];
 
 const ANDROID_STEPS = [
@@ -39,7 +39,7 @@ const ANDROID_STEPS = [
 
 const DESKTOP_STEPS = [
   { title: "Look for the install icon", body: "In Chrome or Edge, look for a computer icon (⊕) in the address bar on the right." },
-  { title: "Click Install", body: 'Click the icon and select "Install SecureChain" from the popup.' },
+  { title: "Click Install", body: 'Click the icon and select "Install CubSave" from the popup.' },
   { title: "Open from desktop", body: "The app will appear in your applications and run like a native app." },
 ];
 
@@ -105,7 +105,7 @@ export default function InstallPage() {
           {LOGO(38)}
         </div>
         <h1 style={{ fontSize: 24, fontWeight: 900, color: "#0a1f17", marginBottom: 10 }}>Already Installed</h1>
-        <p style={{ fontSize: 15, color: "#51635b", marginBottom: 32 }}>SecureChain is running as an installed app.</p>
+        <p style={{ fontSize: 15, color: "#51635b", marginBottom: 32 }}>CubSave is running as an installed app.</p>
         <Link href="/dashboard" style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 14, background: "#15a35c", color: "#fff", fontWeight: 800, fontSize: 15, textDecoration: "none", boxShadow: "0 8px 24px rgba(21,163,92,0.3)" }}>
           Open Dashboard
         </Link>
@@ -127,7 +127,7 @@ export default function InstallPage() {
           <div style={{ width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {LOGO(14)}
           </div>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "#0a1f17" }}>SecureChain</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "#0a1f17" }}>CubSave</span>
         </div>
       </div>
 
@@ -145,7 +145,7 @@ export default function InstallPage() {
             {LOGO(42)}
           </div>
           <h1 style={{ fontSize: 30, fontWeight: 900, color: "#0a1f17", letterSpacing: "-0.02em", marginBottom: 12 }}>
-            Install SecureChain
+            Install CubSave
           </h1>
           <p style={{ fontSize: 15, color: "#51635b", lineHeight: 1.65, maxWidth: 340, margin: "0 auto" }}>
             Add to your home screen for instant access, full-screen mode, and a native app experience.
@@ -209,7 +209,7 @@ export default function InstallPage() {
             <CheckCircle2 size={22} color="#15a35c" />
             <div>
               <p style={{ fontWeight: 800, fontSize: 15, color: "#0a1f17" }}>Installed successfully!</p>
-              <p style={{ fontSize: 13, color: "#51635b" }}>Open SecureChain from your home screen.</p>
+              <p style={{ fontSize: 13, color: "#51635b" }}>Open CubSave from your home screen.</p>
             </div>
           </div>
         )}

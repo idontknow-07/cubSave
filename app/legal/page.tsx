@@ -9,11 +9,11 @@ const FRAMEWORKS = [
     title: "Financial Conduct Authority — Crypto Asset Registration",
     status: "Registration in Progress",
     statusColor: "#f59e0b",
-    body: `SecureChain is actively pursuing registration with the Financial Conduct Authority (FCA) as a crypto asset business under the Money Laundering, Terrorist Financing and Transfer of Funds (Information on the Payer) Regulations 2017.
+    body: `CubSave is actively pursuing registration with the Financial Conduct Authority (FCA) as a crypto asset business under the Money Laundering, Terrorist Financing and Transfer of Funds (Information on the Payer) Regulations 2017.
 
-Our application covers the provision of crypto asset exchange and custodian wallet services in compliance with the FCA's defined activity categories. During the registration period, SecureChain operates under the framework set out in Schedule 7 of the Regulations and maintains full AML/CFT controls consistent with FCA expectations.
+Our application covers the provision of crypto asset exchange and custodian wallet services in compliance with the FCA's defined activity categories. During the registration period, CubSave operates under the framework set out in Schedule 7 of the Regulations and maintains full AML/CFT controls consistent with FCA expectations.
 
-Enquiries related to our regulatory status may be directed to compliance@securechain.app.`,
+Enquiries related to our regulatory status may be directed to compliance@cubsave.com.`,
   },
   {
     badge: "HMRC",
@@ -21,7 +21,7 @@ Enquiries related to our regulatory status may be directed to compliance@securec
     title: "HMRC Anti-Money Laundering Registration",
     status: "Registered",
     statusColor: "#15a35c",
-    body: `SecureChain is registered with His Majesty's Revenue and Customs (HMRC) as a Money Service Business (MSB) for Anti-Money Laundering purposes under the Money Laundering Regulations.
+    body: `CubSave is registered with His Majesty's Revenue and Customs (HMRC) as a Money Service Business (MSB) for Anti-Money Laundering purposes under the Money Laundering Regulations.
 
 All transactions on the platform are subject to ongoing monitoring in line with HMRC's AML compliance requirements, including suspicious activity reporting obligations to the National Crime Agency (NCA).`,
   },
@@ -31,7 +31,7 @@ All transactions on the platform are subject to ongoing monitoring in line with 
     title: "Data Protection & UK GDPR",
     status: "Compliant",
     statusColor: "#15a35c",
-    body: `SecureChain processes personal data in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.
+    body: `CubSave processes personal data in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.
 
 Users have the right to access, correct, or request deletion of their personal data at any time. Data is processed solely for the purposes of account management, regulatory compliance, security monitoring, and service improvement. We do not sell or share personal data with third parties for marketing purposes.
 
@@ -43,7 +43,7 @@ Our full Privacy Policy is available below.`,
     title: "Anti-Money Laundering & Know Your Customer",
     status: "Active Policy",
     statusColor: "#15a35c",
-    body: `SecureChain applies a risk-based AML/KYC framework across all user accounts. Key elements include:
+    body: `CubSave applies a risk-based AML/KYC framework across all user accounts. Key elements include:
 
 • Identity Verification (KYC): All users are required to complete identity verification before accessing full deposit and withdrawal functionality. We collect government-issued ID and proof of address.
 
@@ -59,12 +59,12 @@ const POLICIES = [
   {
     title: "Terms of Service",
     points: [
-      "SecureChain provides cryptocurrency custody and exchange services to verified users aged 18 and over.",
+      "CubSave provides cryptocurrency custody and exchange services to verified users aged 18 and over.",
       "Users are responsible for maintaining the security of their account credentials and withdrawal PIN.",
-      "SecureChain reserves the right to freeze or terminate accounts that violate our AML/KYC policies or applicable law.",
+      "CubSave reserves the right to freeze or terminate accounts that violate our AML/KYC policies or applicable law.",
       "We apply a network fee to all outbound transfers. Fee details are displayed at the time of withdrawal.",
       "Minimum withdrawal amounts apply and are denominated in USD-equivalent value. Thresholds are displayed within the platform.",
-      "SecureChain is not liable for losses resulting from user error, network congestion, or incorrect destination addresses.",
+      "CubSave is not liable for losses resulting from user error, network congestion, or incorrect destination addresses.",
       "These terms are governed by the laws of England and Wales.",
     ],
   },
@@ -74,7 +74,7 @@ const POLICIES = [
       "We collect your name, email address, government-issued ID, and transaction data for the purposes of account management and regulatory compliance.",
       "Your data is stored securely using industry-standard encryption and is never sold to third parties.",
       "Transaction records are retained for a minimum of 5 years in line with UK AML regulations.",
-      "You may request a copy of your personal data or submit a deletion request by contacting privacy@securechain.app.",
+      "You may request a copy of your personal data or submit a deletion request by contacting privacy@cubsave.com.",
       "We use cookies solely for session management and security purposes. No third-party advertising cookies are used.",
       "Our servers are hosted within the United Kingdom and European Economic Area.",
     ],
@@ -96,7 +96,7 @@ export default function LegalPage() {
             Operating to the highest regulatory standard.
           </h1>
           <p className="text-[16.5px] text-[#51635b] leading-relaxed max-w-2xl mx-auto">
-            SecureChain is committed to full regulatory compliance within the United Kingdom.
+            CubSave is committed to full regulatory compliance within the United Kingdom.
             This page outlines our current registrations, active applications, and the legal
             frameworks that govern how we operate.
           </p>
@@ -163,8 +163,8 @@ export default function LegalPage() {
             We aim to respond to all formal correspondence within 2 business days.
           </p>
           <div className="inline-flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="mailto:compliance@securechain.app" className="inline-flex items-center justify-center px-6 py-3 rounded-[12px] bg-[#f4faf6] border border-[#e4efe9] text-[#0a1f17] font-semibold text-[14px] hover:bg-[#eafaf1] transition-colors">
-              compliance@securechain.app
+            <a href="mailto:compliance@cubsave.com" className="inline-flex items-center justify-center px-6 py-3 rounded-[12px] bg-[#f4faf6] border border-[#e4efe9] text-[#0a1f17] font-semibold text-[14px] hover:bg-[#eafaf1] transition-colors">
+              compliance@cubsave.com
             </a>
             <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 rounded-[12px] bg-[#15a35c] text-white font-bold text-[14px] hover:bg-[#0c8048] transition-colors">
               Contact Us

@@ -48,7 +48,7 @@ export default function Signup() {
 
         <label className="flex items-start gap-2.5 text-[13px] text-[#51635b] mb-6 cursor-pointer select-none">
           <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="w-4 h-4 mt-0.5 rounded border-[#cdd9d2] accent-[#15a35c]" />
-          <span>I agree to SecureChain&apos;s <a href="#" className="text-[#15a35c] font-medium hover:underline">Terms</a>, <a href="#" className="text-[#15a35c] font-medium hover:underline">Privacy</a>, and policy.</span>
+          <span>I agree to CubSave&apos;s <a href="#" className="text-[#15a35c] font-medium hover:underline">Terms</a>, <a href="#" className="text-[#15a35c] font-medium hover:underline">Privacy</a>, and policy.</span>
         </label>
 
         <button type="submit" disabled={!agree || !captchaToken} className="w-full h-[48px] rounded-[10px] bg-[#15a35c] text-white font-sora font-semibold text-[15px] shadow-[0_10px_26px_rgba(21,163,92,0.28)] transition-all enabled:hover:bg-[#0c8048] enabled:hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">

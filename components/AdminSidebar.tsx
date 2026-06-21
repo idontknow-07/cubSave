@@ -41,7 +41,7 @@ function SidebarContent({ close }: { close?: () => void }) {
             CV
           </div>
           <div>
-            <p style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", lineHeight: 1.2 }}>SecureChain</p>
+            <p style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", lineHeight: 1.2 }}>CubSave</p>
             <p style={{ fontSize: 11, fontWeight: 700, color: "var(--accent)", display: "flex", alignItems: "center", gap: 4, marginTop: 2 }}>
               <ShieldCheck size={10} /> Admin Panel
             </p>
@@ -148,7 +148,7 @@ export default function AdminSidebar() {
                 <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
               </svg>
             </div>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>SecureChain</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>CubSave</span>
           <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 6, background: "var(--accent-dim)", color: "var(--accent)" }}>Admin</span>
         </div>
         <button onClick={() => setOpen(true)} style={{ width: 36, height: 36, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>

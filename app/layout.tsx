@@ -15,13 +15,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "SecureChain",
+  title: "CubSave",
   description: "Your crypto, your control.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "SecureChain",
+    title: "CubSave",
   },
   other: {
     "format-detection": "telephone=no,email=no,address=no",

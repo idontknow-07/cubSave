@@ -29,11 +29,11 @@ export default function SupportModal({ onClose }: { onClose: () => void }) {
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24 }}>
-          <a href="mailto:support@securechain.app" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>
+          <a href="mailto:support@cubsave.com" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>
             <Mail size={18} color="var(--text-2)" />
             <div style={{ textAlign: "left" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>Email Support</p>
-              <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>support@securechain.app</p>
+              <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 2 }}>support@cubsave.com</p>
             </div>
           </a>
           <a href="https://wa.me/601165244875" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px", borderRadius: 12, background: "var(--surface)", textDecoration: "none", border: "1px solid var(--border)" }}>

@@ -33,7 +33,7 @@ function BrandPanel({ className = "" }: { className?: string }) {
         </ul>
       </div>
 
-      <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 SecureChain. All rights reserved.</div>
+      <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 CubSave. All rights reserved.</div>
     </div>
   );
 }

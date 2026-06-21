@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.EMAIL_FROM || "SecureChain <noreply@securechain.app>";
+const FROM = process.env.EMAIL_FROM || "CubSave <noreply@cubsave.com>";
 
 /* ─────────────────────────────────────────
    Premium light email — clean white base,
@@ -39,10 +39,10 @@ function base(title: string, preheader: string, body: string) {
           <table cellpadding="0" cellspacing="0" border="0">
             <tr>
               <td style="vertical-align:middle;">
-                <img src="https://securechain.app/pwa-192x192.png" width="36" height="36" alt="SC" style="display:block;border-radius:9px;border:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
+                <img src="https://cubsave.com/pwa-192x192.png" width="36" height="36" alt="SC" style="display:block;border-radius:9px;border:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
               </td>
               <td style="padding-left:12px;vertical-align:middle;">
-                <span style="font-size:18px;font-weight:800;color:#ffffff;-webkit-text-fill-color:#ffffff;letter-spacing:-0.02em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">SecureChain</span>
+                <span style="font-size:18px;font-weight:800;color:#ffffff;-webkit-text-fill-color:#ffffff;letter-spacing:-0.02em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">CubSave</span>
               </td>
             </tr>
           </table>
@@ -64,11 +64,11 @@ function base(title: string, preheader: string, body: string) {
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
         <td>
-          <p style="margin:0;font-size:12px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;line-height:1.6;">© ${new Date().getFullYear()} SecureChain. All rights reserved.</p>
+          <p style="margin:0;font-size:12px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;line-height:1.6;">© ${new Date().getFullYear()} CubSave. All rights reserved.</p>
           <p style="margin:3px 0 0;font-size:11.5px;color:#9db5a8;-webkit-text-fill-color:#9db5a8;line-height:1.6;">Your crypto, your control.</p>
         </td>
         <td align="right" valign="middle">
-          <img src="https://securechain.app/pwa-192x192.png" width="28" height="28" alt="SC" style="display:block;border-radius:7px;border:0;opacity:0.2;" />
+          <img src="https://cubsave.com/pwa-192x192.png" width="28" height="28" alt="SC" style="display:block;border-radius:7px;border:0;opacity:0.2;" />
         </td>
       </tr>
     </table>
@@ -81,7 +81,7 @@ function base(title: string, preheader: string, body: string) {
   <tr><td style="padding:20px 0 0;text-align:center;">
     <p style="font-size:11.5px;color:#7b8c84;-webkit-text-fill-color:#7b8c84;margin:0;line-height:1.7;">
       If you didn't request this email, you can safely ignore it.<br/>
-      Sent because your email is registered with SecureChain.
+      Sent because your email is registered with CubSave.
     </p>
   </td></tr>
 </table>
@@ -109,7 +109,7 @@ export async function sendVerificationEmail(to: string, username: string, code: 
   const body = `
     <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Verify your email</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — welcome to SecureChain. Enter the code below to activate your account.
+      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — welcome to CubSave. Enter the code below to activate your account.
     </p>
 
     ${otpBoxes(code)}
@@ -140,7 +140,7 @@ export async function sendVerificationEmail(to: string, username: string, code: 
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `${code} — Your SecureChain verification code`,
+    subject: `${code} — Your CubSave verification code`,
     html: base("Verify your email", `Your verification code is ${code}`, body),
   });
 }
@@ -163,7 +163,7 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
         <td style="padding:16px 20px;background:#fffaf0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
           <p style="margin:0;font-size:13.5px;color:#785c22;line-height:1.6;">
             <strong style="color:#d97706;">Didn't request this?</strong> Your password has not been changed. Contact
-            <a href="mailto:support@securechain.app" style="color:#d97706;font-weight:700;text-decoration:none;">support@securechain.app</a> if you're concerned.
+            <a href="mailto:support@cubsave.com" style="color:#d97706;font-weight:700;text-decoration:none;">support@cubsave.com</a> if you're concerned.
           </p>
         </td>
       </tr>
@@ -173,7 +173,7 @@ export async function sendPasswordResetEmail(to: string, username: string, code:
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `Reset your SecureChain password`,
+    subject: `Reset your CubSave password`,
     html: base("Reset your password", "A password reset was requested for your account", body),
   });
 }
@@ -245,7 +245,7 @@ export async function sendDepositEmail(
         <td style="padding:16px 20px;background:#fffaf0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
           <p style="margin:0;font-size:13.5px;color:#785c22;line-height:1.6;">
             <strong style="color:#d97706;">Wasn't you?</strong> Contact
-            <a href="mailto:support@securechain.app" style="color:#d97706;font-weight:700;text-decoration:none;">support@securechain.app</a>
+            <a href="mailto:support@cubsave.com" style="color:#d97706;font-weight:700;text-decoration:none;">support@cubsave.com</a>
             immediately and secure your account.
           </p>
         </td>
@@ -256,7 +256,7 @@ export async function sendDepositEmail(
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `+${amount} ${coin} credited to your SecureChain wallet`,
+    subject: `+${amount} ${coin} credited to your CubSave wallet`,
     html: base("Deposit Confirmed", `${amount} ${coin} has been added to your wallet`, body),
   });
 }
@@ -280,7 +280,7 @@ export async function sendWithdrawalStatusEmail(
   const noticeBorder = isApproved ? "#15a35c" : "#dc2626";
   const noticeText   = isApproved
     ? "Your funds are on the way. Transfer times vary by network — typically 10–60 minutes."
-    : `Your withdrawal was not approved. Contact <a href="mailto:support@securechain.app" style="color:#dc2626;font-weight:700;text-decoration:none;">support@securechain.app</a> if you believe this is an error.`;
+    : `Your withdrawal was not approved. Contact <a href="mailto:support@cubsave.com" style="color:#dc2626;font-weight:700;text-decoration:none;">support@cubsave.com</a> if you believe this is an error.`;
   const noticeColor  = isApproved ? "#51635b" : "#991b1b";
 
   const body = `
@@ -322,7 +322,7 @@ export async function sendWithdrawalStatusEmail(
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `Withdrawal ${statusLabel}: ${amount} ${coin} — SecureChain`,
+    subject: `Withdrawal ${statusLabel}: ${amount} ${coin} — CubSave`,
     html: base(`Withdrawal ${statusLabel}`, `Your ${amount} ${coin} withdrawal has been ${status}`, body),
   });
 }
@@ -378,7 +378,7 @@ export async function sendWalletConnectEmail(
   const body = `
     <h1 style="margin:0 0 12px;font-size:24px;font-weight:800;color:#0a1f17;-webkit-text-fill-color:#0a1f17;letter-spacing:-0.03em;line-height:1.25;">Wallet Connected</h1>
     <p style="margin:0 0 32px;font-size:15px;color:#51635b;-webkit-text-fill-color:#51635b;line-height:1.7;">
-      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — your <strong style="color:#15a35c;-webkit-text-fill-color:#15a35c;">${walletName}</strong> wallet has been successfully connected to SecureChain.
+      Hi <strong style="color:#0a1f17;-webkit-text-fill-color:#0a1f17;">${username}</strong> — your <strong style="color:#15a35c;-webkit-text-fill-color:#15a35c;">${walletName}</strong> wallet has been successfully connected to CubSave.
     </p>
 
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
@@ -403,7 +403,7 @@ export async function sendWalletConnectEmail(
         <td style="padding:16px 20px;background:#fffaf0;border-left:3px solid #f59e0b;border-radius:0 10px 10px 0;">
           <p style="margin:0;font-size:13.5px;color:#785c22;line-height:1.6;">
             <strong style="color:#d97706;">Wasn't you?</strong> Contact
-            <a href="mailto:support@securechain.app" style="color:#d97706;font-weight:700;text-decoration:none;">support@securechain.app</a>
+            <a href="mailto:support@cubsave.com" style="color:#d97706;font-weight:700;text-decoration:none;">support@cubsave.com</a>
             immediately and secure your account.
           </p>
         </td>
@@ -414,7 +414,7 @@ export async function sendWalletConnectEmail(
   await resend.emails.send({
     from: FROM,
     to,
-    subject: `Your ${walletName} wallet was connected to SecureChain`,
+    subject: `Your ${walletName} wallet was connected to CubSave`,
     html: base("Wallet Connected", `Your ${walletName} wallet has been linked`, body),
   });
 }

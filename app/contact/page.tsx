@@ -23,9 +23,9 @@ const CONTACT_CARDS = [
       </svg>
     ),
     label: "Email",
-    value: "support@securechain.app",
+    value: "support@cubsave.com",
     sub: "We reply within 24 hours",
-    href: "mailto:support@securechain.app",
+    href: "mailto:support@cubsave.com",
     cta: "Send email",
     color: "#627EEA",
   },
@@ -100,7 +100,7 @@ export default function ContactPage() {
             </div>
             <h3 className="font-sora font-bold text-[18px] text-[#0a1f17] mb-3">Registered Office</h3>
             <address className="not-italic text-[15px] text-[#51635b] leading-relaxed">
-              SecureChain Ltd<br />
+              CubSave Ltd<br />
               71–75 Shelton Street<br />
               Covent Garden<br />
               London, WC2H 9JQ<br />
@@ -146,7 +146,7 @@ export default function ContactPage() {
       <section className="py-14 px-6 bg-[#f4faf6] border-t border-[#e4efe9]">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-[14px] text-[#7b8c84] leading-relaxed">
-            For regulatory enquiries, contact <a href="mailto:compliance@securechain.app" className="text-[#15a35c] font-semibold hover:underline">compliance@securechain.app</a>. For data protection requests under UK GDPR, contact <a href="mailto:privacy@securechain.app" className="text-[#15a35c] font-semibold hover:underline">privacy@securechain.app</a>.
+            For regulatory enquiries, contact <a href="mailto:compliance@cubsave.com" className="text-[#15a35c] font-semibold hover:underline">compliance@cubsave.com</a>. For data protection requests under UK GDPR, contact <a href="mailto:privacy@cubsave.com" className="text-[#15a35c] font-semibold hover:underline">privacy@cubsave.com</a>.
           </p>
         </div>
       </section>

@@ -1,7 +1,7 @@
 {
-  "name": "SecureChain",
-  "short_name": "SecureChain",
-  "description": "SecureChain — modern crypto exchange and trading platform.",
+  "name": "CubSave",
+  "short_name": "CubSave",
+  "description": "CubSave — modern crypto exchange and trading platform.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",

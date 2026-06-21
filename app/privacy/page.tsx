@@ -9,7 +9,7 @@ export default function PrivacyPage() {
         <h1 className="text-4xl font-sora font-bold mb-8">Privacy Policy</h1>
         <div className="prose prose-lg">
           <p className="mb-4">
-            At SecureChain, we take your privacy seriously. This Privacy Policy outlines how we collect, use, and protect your personal information.
+            At CubSave, we take your privacy seriously. This Privacy Policy outlines how we collect, use, and protect your personal information.
           </p>
           <h2 className="text-2xl font-bold mt-8 mb-4">Information We Collect</h2>
           <p className="mb-4">

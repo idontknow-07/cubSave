@@ -26,7 +26,7 @@ const VALUES = [
 ];
 
 const MILESTONES = [
-  { year: "2024 Q1", event: "SecureChain founded — concept, architecture, and initial infrastructure established." },
+  { year: "2024 Q1", event: "CubSave founded — concept, architecture, and initial infrastructure established." },
   { year: "2024 Q2", event: "Core wallet engine built. Multi-coin support and PIN-secured withdrawals implemented." },
   { year: "2024 Q3", event: "Beta launched to a closed group of testers. Real-time CoinGecko pricing integration shipped." },
   { year: "2024 Q4", event: "Public launch. KYC/ID verification, email notifications, and admin panel released." },
@@ -42,13 +42,13 @@ export default function AboutPage() {
       <section className="pt-28 pb-20 px-6 bg-gradient-to-b from-[#f4faf6] to-white">
         <div className="max-w-3xl mx-auto text-center">
           <span className="inline-block text-[11px] font-bold tracking-[0.16em] uppercase text-[#15a35c] mb-5">
-            About SecureChain
+            About CubSave
           </span>
           <h1 className="font-sora text-[42px] md:text-[52px] font-black leading-[1.1] tracking-tight text-[#0a1f17] mb-6">
             Built to give people real control over their crypto.
           </h1>
           <p className="text-[17px] text-[#51635b] leading-relaxed max-w-2xl mx-auto">
-            SecureChain is a United Kingdom–based cryptocurrency platform focused on security,
+            CubSave is a United Kingdom–based cryptocurrency platform focused on security,
             transparency, and genuine accessibility. We believe managing digital assets should feel
             as natural as online banking — and we&apos;re building toward that standard.
           </p>
@@ -65,7 +65,7 @@ export default function AboutPage() {
             </h2>
             <p className="text-[15.5px] text-[#51635b] leading-relaxed mb-4">
               Most people avoid crypto because it feels complicated and risky. The platforms that exist
-              either overwhelm beginners or underserve experienced traders. SecureChain was created to
+              either overwhelm beginners or underserve experienced traders. CubSave was created to
               close that gap.
             </p>
             <p className="text-[15.5px] text-[#51635b] leading-relaxed">
@@ -121,7 +121,7 @@ export default function AboutPage() {
             Built by people who care about getting this right.
           </h2>
           <p className="text-[15.5px] text-[#51635b] leading-relaxed mb-4">
-            SecureChain is developed and operated by an organisation of professionals with backgrounds
+            CubSave is developed and operated by an organisation of professionals with backgrounds
             spanning fintech engineering, cybersecurity, product design, and digital finance.
           </p>
           <p className="text-[15.5px] text-[#51635b] leading-relaxed mb-4">

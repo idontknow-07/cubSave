@@ -8,7 +8,7 @@ export default function WhyUs() {
     <section id="why" className="py-24 bg-white">
       <Wrap>
         <SectionHeading
-          eyebrow="Why SecureChain"
+          eyebrow="Why CubSave"
           title="Built for traders who value security and speed."
           intro="Everything we ship is designed around three things: protecting your assets, keeping costs transparent, and getting out of your way so you can trade."
         />

@@ -153,7 +153,7 @@ export function CoinIco({ sym, grad, size = 34, ticker }: CoinIcoProps) {
 export const Logo = ({ light }: { light?: boolean }) => (
   <a href="#top" className={`flex items-center gap-[11px] font-sora font-bold text-[19px] tracking-tight ${light ? "text-white" : "text-[#0a1f17]"}`}>
     <span className="w-[34px] h-[34px] rounded-[9px] grid place-items-center shadow-[0_4px_14px_rgba(21,163,92,0.35)]" style={{ background: "linear-gradient(135deg,#15a35c,#047857)" }}>
-      {/* SecureChain mark — blockchain block with a keyhole (Option 3).
+      {/* CubSave mark — blockchain block with a keyhole (Option 3).
           Swap the inner paths for an alternate logo:
           Option 1 (secure shield + link): <path d="M12 2.6 5 5.3V10.6C5 14.8 7.9 17.5 12 19.5 16.1 17.5 19 14.8 19 10.6V5.3Z" /><path d="M10.6 13.4a2.4 2.4 0 0 1 0-3.4l1.4-1.4a2.4 2.4 0 0 1 3.4 3.4l-.7.7" /><path d="M13.4 10.6a2.4 2.4 0 0 1 0 3.4l-1.4 1.4a2.4 2.4 0 0 1-3.4-3.4l.7-.7" />
           Option 2 (chain links): <path d="M9.5 14.5a3.5 3.5 0 0 1 0-5l1.8-1.8a3.5 3.5 0 0 1 5 5l-1 1" /><path d="M14.5 9.5a3.5 3.5 0 0 1 0 5l-1.8 1.8a3.5 3.5 0 0 1-5-5l1-1" /> */}

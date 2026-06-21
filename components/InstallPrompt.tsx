@@ -90,7 +90,7 @@ export default function InstallPrompt() {
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "var(--text, #0a1f17)", lineHeight: 1.3 }}>
-          Install SecureChain
+          Install CubSave
         </p>
         <p style={{ margin: "2px 0 0", fontSize: 11.5, color: "var(--text-2, #51635b)", lineHeight: 1.4 }}>
           {isIOS ? "Tap to see install instructions" : "Add to home screen — tap to install"}

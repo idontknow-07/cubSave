@@ -10,7 +10,7 @@ export default function Footer() {
             <Logo light />
             <p className="text-[#9fb3a9] text-[14px] mt-4 mb-5 max-w-[300px]">A modern cryptocurrency exchange built for secure, transparent, and seamless trading.</p>
             <address className="not-italic text-[13px] text-[#6f867c] leading-[1.8]">
-              SecureChain Ltd<br />
+              CubSave Ltd<br />
               71–75 Shelton Street<br />
               Covent Garden, London<br />
               WC2H 9JQ, United Kingdom<br />
@@ -28,7 +28,7 @@ export default function Footer() {
         </div>
         <div className="border-t border-white/10 pt-[26px] flex justify-center items-center">
           <p className="text-[#6f867c] text-[13px]">
-            © 2026 SecureChain. All rights reserved.
+            © 2026 CubSave. All rights reserved.
           </p>
         </div>
       </Wrap>

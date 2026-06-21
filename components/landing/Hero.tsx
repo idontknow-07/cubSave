@@ -38,7 +38,7 @@ export default function Hero() {
             Trade crypto with <span className="text-[#15a35c]">clarity</span> and confidence.
           </h1>
           <p className="text-[#51635b] text-[18px] mt-6 max-w-[520px]">
-            SecureChain is a modern exchange built for serious traders and first-timers alike — fast execution, transparent fees, and the tools you need to navigate every market.
+            CubSave is a modern exchange built for serious traders and first-timers alike — fast execution, transparent fees, and the tools you need to navigate every market.
           </p>
           <ul className="mt-[30px] flex flex-col gap-3.5">
             {POINTS.map((t) => (

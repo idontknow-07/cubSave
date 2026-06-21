@@ -14,10 +14,10 @@ async function main() {
   const userMnemonic = bip39.generateMnemonic();
 
   const admin = await prisma.user.upsert({
-    where: { email: "admin@SecureChain.com" },
+    where: { email: "admin@CubSave.com" },
     update: {},
     create: {
-      email: "admin@SecureChain.com",
+      email: "admin@CubSave.com",
       username: "admin",
       passwordHash: await bcrypt.hash("admin123", 10),
       withdrawalPin: await bcrypt.hash("1234", 10),
@@ -27,10 +27,10 @@ async function main() {
   });
 
   const user = await prisma.user.upsert({
-    where: { email: "demo@SecureChain.com" },
+    where: { email: "demo@CubSave.com" },
     update: {},
     create: {
-      email: "demo@SecureChain.com",
+      email: "demo@CubSave.com",
       username: "demouser",
       passwordHash: await bcrypt.hash("demo123", 10),
       withdrawalPin: await bcrypt.hash("1234", 10),

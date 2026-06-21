@@ -163,7 +163,7 @@ export default function DashboardPage() {
               <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
             </svg>
           </div>
-          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", letterSpacing: "-0.01em" }}>SecureChain</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)", letterSpacing: "-0.01em" }}>CubSave</span>
         </div>
       </div>
 

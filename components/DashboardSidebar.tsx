@@ -115,7 +115,7 @@ export default function DashboardSidebar() {
             <div style={{ width: 32, height: 32, borderRadius: 9, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               {LOGO_SVG}
             </div>
-            <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", letterSpacing: "-0.01em" }}>SecureChain</span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", letterSpacing: "-0.01em" }}>CubSave</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 15, color: "#fff", flexShrink: 0 }}>
@@ -158,7 +158,7 @@ export default function DashboardSidebar() {
                 <div style={{ width: 34, height: 34, borderRadius: 9, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {LOGO_SVG}
                 </div>
-                <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>SecureChain</span>
+                <span style={{ fontWeight: 800, fontSize: 15, color: "var(--text)" }}>CubSave</span>
               </div>
               <button onClick={() => setDrawerOpen(false)}
                 style={{ width: 32, height: 32, borderRadius: 9, background: "var(--card)", border: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>

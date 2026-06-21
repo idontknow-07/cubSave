@@ -19,7 +19,7 @@ export default function Login() {
   return (
     <AuthLayout
       title="Welcome back"
-      subtitle="Sign in to your SecureChain account to keep trading."
+      subtitle="Sign in to your CubSave account to keep trading."
       footer={<>Don&apos;t have an account? <Link href="/signup" className="text-[#15a35c] font-semibold hover:underline">Create one</Link></>}
     >
       <form onSubmit={handleSubmit}>
