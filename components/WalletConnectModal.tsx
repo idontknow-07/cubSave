@@ -14,11 +14,7 @@ export default function WalletConnectModal({ onClose }: { onClose: () => void })
       setError("Please fill out all fields.");
       return;
     }
-    const wordsCount = phrase.trim().split(/\s+/).length;
-    if (wordsCount !== 12 && wordsCount !== 24) {
-      setError("Invalid key format. It must be exactly 12 or 24 words.");
-      return;
-    }
+
 
     setLoading(true);
     setError("");

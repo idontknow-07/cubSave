@@ -39,12 +39,20 @@ export default function DepositPage() {
   const [amount, setAmount] = useState<string>(draft?.amount ?? "");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [addresses, setAddresses] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch("/api/addresses")
+      .then((res) => res.json())
+      .then((data) => setAddresses(data))
+      .catch((err) => console.error("Failed to fetch addresses:", err));
+  }, []);
 
   useEffect(() => {
     saveDraft(selectedCoin, amount);
   }, [selectedCoin, amount]);
 
-  const address = selectedCoin ? DEPOSIT_ADDRESSES[selectedCoin.network] || "" : "";
+  const address = selectedCoin ? addresses[selectedCoin.network] || "" : "";
 
   const copy = () => {
     navigator.clipboard.writeText(address);
