@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { ALL_COINS, FUNCTIONAL_COINS, DEPOSIT_ADDRESSES } from "@/lib/coins";
+import { ALL_COINS, FUNCTIONAL_COINS } from "@/lib/coins";
 import { formatCurrency, formatCrypto } from "@/lib/utils";
 import { ArrowLeft, Send, Download, ArrowUpRight, ArrowDownLeft, ExternalLink, Copy, Check } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, Tooltip, YAxis } from "recharts";
@@ -87,6 +87,14 @@ export default function CoinDetailPage() {
   const [showComing, setShowComing] = useState(false);
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [copiedAddress, setCopiedAddress] = useState(false);
+  const [addresses, setAddresses] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    fetch("/api/addresses")
+      .then((res) => res.json())
+      .then((data) => setAddresses(data))
+      .catch((err) => console.error("Failed to fetch addresses:", err));
+  }, []);
 
   const [coinName, network] = useMemo(() => {
     const parts = slug.split("-");
@@ -153,7 +161,7 @@ export default function CoinDetailPage() {
 
   const copyAddress = () => {
     if (!coinDef) return;
-    const addr = DEPOSIT_ADDRESSES[coinDef.network] || "";
+    const addr = addresses[coinDef.network] || "";
     navigator.clipboard.writeText(addr);
     setCopiedAddress(true);
     setTimeout(() => setCopiedAddress(false), 2000);
@@ -265,7 +273,7 @@ export default function CoinDetailPage() {
             {coinDef.network} Deposit Address
           </p>
           <p style={{ fontSize: 12, fontFamily: "monospace", color: "var(--text)", wordBreak: "break-all", lineHeight: 1.7, marginBottom: 12 }}>
-            {DEPOSIT_ADDRESSES[coinDef.network] || "Address unavailable"}
+            {addresses[coinDef.network] || "Address unavailable"}
           </p>
           <button
             onClick={copyAddress}
