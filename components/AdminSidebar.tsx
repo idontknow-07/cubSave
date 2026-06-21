@@ -31,14 +31,10 @@ function SidebarContent({ close }: { close?: () => void }) {
       {/* Brand */}
       <div style={{ padding: "24px 20px 20px", borderBottom: "1px solid var(--border)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 10,
-            background: "var(--accent)", color: "#000",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontWeight: 900, fontSize: 12, flexShrink: 0,
-            boxShadow: "0 0 16px var(--accent-glow)",
-          }}>
-            CV
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg,#15a35c,#047857)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 4px 12px rgba(21,163,92,0.3)" }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" width="19" height="19">
+              <path d="M12 2.6 20 7V17L12 21.4 4 17V7Z"/><circle cx="12" cy="11" r="1.9"/><path d="M12 12.9V15.4"/>
+            </svg>
           </div>
           <div>
             <p style={{ fontWeight: 800, fontSize: 14, color: "var(--text)", lineHeight: 1.2 }}>CubSave</p>
