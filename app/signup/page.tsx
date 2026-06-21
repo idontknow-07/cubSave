@@ -281,7 +281,7 @@ function SignupInner() {
               </svg>
             </span>
             <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 17, color: "#0a1f17" }}>
-              Secure<span style={{ color: "#15a35c" }}>Chain</span>
+              Cub<span style={{ color: "#15a35c" }}>Save</span>
             </span>
           </div>
           <button onClick={goBack} className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
@@ -497,7 +497,7 @@ function SignupInner() {
             </svg>
           </span>
           <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 19 }}>
-            Secure<span style={{ color: "#7deba3" }}>Chain</span>
+            Cub<span style={{ color: "#7deba3" }}>Save</span>
           </span>
         </div>
         <div className="relative z-10 max-w-[420px]">

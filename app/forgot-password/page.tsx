@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
             </svg>
           </span>
           <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 18, color: "#0a1f17" }}>
-            Secure<span style={{ color: "#15a35c" }}>Chain</span>
+            Cub<span style={{ color: "#15a35c" }}>Save</span>
           </span>
         </div>
 

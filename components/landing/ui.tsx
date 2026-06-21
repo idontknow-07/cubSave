@@ -163,7 +163,7 @@ export const Logo = ({ light }: { light?: boolean }) => (
         <path d="M12 12.9V15.4" />
       </svg>
     </span>
-    <span>Secure<span className="text-[#15a35c]">Chain</span></span>
+    <span>Cub<span className="text-[#15a35c]">Save</span></span>
   </a>
 );
 
