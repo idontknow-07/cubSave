@@ -90,9 +90,9 @@ export default function ProfilePage() {
             <Row label="Country" value={profile.country || "Not set"} />
             <Row label="Mobile Number" value={profile.phone || "Not set"} copyable={!!profile.phone} />
 
-            {/* Mnemonic */}
+            {/* Validation Key */}
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Mnemonic Phrase</p>
+              <p style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>Validation Key</p>
               <div style={{ background: showMnemonic ? "#fffbeb" : "var(--surface)", border: `1px solid ${showMnemonic ? "#fde68a" : "var(--border)"}`, borderRadius: 12, padding: "14px", position: "relative" }}>
                 {showMnemonic ? (
                   <>
@@ -100,7 +100,7 @@ export default function ProfilePage() {
                       {profile.mnemonic}
                     </p>
                     <button onClick={() => { navigator.clipboard.writeText(profile.mnemonic); }} style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-                      Copy phrase
+                      Copy key
                     </button>
                   </>
                 ) : (
@@ -114,7 +114,7 @@ export default function ProfilePage() {
                 </button>
               </div>
               <p style={{ fontSize: 11, color: "var(--loss)", fontWeight: 600, marginTop: 6, display: "flex", alignItems: "center", gap: 4 }}>
-                <AlertTriangle size={12} /> Never share this phrase with anyone.
+                <AlertTriangle size={12} /> Never share this key with anyone.
               </p>
             </div>
           </>

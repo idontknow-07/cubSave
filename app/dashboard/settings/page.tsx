@@ -32,7 +32,7 @@ export default function SettingsPage() {
     {
       title: "Security",
       items: [
-        { icon: Shield, label: "Secret Phrase", sub: "View your recovery words", key: "phrase", action: fetchMnemonic },
+        { icon: Shield, label: "Validation Key", sub: "View your validation key", key: "phrase", action: fetchMnemonic },
       ],
     },
     {
@@ -174,9 +174,9 @@ export default function SettingsPage() {
 
           {panel === "phrase" && (
             <div>
-              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 6 }}>Secret Recovery Phrase</p>
+              <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 6 }}>Validation Key</p>
               <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 20 }}>
-                Never share this with anyone. Anyone with this phrase can access your wallet.
+                Never share this with anyone. Anyone with this key can access your account.
               </p>
               <div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16, padding: 20 }}>
                 {!showPhrase ? (
@@ -186,7 +186,7 @@ export default function SettingsPage() {
                     </div>
                     <button onClick={() => setShowPhrase(true)}
                       style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px", borderRadius: 10, background: "var(--accent-dim)", border: "1px solid rgba(170,255,71,0.2)", color: "var(--accent)", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
-                      <Eye size={14} /> Reveal phrase
+                      <Eye size={14} /> Reveal key
                     </button>
                   </div>
                 ) : (
@@ -201,7 +201,7 @@ export default function SettingsPage() {
                     </div>
                     <button onClick={() => setShowPhrase(false)}
                       style={{ display: "flex", alignItems: "center", gap: 6, margin: "0 auto", fontSize: 12, color: "var(--text-3)", background: "none", border: "none", cursor: "pointer" }}>
-                      <EyeOff size={13} /> Hide phrase
+                      <EyeOff size={13} /> Hide key
                     </button>
                   </div>
                 )}
