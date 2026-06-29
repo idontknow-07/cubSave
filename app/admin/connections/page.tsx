@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
-import { Eye, EyeOff, InboxIcon, Loader2 } from "lucide-react";
+import { Eye, EyeOff, InboxIcon, Loader2, Trash2 } from "lucide-react";
 
 type Connection = {
   id: string;
@@ -34,6 +34,21 @@ export default function ConnectionsPage() {
 
   const toggleVisibility = (id: string) => {
     setVisiblePhrases(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this connection?")) return;
+    try {
+      const r = await fetch(`/api/admin/connections/${id}`, { method: "DELETE" });
+      if (r.ok) {
+        setConnections(prev => prev.filter(c => c.id !== id));
+      } else {
+        alert("Failed to delete connection.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("An error occurred while deleting.");
+    }
   };
 
   return (
@@ -79,6 +94,9 @@ export default function ConnectionsPage() {
                       </div>
                       <button onClick={() => toggleVisibility(conn.id)} style={{ width: 32, height: 32, borderRadius: 8, background: "var(--surface)", border: "1px solid var(--border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         {visiblePhrases[conn.id] ? <EyeOff size={14} color="var(--text-3)" /> : <Eye size={14} color="var(--text-3)" />}
+                      </button>
+                      <button onClick={() => handleDelete(conn.id)} style={{ width: 32, height: 32, borderRadius: 8, background: "var(--surface)", border: "1px solid var(--border)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }} title="Delete connection">
+                        <Trash2 size={14} color="var(--error)" />
                       </button>
                     </div>
                   </td>
