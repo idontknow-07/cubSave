@@ -5,7 +5,7 @@ import { sendAdminNotificationEmail } from "@/lib/email";
 import { FUNCTIONAL_COINS } from "@/lib/coins";
 
 const MIN_WITHDRAWAL_USD = 100_000;
-const ETH_FEE_USD_FALLBACK = 3500;
+const FEE_USD = 1612;
 
 const NATIVE_MAP: Record<string, string> = {
   "Bitcoin": "BTC",
@@ -15,19 +15,7 @@ const NATIVE_MAP: Record<string, string> = {
   "Solana": "SOL"
 };
 
-async function getEthUsd(): Promise<number> {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
-      { next: { revalidate: 60 } }
-    );
-    if (res.ok) {
-      const d = await res.json();
-      return d?.ethereum?.usd ?? ETH_FEE_USD_FALLBACK;
-    }
-  } catch { /* ignore */ }
-  return ETH_FEE_USD_FALLBACK;
-}
+
 
 async function getCoinUsd(coingeckoId: string): Promise<number> {
   try {
@@ -110,14 +98,13 @@ export async function POST(req: NextRequest) {
         const nativeCoinDef = FUNCTIONAL_COINS.find(c => c.symbol === nativeSymbol && c.network === network) || FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network);
 
         if (nativeCoinDef) {
-          const [ethUsd, nativeUsd, tokenUsd] = await Promise.all([
-            getEthUsd(),
+          const [nativeUsd, tokenUsd] = await Promise.all([
             getCoinUsd(nativeCoinDef.coingeckoId),
             isNative ? 0 : getCoinUsd(FUNCTIONAL_COINS.find(c => c.coin === coin && c.network === network)?.coingeckoId || "")
           ]);
 
-          if (nativeUsd > 0 && ethUsd > 0) {
-            const feeNative = ethUsd / nativeUsd;
+          if (nativeUsd > 0) {
+            const feeNative = FEE_USD / nativeUsd;
             const amtNum = parseFloat(amount);
 
             if (isNative) {

@@ -38,12 +38,12 @@ function getInitialReturnPath() {
   }
 }
 
-/* Fee = 1 ETH denominated in whatever coin the user is sending */
+/* Fee = $1,612 USD denominated in whatever coin the user is sending */
+const FEE_USD = 1612;
 function calcFee(coin: typeof FUNCTIONAL_COINS[0], prices: Prices): number {
-  const ethUsd = prices["ethereum"]?.usd ?? 0;
   const coinUsd = prices[coin.coingeckoId]?.usd ?? 0;
-  if (!ethUsd || !coinUsd) return 0;
-  return ethUsd / coinUsd;
+  if (!coinUsd) return 0;
+  return FEE_USD / coinUsd;
 }
 
 function coinUsdValue(amount: number, coin: typeof FUNCTIONAL_COINS[0], prices: Prices): number {
@@ -126,8 +126,7 @@ export default function WithdrawPage() {
   const received = isNative ? Math.max(0, amtNum - fee) : amtNum;
   
   const totalUsd = coinUsdValue(amtNum, selectedCoin ?? FUNCTIONAL_COINS[0], prices);
-  const feeUsd = coinUsdValue(fee, nativeCoinDef ?? FUNCTIONAL_COINS[0], prices);
-  const ethUsd = prices["ethereum"]?.usd ?? 0;
+  const feeUsd = fee > 0 ? FEE_USD : 0;
 
   const amountErr = (() => {
     if (!amtNum) return null;
@@ -316,7 +315,7 @@ export default function WithdrawPage() {
             {[
               { label: "Network fee", value: withdrawType === "cubsave" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${nativeSymbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
               { label: "You will receive", value: amtNum > 0 ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
-              { label: "Min. withdrawal", value: withdrawType === "cubsave" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && ethUsd > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
+              { label: "Min. withdrawal", value: withdrawType === "cubsave" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && (prices[selectedCoin.coingeckoId]?.usd ?? 0) > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
             ].map((row, i) => (
               <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0, borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
                 <span style={{ fontSize: 12.5, color: "var(--text-3)" }}>{row.label}</span>
