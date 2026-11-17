@@ -27,7 +27,7 @@ function clearDraft() {
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
 }
 
-type DepositType = "external" | "cubsave" | null;
+type DepositType = "external" | "Raverlo Exchange" | null;
 
 export default function DepositPage() {
   const router = useRouter();

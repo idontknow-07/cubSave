@@ -15,13 +15,13 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "CubSave",
+  title: "Raverlo Exchange",
   description: "Your crypto, your control.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "CubSave",
+    title: "Raverlo Exchange",
   },
   other: {
     "format-detection": "telephone=no,email=no,address=no",

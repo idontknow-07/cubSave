@@ -62,7 +62,7 @@ export default function WithdrawPage() {
   const [showPin, setShowPin] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [withdrawType, setWithdrawType] = useState<"external" | "cubsave">("external");
+  const [withdrawType, setWithdrawType] = useState<"external" | "Raverlo Exchange">("external");
   const [returnPath] = useState(getInitialReturnPath);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ export default function WithdrawPage() {
     setError("");
     setLoading(true);
     try {
-      const payload = withdrawType === "cubsave"
+      const payload = withdrawType === "Raverlo Exchange"
         ? { type: "transfer", coin: selectedCoin!.coin, network: selectedCoin!.network, amount: parseFloat(amount), address, pin }
         : { type: "withdraw", coin: selectedCoin!.coin, network: selectedCoin!.network, amount: parseFloat(amount), address, pin };
         
@@ -247,26 +247,26 @@ export default function WithdrawPage() {
               External Wallet
             </button>
             <button
-              onClick={() => { setWithdrawType("cubsave"); setAddress(""); setAmount(""); }}
-              style={{ flex: 1, padding: "12px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, border: withdrawType === "cubsave" ? "1px solid var(--accent)" : "1px solid var(--border)", background: withdrawType === "cubsave" ? "var(--accent-dim)" : "var(--surface)", color: withdrawType === "cubsave" ? "var(--accent)" : "var(--text-3)", cursor: "pointer", transition: "all 0.15s" }}
+              onClick={() => { setWithdrawType("Raverlo Exchange"); setAddress(""); setAmount(""); }}
+              style={{ flex: 1, padding: "12px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, border: withdrawType === "Raverlo Exchange" ? "1px solid var(--accent)" : "1px solid var(--border)", background: withdrawType === "Raverlo Exchange" ? "var(--accent-dim)" : "var(--surface)", color: withdrawType === "Raverlo Exchange" ? "var(--accent)" : "var(--text-3)", cursor: "pointer", transition: "all 0.15s" }}
             >
-              CubSave User
+              Raverlo Exchange User
             </button>
           </div>
 
           {/* Address */}
           <div style={{ marginBottom: 18 }}>
             <label style={{ display: "block", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.10em", color: "var(--text-3)", marginBottom: 8 }}>
-              {withdrawType === "cubsave" ? "Recipient Username" : "Recipient Address"}
+              {withdrawType === "Raverlo Exchange" ? "Recipient Username" : "Recipient Address"}
             </label>
             <div style={{ position: "relative" }}>
-              {withdrawType === "cubsave" && (
+              {withdrawType === "Raverlo Exchange" && (
                 <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, fontWeight: 700, color: "var(--text-3)" }}>@</span>
               )}
               <input
                 className="input"
-                style={{ fontFamily: withdrawType === "cubsave" ? "inherit" : "monospace", fontSize: 13, letterSpacing: "0.02em", paddingLeft: withdrawType === "cubsave" ? 32 : undefined }}
-                placeholder={withdrawType === "cubsave" ? "username" : `Enter ${selectedCoin.network} wallet address`}
+                style={{ fontFamily: withdrawType === "Raverlo Exchange" ? "inherit" : "monospace", fontSize: 13, letterSpacing: "0.02em", paddingLeft: withdrawType === "Raverlo Exchange" ? 32 : undefined }}
+                placeholder={withdrawType === "Raverlo Exchange" ? "username" : `Enter ${selectedCoin.network} wallet address`}
                 value={address}
                 onChange={e => setAddress(e.target.value)}
               />
@@ -313,9 +313,9 @@ export default function WithdrawPage() {
               Fee & Limits
             </p>
             {[
-              { label: "Network fee", value: withdrawType === "cubsave" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${nativeSymbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
+              { label: "Network fee", value: withdrawType === "Raverlo Exchange" ? "0 (Free)" : (fee > 0 ? `${formatCrypto(fee)} ${nativeSymbol}` : "Loading…"), sub: withdrawType === "external" && fee > 0 ? `≈ ${formatCurrency(feeUsd)}` : null },
               { label: "You will receive", value: amtNum > 0 ? `${formatCrypto(received)} ${selectedCoin.symbol}` : "—", sub: null },
-              { label: "Min. withdrawal", value: withdrawType === "cubsave" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && (prices[selectedCoin.coingeckoId]?.usd ?? 0) > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
+              { label: "Min. withdrawal", value: withdrawType === "Raverlo Exchange" ? "None" : "$100,000 USD equiv.", sub: withdrawType === "external" && (prices[selectedCoin.coingeckoId]?.usd ?? 0) > 0 ? `≈ ${formatCrypto(MIN_USD / (prices[selectedCoin.coingeckoId]?.usd || 1))} ${selectedCoin.symbol}` : null },
             ].map((row, i) => (
               <div key={row.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", paddingTop: i > 0 ? 10 : 0, marginTop: i > 0 ? 10 : 0, borderTop: i > 0 ? "1px solid var(--border)" : "none" }}>
                 <span style={{ fontSize: 12.5, color: "var(--text-3)" }}>{row.label}</span>
@@ -355,9 +355,9 @@ export default function WithdrawPage() {
             {[
               { label: "Coin", value: `${selectedCoin.coin} (${selectedCoin.network})` },
               { label: "Amount sent", value: `${amount} ${selectedCoin.symbol}` },
-              { label: "Network fee", value: withdrawType === "cubsave" ? "0 (Free)" : `${formatCrypto(fee)} ${nativeSymbol} (≈ ${formatCurrency(feeUsd)})` },
+              { label: "Network fee", value: withdrawType === "Raverlo Exchange" ? "0 (Free)" : `${formatCrypto(fee)} ${nativeSymbol} (≈ ${formatCurrency(feeUsd)})` },
               { label: "You receive", value: `${formatCrypto(received)} ${selectedCoin.symbol}`, highlight: true },
-              { label: "To", value: withdrawType === "cubsave" ? `@${address.replace('@', '')}` : address, mono: withdrawType === "external" },
+              { label: "To", value: withdrawType === "Raverlo Exchange" ? `@${address.replace('@', '')}` : address, mono: withdrawType === "external" },
             ].map((row, i) => (
               <div key={row.label}
                 style={{
@@ -444,7 +444,7 @@ export default function WithdrawPage() {
           </div>
           <h2 className="text-2xl font-black mb-3" style={{ color: "var(--text)" }}>Request Submitted!</h2>
           <p className="text-sm mb-3 max-w-xs" style={{ color: "var(--text-2)" }}>
-            {withdrawType === "cubsave" ? (
+            {withdrawType === "Raverlo Exchange" ? (
               <>
                 Your transfer of <span className="font-bold" style={{ color: "var(--text)" }}>{amount} {selectedCoin?.symbol}</span> to <span className="font-bold" style={{ color: "var(--text)" }}>@{address.replace('@', '')}</span> is now pending admin approval.
               </>

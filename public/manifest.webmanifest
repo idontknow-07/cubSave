@@ -1,7 +1,7 @@
 {
-  "name": "CubSave",
-  "short_name": "CubSave",
-  "description": "CubSave — modern crypto exchange and trading platform.",
+  "name": "Raverlo Exchange",
+  "short_name": "Raverlo Exchange",
+  "description": "Raverlo Exchange — modern crypto exchange and trading platform.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",

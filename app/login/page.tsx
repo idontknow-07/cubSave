@@ -50,7 +50,7 @@ export default function LoginPage() {
             </svg>
           </span>
           <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 19 }}>
-            Cub<span style={{ color: "#7deba3" }}>Save</span>
+            Raverlo <span style={{ color: "#7deba3" }}>Exchange</span>
           </span>
         </div>
 
@@ -73,7 +73,7 @@ export default function LoginPage() {
           </ul>
         </div>
 
-        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 CubSave. All rights reserved.</div>
+        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 Raverlo Exchange. All rights reserved.</div>
       </div>
 
       {/* ── Form panel ── */}
@@ -90,7 +90,7 @@ export default function LoginPage() {
               </svg>
             </span>
             <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 18, color: "#0a1f17" }}>
-              Cub<span style={{ color: "#15a35c" }}>Save</span>
+              Raverlo <span style={{ color: "#15a35c" }}>Exchange</span>
             </span>
           </div>
           <Link href="/" className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
@@ -105,7 +105,7 @@ export default function LoginPage() {
             <h1 style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 30, letterSpacing: "-0.02em", color: "#0a1f17" }}>
               Welcome back
             </h1>
-            <p className="text-[#51635b] text-[15px] mt-2">Sign in to your CubSave account to keep trading.</p>
+            <p className="text-[#51635b] text-[15px] mt-2">Sign in to your Raverlo Exchange account to keep trading.</p>
 
             <form onSubmit={submit} className="mt-8 flex flex-col gap-4">
               <label className="block">

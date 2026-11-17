@@ -53,14 +53,14 @@ export default function HistoryPage() {
 
   const filtered = transactions.filter(tx => {
     if (filter === "Deposits") return tx.type === "deposit";
-    if (filter === "Withdrawals") return tx.type === "withdraw";
+    if (filter === "Withdrawals") return tx.type === "withdraw" || tx.type === "transfer";
     return true;
   });
 
   const counts = {
     All: transactions.length,
     Deposits: transactions.filter(t => t.type === "deposit").length,
-    Withdrawals: transactions.filter(t => t.type === "withdraw").length,
+    Withdrawals: transactions.filter(t => t.type === "withdraw" || t.type === "transfer").length,
   };
 
   return (

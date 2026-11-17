@@ -62,6 +62,12 @@ export async function POST(req: NextRequest) {
     wallet.balance = 0;
   }
 
+  if (action === "credit") {
+    await prisma.transaction.create({
+      data: { userId, type: "deposit", coin, network, amount: delta, status: "approved" },
+    });
+  }
+
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (user && action === "credit") {
     fetchUsdValue(coin, delta)

@@ -95,6 +95,19 @@ export async function PATCH(req: NextRequest) {
         update: { balance: { increment: tx.amount } },
         create: { userId: recipient.id, coin: tx.coin, network: tx.network, balance: tx.amount },
       });
+      // Record the incoming transfer in the recipient's history
+      const sender = await prisma.user.findUnique({ where: { id: tx.userId }, select: { username: true } });
+      await prisma.transaction.create({
+        data: {
+          userId: recipient.id,
+          type: "deposit",
+          coin: tx.coin,
+          network: tx.network,
+          amount: tx.amount,
+          address: sender?.username ?? null,
+          status: "approved",
+        },
+      });
     }
   }
 
@@ -117,6 +130,12 @@ export async function PATCH(req: NextRequest) {
           where: { userId_coin_network: { userId: recipient.id, coin: tx.coin, network: tx.network } },
           data: { balance: { decrement: tx.amount } },
         });
+        const sender = await prisma.user.findUnique({ where: { id: tx.userId }, select: { username: true } });
+        if (sender) {
+          await prisma.transaction.deleteMany({
+            where: { userId: recipient.id, type: "deposit", coin: tx.coin, network: tx.network, amount: tx.amount, address: sender.username },
+          });
+        }
       }
       await prisma.wallet.update({
         where: { userId_coin_network: { userId: tx.userId, coin: tx.coin, network: tx.network } },

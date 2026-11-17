@@ -281,7 +281,7 @@ function SignupInner() {
               </svg>
             </span>
             <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 17, color: "#0a1f17" }}>
-              Cub<span style={{ color: "#15a35c" }}>Save</span>
+              Raverlo <span style={{ color: "#15a35c" }}>Exchange</span>
             </span>
           </div>
           <button onClick={goBack} className="ml-auto text-[14px] font-medium text-[#51635b] hover:text-[#15a35c] transition-colors flex items-center gap-1.5">
@@ -497,7 +497,7 @@ function SignupInner() {
             </svg>
           </span>
           <span style={{ fontFamily: "var(--font-sora, Sora), sans-serif", fontWeight: 700, fontSize: 19 }}>
-            Cub<span style={{ color: "#7deba3" }}>Save</span>
+            Raverlo <span style={{ color: "#7deba3" }}>Exchange</span>
           </span>
         </div>
         <div className="relative z-10 max-w-[420px]">
@@ -518,7 +518,7 @@ function SignupInner() {
             ))}
           </ul>
         </div>
-        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 CubSave. All rights reserved.</div>
+        <div className="relative z-10 text-white/60 text-[12.5px]">© 2026 Raverlo Exchange. All rights reserved.</div>
       </div>
     </div>
   );
